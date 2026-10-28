@@ -13,9 +13,6 @@
   }
   Then set --font-main: "Main"; below.
 */
-:root {
-  --font-main: "Inter";
-}
 
 html {
   @apply bg-bg text-foreground;
@@ -47,21 +44,4 @@ body {
   /* right glow centre ~y150 (hero top), left glow centre ~y850 (hero bottom) */
   background-position: 0 -550px, 0 150px;
   background-attachment: scroll;
-}
-
-
-@font-face {
-  font-family: "Neue Montreal";
-  src: url("/fonts/NeueMontreal-Regular.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Neue Montreal";
-  src: url("/fonts/NeueMontreal-Medium.woff2") format("woff2");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
 }

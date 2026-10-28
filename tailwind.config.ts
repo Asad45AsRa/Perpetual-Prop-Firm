@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import plugin from "tailwindcss/plugin";
 
 const config: Config = {
   content: ["./src/**/*.{ts,tsx,mdx}"],
@@ -17,21 +18,18 @@ const config: Config = {
           light: "#d4b678",
           accent: "#99804A",
         },
-        // NEW: check icons ("No KYC required", "105× trading capital")
         success: "#22c55e",
-        // NEW: dropdown / input ka darker fill
         field: "#0d0d0d",
-        // NEW: subtle border
         line: "rgba(255,255,255,0.08)",
       },
       fontFamily: {
-        sans: ["Neue Montreal", "ui-sans-serif", "system-ui", "sans-serif"],
+        //sans: ["var(--font-montreal)", "ui-sans-serif", "system-ui", "sans-serif"],
+        sans: ["var(--font-montreal)", '"Neue Montreal"', "ui-sans-serif", "system-ui", "sans-serif"],
+
       },
       fontSize: {
         label: ["12px", { lineHeight: "86%", letterSpacing: "0" }],
-        // NEW: plan card sub-labels (uppercase class ke saath)
         eyebrow: ["10px", { lineHeight: "1", letterSpacing: "0.06em" }],
-        // NEW: checkout page heading
         display: ["64px", { lineHeight: "1.05", letterSpacing: "-0.03em" }],
       },
       maxWidth: {
@@ -45,17 +43,39 @@ const config: Config = {
       },
       backgroundImage: {
         "gold-line": "linear-gradient(90deg, #FFFFFF 0%, #99804A 100%)",
-        // NEW: selected plan card glow
         "gold-card":
           "linear-gradient(135deg, rgba(153,128,74,0.05) 0%, rgba(153,128,74,0.45) 100%)",
       },
-      // NEW
       boxShadow: {
         "gold-glow": "0 0 40px rgba(153,128,74,0.25)",
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(({ addBase }) => {
+      const faces: [string, number, "normal" | "italic"][] = [
+        ["NeueMontreal-Light.otf", 300, "normal"],
+        ["NeueMontreal-LightItalic.otf", 300, "italic"],
+        ["NeueMontreal-Regular.otf", 400, "normal"],
+        ["NeueMontreal-Italic.otf", 400, "italic"],
+        ["NeueMontreal-Medium.otf", 500, "normal"],
+        ["NeueMontreal-MediumItalic.otf", 500, "italic"],
+        ["NeueMontreal-Bold.otf", 700, "normal"],
+        ["NeueMontreal-BoldItalic.otf", 700, "italic"],
+      ];
+      faces.forEach(([file, weight, style]) =>
+        addBase({
+          "@font-face": {
+            fontFamily: '"Neue Montreal"',
+            src: `url("/fonts/NeueMontreal/${file}") format("opentype")`,
+            fontWeight: String(weight),
+            fontStyle: style,
+            fontDisplay: "swap",
+          },
+        })
+      );
+    }),
+  ],
 };
 
 export default config;
