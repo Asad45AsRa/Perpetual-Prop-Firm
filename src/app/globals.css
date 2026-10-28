@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  Add your Figma font here (file goes in public/fonts), e.g.:
+
+  @font-face {
+    font-family: "Main";
+    src: url("/fonts/Main-Regular.woff2") format("woff2");
+    font-weight: 400;
+    font-display: swap;
+  }
+  Then set --font-main: "Main"; below.
+*/
+:root {
+  --font-main: "Inter";
+}
+
+html {
+  @apply bg-bg text-foreground;
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-bg font-sans antialiased;
+  min-height: 100vh;
+
+  /* Side vignette + top-right and left glow (matches Figma page background) */
+  background-image:
+    /* RIGHT glow */
+    radial-gradient(ellipse 32vw 700px at 100% 50%,
+      rgba(255, 255, 255, 0.17) 0%,
+      rgba(255, 255, 255, 0.12) 20%,
+      rgba(255, 255, 255, 0.07) 45%,
+      rgba(255, 255, 255, 0.03) 70%,
+      rgba(255, 255, 255, 0) 100%),
+    /* LEFT glow */
+    radial-gradient(ellipse 32vw 700px at 0% 50%,
+      rgba(255, 255, 255, 0.15) 0%,
+      rgba(255, 255, 255, 0.10) 20%,
+      rgba(255, 255, 255, 0.06) 45%,
+      rgba(255, 255, 255, 0.025) 70%,
+      rgba(255, 255, 255, 0) 100%);
+  background-size: 100% 1400px, 100% 1400px;
+  background-repeat: repeat-y, repeat-y;
+  /* right glow centre ~y150 (hero top), left glow centre ~y850 (hero bottom) */
+  background-position: 0 -550px, 0 150px;
+  background-attachment: scroll;
+}
+
+
+@font-face {
+  font-family: "Neue Montreal";
+  src: url("/fonts/NeueMontreal-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Montreal";
+  src: url("/fonts/NeueMontreal-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
