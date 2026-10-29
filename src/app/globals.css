@@ -26,14 +26,14 @@ body {
   /* Side vignette + top-right and left glow (matches Figma page background) */
   background-image:
     /* RIGHT glow */
-    radial-gradient(ellipse 32vw 700px at 100% 50%,
+    radial-gradient(ellipse 16vw 420px at 100% 50%,
       rgba(255, 255, 255, 0.17) 0%,
       rgba(255, 255, 255, 0.12) 20%,
       rgba(255, 255, 255, 0.07) 45%,
       rgba(255, 255, 255, 0.03) 70%,
       rgba(255, 255, 255, 0) 100%),
     /* LEFT glow */
-    radial-gradient(ellipse 32vw 700px at 0% 50%,
+    radial-gradient(ellipse 16vw 420px at 0% 50%,
       rgba(255, 255, 255, 0.15) 0%,
       rgba(255, 255, 255, 0.10) 20%,
       rgba(255, 255, 255, 0.06) 45%,

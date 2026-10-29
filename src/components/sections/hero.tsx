@@ -51,16 +51,16 @@ export function Hero() {
           and performance-based rewards, all built around your trading skills.
         </p>
 
-        <div className="mt-[30px] flex gap-[14px]">
+        <div className="mt-[30px] font-[50px] flex gap-[14px]">
           <Link
             href={siteConfig.links.getFunded}
-            className="inline-flex h-[41px] items-center bg-white px-7 text-[14px] text-ink"
+            className="inline-flex h-[41px]  items-center bg-white px-7 text-[14px] text-ink"
           >
             Get Funded
           </Link>
           <Link
             href={siteConfig.links.discord}
-            className="inline-flex h-[41px] items-center gap-2 border border-[#333] bg-[#1c1c1c] px-7 text-[14px] text-white"
+            className="inline-flex h-[41px] items-center gap-2 border border-[#333] bg-[#1c1c1c]  px-7 text-[14px] text-white"
           >
             Join Discord
             <FaDiscord className="h-[18px] w-[18px]" />

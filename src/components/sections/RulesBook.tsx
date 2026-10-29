@@ -1373,13 +1373,16 @@ export function RulesBook() {
 
   /* sidebar item click => us rule tak smooth scroll */
   const goTo = (item: Item) => {
-    const el = document.getElementById(ruleId(item.sections[0].n));
+    // Overview ka item Quick Overview block par jaye, baqi apne pehle rule par
+    const targetId =
+      item.id === "overview" ? "quick-overview" : ruleId(item.sections[0].n);
+    const el = document.getElementById(targetId);
     if (!el) return;
     setActiveId(item.id);
     lockRef.current = true;
     window.setTimeout(() => (lockRef.current = false), 900);
     el.scrollIntoView({ behavior: "smooth", block: "start" });
-    window.history.replaceState(null, "", `#${el.id}`);
+    window.history.replaceState(null, "", item.id === "overview" ? "#overview" : `#${el.id}`);
   };
 
   /* scroll-spy: jo rule screen par hai uska item active */
@@ -1393,7 +1396,7 @@ export function RulesBook() {
         if (!els.length) return;
         let current = els[0];
         for (const el of els) {
-          if (el.getBoundingClientRect().top <= 160) current = el;
+          if (el.getBoundingClientRect().top <= 120) current = el;
         }
         const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
         if (atBottom) current = els[els.length - 1];
@@ -1411,9 +1414,10 @@ export function RulesBook() {
   /* page load par #rule-N ho to wahan jao */
   useEffect(() => {
     const hash = window.location.hash.slice(1);
-    if (!hash.startsWith("rule-")) return;
+    if (!hash.startsWith("rule-") && hash !== "overview") return;
+    const id = hash === "overview" ? "quick-overview" : hash;
     const t = window.setTimeout(() => {
-      document.getElementById(hash)?.scrollIntoView({ block: "start" });
+      document.getElementById(id)?.scrollIntoView({ block: "start" });
     }, 80);
     return () => window.clearTimeout(t);
   }, []);
@@ -1464,8 +1468,8 @@ export function RulesBook() {
       {/* ───── BODY ───── */}
       <div className="relative z-10 mt-[58px] flex flex-col gap-10 lg:flex-row lg:gap-[54px]">
         {/* SIDEBAR */}
-        <aside className="w-full shrink-0 lg:sticky lg:top-[100px] lg:h-[calc(100vh-120px)] lg:w-[412px] lg:self-start">
-          <div className="flex h-full flex-col border border-line bg-black/20 p-[22px]">
+        <aside className="w-full shrink-0 lg:w-[412px]">
+          <div className="flex flex-col border border-line bg-black/20 p-[22px]">
             {/* search */}
             <label className="flex h-[41px] shrink-0 items-center gap-3 border border-line bg-white/[0.03] px-4">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-muted">
@@ -1480,13 +1484,10 @@ export function RulesBook() {
               />
             </label>
 
-            {/* groups */}
-            <nav
-              ref={navRef}
-              className="relative mt-6 min-h-0 flex-1 overflow-y-auto pr-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-            >
+            {/* list: poori height, koi scroll nahi */}
+            <nav ref={navRef} className="mt-6">
               {filteredGroups.map((g) => (
-                <div key={g.label} className="mb-6">
+                <div key={g.label} className="mb-6 last:mb-0">
                   <p className="mb-3 text-[10px] uppercase tracking-[0.04em] text-muted">{g.label}</p>
                   <ul className="space-y-[10px]">
                     {g.items.map((it) => {
@@ -1523,16 +1524,14 @@ export function RulesBook() {
                 </div>
               ))}
 
-              {filteredGroups.length === 0 && (
-                <p className="text-[13px] text-muted">No rules found.</p>
-              )}
+              {filteredGroups.length === 0 && <p className="text-[13px] text-muted">No rules found.</p>}
             </nav>
           </div>
         </aside>
 
         {/* CONTENT: 1 se end tak saare rules ek sath */}
         <div className="min-w-0 flex-1">
-          <div>
+          <div id="quick-overview" className="scroll-mt-[96px]">
             <p className="text-[10px] uppercase tracking-[0.04em] text-muted">Quick Overview</p>
             <h2 className="mt-3 text-[28px] font-normal leading-[1.1] tracking-[-0.02em] text-white">
               Choose your rules.

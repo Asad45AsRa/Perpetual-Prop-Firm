@@ -205,22 +205,14 @@ function CoinStack({ small = false }: { small?: boolean }) {
   );
 }
 
-function PlanIcon({
-  icon,
-  large,
-  selected,
-}: {
-  icon: string;
-  large: boolean;
-  selected: boolean;
-}) {
+function PlanIcon({ icon, selected }: { icon: string; selected: boolean }) {
   return (
     <span
       className={cn(
-        "flex h-16 w-16 shrink-0 items-center justify-center border",
+        "flex h-16 w-16 shrink-0 items-center justify-center border transition-colors",
         selected
-          ? "border-[#6B5A33] bg-[#4A3F2A]"
-          : "border-white/20 bg-[#2A2A2A]",
+          ? "border-[#99804A]/40 bg-[#99804A]/20"
+          : "border-white/20 bg-white/[0.06]",
       )}
     >
       <Image
@@ -228,11 +220,12 @@ function PlanIcon({
         alt=""
         width={40}
         height={40}
-        className={cn("object-contain", large ? "h-10 w-10" : "h-7 w-7")}
+        className="h-7 w-7 object-contain"
       />
     </span>
   );
 }
+
 
 /* ------------------------------------------------------------------ */
 /* Page                                                                */
@@ -269,7 +262,7 @@ export function CheckoutPage() {
     <main className="min-h-screen pt-[78px] text-foreground">
       {/* Figma: 1440 frame, 80px side padding */}
       <section className="w-full px-6 pb-24 pt-11 lg:px-20">
-        <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_466px] lg:gap-6">
+        <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_466px] lg:items-stretch lg:gap-6">
           {/* ============================ LEFT ============================ */}
           <div className="min-w-0">
             <h1 className="text-[40px] font-normal leading-[1.1] tracking-[-0.03em] text-white md:text-[48px]">
@@ -297,22 +290,29 @@ export function CheckoutPage() {
                       type="button"
                       onClick={() => setPlanId(p.id)}
                       aria-pressed={selected}
+                      ref={(el) => {
+                        if (!el) return;
+                        el.style.setProperty(
+                          "background",
+                          selected
+                            ? "radial-gradient(32% 75% at 88% 105%, rgba(195,176,128,0.50) 0%, rgba(153,128,74,0.20) 55%, rgba(153,128,74,0) 100%), linear-gradient(180deg, rgba(153,128,74,0.16) 0%, rgba(153,128,74,0) 30%, rgba(153,128,74,0) 60%, rgba(153,128,74,0.14) 100%), linear-gradient(120deg, #26221A 0%, #1B1813 50%, #231F17 100%)"
+                            : "linear-gradient(135deg, #1C1C1C 0%, #141414 100%)",
+                          "important",
+                        );
+                        el.style.setProperty("border-width", "0.7px", "important");
+                      }}
                       className={cn(
-                        "relative isolate flex h-[148px] w-full flex-col justify-between overflow-hidden border p-4 text-left transition-colors",
+                        "relative isolate flex h-[148px] w-full flex-col justify-between overflow-hidden border-solid p-4 text-left transition-colors",
                         "outline-none focus:outline-none focus-visible:outline-none focus:ring-0 active:shadow-none",
                         "[box-shadow:none!important] [filter:none!important] [-webkit-tap-highlight-color:transparent]",
                         "before:!hidden after:!hidden",
                         selected
-                          ? "border-[#4A3F26] !bg-[#2A2417] !bg-none hover:border-[#4A3F26]"
-                          : "border-white/[0.14] bg-[linear-gradient(135deg,#1E1E1E_0%,#141414_100%)] hover:border-white/25",
+                          ? "border-[#99804A]/20"
+                          : "border-white/[0.15] hover:border-white/30",
                       )}
                     >
                       <span className="flex items-center gap-3.5">
-                        <PlanIcon
-                          icon={p.icon}
-                          large={p.id === "custom"}
-                          selected={selected}
-                        />
+                        <PlanIcon icon={p.icon} selected={selected} />
                         <span>
                           <span
                             className={cn(
@@ -336,22 +336,20 @@ export function CheckoutPage() {
                       {/* radio */}
                       <span
                         className={cn(
-                          "absolute right-4 top-4 flex h-[18px] w-[18px] items-center justify-center rounded-full border-[1.5px]",
-                          selected ? "border-[#B79F68]" : "border-white/60",
+                          "absolute right-4 top-4 flex h-5 w-5 items-center justify-center rounded-full border-[1.5px]",
+                          selected ? "border-[#C9B27C]" : "border-white/60",
                         )}
                       >
-                        {selected && (
-                          <span className="h-[8px] w-[8px] rounded-full bg-[#B79F68]" />
-                        )}
+                        {selected && <span className="h-2.5 w-2.5 rounded-full bg-[#C9B27C]" />}
                       </span>
 
-                      {/* bottom row */}
-                      <span className="flex items-center justify-between">
-                        <span className="flex items-center gap-1.5 text-[10px] uppercase leading-none text-white/50">
+                      {/* bottom row + divider */}
+                      <span className="flex items-center justify-between border-t border-white/10 pt-3.5">
+                        <span className="flex items-center gap-1.5 text-[12px] uppercase leading-none tracking-wide text-muted/80">
                           {p.tag}
                           <LuInfo className="h-3 w-3" />
                         </span>
-                        <span className="text-[12px] font-semibold leading-none text-white">
+                        <span className="text-[12px]  leading-none text-white">
                           {money(price)}
                         </span>
                       </span>
@@ -362,22 +360,29 @@ export function CheckoutPage() {
             </div>
 
             {/* ---------- Build Your Rules: sirf "Capital Your Way" par ---------- */}
-            {isCustom && (
-              <div className="mt-6">
-                <div className="flex items-center justify-between">
+            <div className="mt-6">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                {isCustom ? (
                   <SectionChip>
                     Build Your Rules · {plan.multiplier}× Multiplier
                   </SectionChip>
-                  <a
-                    href="/rules"
-                    className="inline-flex items-center gap-1.5 text-[11px] text-white/80 underline underline-offset-2 hover:text-white"
-                  >
+                ) : (
+                  <SectionChip>Account Rules</SectionChip>
+                )}
+                <a
+                  href="/rules"
+                  className="group inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap text-[11px] text-white/80 hover:text-white"
+                >
+                  <span className="underline underline-offset-2">
                     Compare Account Rules
-                    <LuArrowUpRight className="h-3 w-3" />
-                  </a>
-                </div>
+                  </span>
+                  <LuArrowUpRight className="h-3 w-3" />
+                </a>
+              </div>
 
-                <Panel className="mt-6 grid gap-x-4 gap-y-5 px-4 py-5 sm:grid-cols-2">
+              {/* Dropdowns: sirf "Capital Your Way" par */}
+              {isCustom && (
+                <Panel className="mt-6 grid gap-x-4 gap-y-5 px-4 py-5 sm:grid-cols-2 text-[10px] font-muted/80">
                   <SelectField
                     label="Profit Target"
                     value={profitTarget}
@@ -403,9 +408,8 @@ export function CheckoutPage() {
                     onChange={setProfitSplit}
                   />
                 </Panel>
-              </div>
-            )}
-
+              )}
+            </div>
             {/* ---------- Choose Payment Amount: hamesha dikhega ---------- */}
             <div className="mt-6">
               <SectionChip>Choose Payment Amount</SectionChip>
@@ -488,8 +492,7 @@ export function CheckoutPage() {
           </div>
 
           {/* ============================ RIGHT ============================ */}
-          <aside className="min-w-0 lg:pt-3">
-            {/* Fee -> Balance */}
+          <aside className="flex min-w-0 flex-col lg:pt-3">            {/* Fee -> Balance */}
             <div className="flex items-start justify-end gap-6">
               <div>
                 <p className="text-[10px] leading-4 text-white/50">Challenge Fee</p>
@@ -547,7 +550,7 @@ export function CheckoutPage() {
               <SectionChip>Your Challenge</SectionChip>
             </div>
 
-            <Panel className="mt-6">
+            <Panel className="mt-6 flex flex-1 flex-col">
               {/* You'll trade with */}
               <div className="bg-white/[0.05] px-6 pb-3 pt-3">
                 <p className="text-[12px] leading-4 text-white/60">You&apos;ll Trade With</p>
@@ -561,7 +564,7 @@ export function CheckoutPage() {
               </div>
 
               {/* Rules */}
-              <div className="space-y-4 px-6 py-7">
+              <div className="space-y-4 px-6 py-7 text-muted/90 font-light">
                 <SummaryRow label="Challenge phase" value="Yes" />
                 <SummaryRow label="Profit target" value={profitTarget} />
                 <SummaryRow label="Max loss" value={dailyLoss} />
@@ -593,7 +596,7 @@ export function CheckoutPage() {
                 </div>
               </div>
 
-              <div className="border-t border-white/10 px-6 py-7">
+              <div className="flex-1 border-t border-white/10 px-6 py-7">
                 <div className="flex items-center justify-between">
                   <span className="text-[12px] leading-4 text-white/50">You pay today</span>
                   <span className="text-[26px] leading-[28px] text-white">
@@ -605,30 +608,30 @@ export function CheckoutPage() {
                   <span className="text-white">yourname@gmail.com</span>
                 </div>
 
-                <label className="mt-6 flex cursor-pointer items-start gap-3">
-                  <span className="relative mt-0.5 h-3.5 w-3.5 shrink-0">
+                <label className="group mt-6 flex cursor-pointer items-start gap-3">
+                  <span className="relative mt-px h-[18px] w-[18px] shrink-0">
                     <input
                       type="checkbox"
                       checked={agreed}
                       onChange={(e) => setAgreed(e.target.checked)}
-                      className="peer h-3.5 w-3.5 cursor-pointer appearance-none border border-white/30 bg-transparent outline-none checked:border-[#99804A] checked:bg-[#99804A] focus-visible:ring-1 focus-visible:ring-white/40"
+                      className="peer h-[18px] w-[18px] cursor-pointer appearance-none rounded-[4px] border border-white/25 bg-white/[0.04] outline-none transition-all duration-200 group-hover:border-[#B79F68]/70 checked:border-[#C9B27C] checked:bg-[linear-gradient(135deg,#D9C58F_0%,#A38A52_100%)] checked:shadow-[0_0_10px_rgba(183,159,104,0.45)] focus-visible:ring-2 focus-visible:ring-[#B79F68]/50"
                     />
                     <svg
-                      viewBox="0 0 14 14"
+                      viewBox="0 0 18 18"
                       fill="none"
                       aria-hidden
-                      className="pointer-events-none absolute inset-0 h-3.5 w-3.5 opacity-0 peer-checked:opacity-100"
+                      className="pointer-events-none absolute inset-0 h-[18px] w-[18px] scale-50 opacity-0 transition-all duration-200 peer-checked:scale-100 peer-checked:opacity-100"
                     >
                       <path
-                        d="M3 7.2l2.6 2.6L11 4.4"
-                        stroke="#FFFFFF"
-                        strokeWidth="1.6"
+                        d="M4.5 9.3l3 3 6-6.4"
+                        stroke="#1A150B"
+                        strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
                       />
                     </svg>
                   </span>
-                  <span className="text-[12px] leading-[16px] text-white/60">
+                  <span className="text-[12px] leading-[18px] text-white/60 transition-colors group-hover:text-white/80">
                     I have read, understood, and agree to all rules and
                     conditions outlined above.
                   </span>

@@ -1,6 +1,5 @@
-import { PagePlaceholder } from "@/components/ui/page-placeholder";
-import {Faq} from '@/components/sections/Faq'
+import { redirect } from "next/navigation";
 
 export default function FaqPage() {
-  return <Faq />;
+  redirect("/#faq");
 }

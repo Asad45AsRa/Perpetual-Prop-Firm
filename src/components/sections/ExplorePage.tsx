@@ -139,7 +139,7 @@ const VISIBLE_ROWS = 5;
 const ACTIVE_SLOT = 2;
 // slot 0..4 ke liye: bahar ki rows narrow, beech wali sabse wide
 const SLOT_INSET = [34, 17, 0, 17, 34];
-const SLOT_OPACITY = [0.3, 1, 1, 1, 0.3];
+const SLOT_OPACITY = [0.18, 1, 1, 1, 0.18];
 const SLOT_H = [35, 36, 41, 36, 35];
 const SLOT_TOP = [0, 35, 71, 112, 148];
 const TABLE_H = 183;
@@ -295,11 +295,11 @@ export function ExplorePage() {
               with liquidity powered by Hyperliquid.
             </p>
 
-            <div className="mt-8 flex max-w-[430px] flex-wrap gap-3">
+            <div className="mt-8 flex max-w-[430px]  flex-wrap gap-3">
               {TAGS.map((t) => (
                 <span
                   key={t}
-                  className="border border-white/10 bg-white/[0.06] px-7 py-3 text-sm leading-none text-white"
+                  className="border border-white/10 bg-white/[0.06] px-7 py-3 text-sm leading-none font-[50px] text-white/80"
                 >
                   {t}
                 </span>
@@ -372,11 +372,11 @@ export function ExplorePage() {
             {/* Legend: Figma mein table ke upar center */}
             <div className="mb-3 flex items-center justify-center gap-6 text-[12px] text-muted/80">
               <span className="flex items-center gap-1.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
+                <span className="h-1.5 w-1.5 rounded-full bg-green-500 shadow-[0_0_6px_2px_rgba(34,197,94,0.9),0_0_12px_4px_rgba(34,197,94,0.4)]" />
                 Live Payouts
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#99804A]" />
+                <span className="h-1.5 w-1.5 rounded-full bg-[#99804A] shadow-[0_0_6px_2px_rgba(153,128,74,0.7),0_0_12px_4px_rgba(153,128,74,0.3)]" />
                 Perpetual Funding
               </span>
             </div>
@@ -422,7 +422,7 @@ export function ExplorePage() {
                       <span className={`transition-colors duration-700 ${isActive ? "text-black" : "text-white/60"}`}>
                         {p.address}
                       </span>
-                      <span className={`transition-colors duration-700 ${isActive ? "text-green-600" : "text-green-500"}`}>
+                      <span className={`transition-colors duration-700 ${isActive ? "text-green-500" : "text-green-500"}`}>
                         {p.amount}
                       </span>
                     </div>
@@ -447,7 +447,7 @@ export function ExplorePage() {
               {PILLS.map((label) => (
                 <span
                   key={label}
-                  className="inline-flex items-center gap-[6.9px] border-[0.64px] border-white/20 bg-white/[0.06] px-[28.5px] py-[13.5px] text-[14px] font-normal leading-none text-white backdrop-blur-[14px]"
+                  className="inline-flex items-center gap-[6.9px] border-[0.64px] border-white/20 bg-white/[0.06] px-[28.5px] py-[13.5px] text-[14px] font-[5px] leading-none text-white/80 backdrop-blur-[14px]"
                 >
                   {label}
                 </span>

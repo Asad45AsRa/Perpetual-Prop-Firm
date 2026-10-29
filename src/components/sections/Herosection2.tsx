@@ -1,28 +1,80 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { FaDiscord } from "react-icons/fa6";
 
 const STATS = [
-  { value: "$680.1K", label: "Payout reserve" },
-  { value: "$1.73M", label: "Lifetime payouts" },
-  { value: "8.3s", label: "Avg payout time" },
-  { value: "$5.18M", label: "Funded trader AUM" },
-  { value: "$10.84B", label: "Traded volume" },
+  { prefix: "$", value: 680.1, decimals: 1, suffix: "K", label: "Payout reserve" },
+  { prefix: "$", value: 1.73, decimals: 2, suffix: "M", label: "Lifetime payouts" },
+  { prefix: "", value: 8.3, decimals: 1, suffix: "s", label: "Avg payout time" },
+  { prefix: "$", value: 5.18, decimals: 2, suffix: "M", label: "Funded trader AUM" },
+  { prefix: "$", value: 10.84, decimals: 2, suffix: "B", label: "Traded volume" },
 ];
 
-/*
-  Figma frame = 1440px, base text = 14px.
-  Every size is in `em`; the section's font-size scales with the viewport
-  above 1440px, so the whole hero grows on bigger screens.
+/* easeOutExpo count-up, starts after `delayMs` */
+function useCountUp(target: number, delayMs: number, durationMs = 1800) {
+  const [val, setVal] = useState(0);
 
-  Vertical rhythm (Figma @1440, 14px base):
-  heading top 270px -> 19.29em
-  heading -> paragraph 21px -> 1.5em
-  paragraph -> buttons 25px -> 1.8em
-  buttons -> stats 50px -> 3.57em
-  stat divider padding 45px -> 3.214em
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setVal(target);
+      return;
+    }
+    let raf = 0;
+    const timer = setTimeout(() => {
+      const start = performance.now();
+      const tick = (now: number) => {
+        const p = Math.min((now - start) / durationMs, 1);
+        const eased = p === 1 ? 1 : 1 - Math.pow(2, -10 * p);
+        setVal(target * eased);
+        if (p < 1) raf = requestAnimationFrame(tick);
+      };
+      raf = requestAnimationFrame(tick);
+    }, delayMs);
 
-  Animations: only fade / blur / scale (no directional movement).
-*/
+    return () => {
+      clearTimeout(timer);
+      cancelAnimationFrame(raf);
+    };
+  }, [target, delayMs, durationMs]);
+
+  return val;
+}
+
+function StatValue({
+  prefix,
+  value,
+  decimals,
+  suffix,
+  delayMs,
+}: {
+  prefix: string;
+  value: number;
+  decimals: number;
+  suffix: string;
+  delayMs: number;
+}) {
+  const current = useCountUp(value, delayMs);
+  const final = `${prefix}${value.toFixed(decimals)}${suffix}`;
+  const live = `${prefix}${current.toFixed(decimals)}${suffix}`;
+
+  return (
+    <span
+      className="relative inline-block text-[1.714em] font-normal leading-none text-white transition-transform duration-300 ease-out group-hover:scale-110"
+      aria-label={final}
+    >
+      {/* invisible final value reserves the width so nothing jumps while counting */}
+      <span className="invisible" aria-hidden>
+        {final}
+      </span>
+      <span className="absolute inset-0 text-center" aria-hidden>
+        {live}
+      </span>
+    </span>
+  );
+}
+
 export function HeroSection2() {
   return (
     <section
@@ -40,11 +92,7 @@ export function HeroSection2() {
         }
         @keyframes heroBreathe {
           0%, 100% { opacity: 1; }
-          50%      { opacity: 0.7; }
-        }
-        @keyframes heroLine {
-          from { opacity: 0; }
-          to   { opacity: 1; }
+          50%      { opacity: 0.8; }
         }
         .hero-in {
           animation: heroIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -62,17 +110,27 @@ export function HeroSection2() {
         }
       `}</style>
 
-      {/* Content wrapper: the glow is centered on this, so it always sits behind the paragraph like in Figma */}
       <div className="relative flex w-full flex-col items-center text-center">
-        {/* Background glow: 1600x267 gradient (#FFFFFF -> #99804A), layer blur 350 (= 175px css) */}
+        {/* Glow layer 1: Figma gradient (#FFFFFF -> #99804A), brighter + less blur */}
         <div
           aria-hidden
-          className="hero-glow pointer-events-none absolute left-1/2 top-1/2 z-0 h-[19.07em] w-[114.29em] -translate-x-1/2 -translate-y-1/2 blur-[12.5em]"
-          style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #99804A 100%)" }}
+          className="hero-glow pointer-events-none absolute left-1/2 top-[42%] z-0 h-[21em] w-[114.29em] -translate-x-1/2 -translate-y-1/2 blur-[9em]"
+          style={{
+            background: "linear-gradient(180deg, #FFFFFF 0%, #99804A 100%)",
+            opacity: 0.95,
+          }}
         />
+        {/* Glow layer 2: soft warm wash so edges fade to dark like Figma */}
+        <div
+        aria-hidden
+        className="hero-glow pointer-events-none absolute inset-x-0 top-[48%] z-0 h-[45em]"
+        style={{
+          background:
+            "radial-gradient(ellipse 70% 70% at 50% 0%, rgba(153,128,74,0.38) 0%, rgba(160, 142, 103, 0.2) 40%, rgba(131, 116, 85, 0.07) 75%, transparent 100%)",
+        }}
+      />
 
         <div className="relative z-10 flex w-full flex-col items-center tracking-normal">
-          {/* Heading: 85.51px / 86% / -3% / centered */}
           <h1
             className="hero-in w-full text-[3em] font-normal leading-[0.86] tracking-[-0.03em] text-white md:text-[4.5em] lg:text-[6.108em]"
             style={{ "--d": "0.1s" } as React.CSSProperties}
@@ -81,7 +139,6 @@ export function HeroSection2() {
             <span className="md:block">Get Funded.</span>
           </h1>
 
-          {/* Paragraph: 14px / 150% */}
           <p
             className="hero-in mt-[1.5em] max-w-[62em] text-[15px] font-normal leading-[1.5] text-white/70"
             style={{ "--d": "0.35s" } as React.CSSProperties}
@@ -94,12 +151,9 @@ export function HeroSection2() {
               prove your trading skills through a one-step evaluation, and earn
               performance-based payouts with no{" "}
             </span>
-            <span className="md:block">
-              personal trading capital required.
-            </span>
+            <span className="md:block">personal trading capital required.</span>
           </p>
 
-          {/* Buttons */}
           <div className="mt-[1.8em] flex flex-wrap items-center justify-center gap-[1.143em]">
             <Link
               href="/challenges"
@@ -124,22 +178,29 @@ export function HeroSection2() {
             </a>
           </div>
 
-          {/* Stats: content-sized columns, 45px (3.214em) each side of the divider */}
+          {/* Stats with count-up */}
           <div className="mt-[3.57em] grid w-full grid-cols-2 gap-y-8 lg:flex lg:w-auto lg:justify-center lg:gap-y-0">
-            {STATS.map((s, i) => (
-              <div
-                key={s.label}
-                className="hero-in group flex flex-col items-center gap-[0.857em] py-[0.2em] lg:border-l lg:border-white/15 lg:px-[3.214em] lg:first:border-l-0 lg:first:pl-0 lg:last:pr-0"
-                style={{ "--d": `${0.95 + i * 0.12}s` } as React.CSSProperties}
-              >
-                <span className="text-[1.714em] font-normal leading-none text-white transition-transform duration-300 ease-out group-hover:scale-110">
-                  {s.value}
-                </span>
-                <span className="text-[0.857em] font-normal leading-none text-white/50 transition-colors duration-300 group-hover:text-white/80">
-                  {s.label}
-                </span>
-              </div>
-            ))}
+            {STATS.map((s, i) => {
+              const delay = 0.95 + i * 0.12;
+              return (
+                <div
+                  key={s.label}
+                  className="hero-in group flex flex-col items-center gap-[0.857em] py-[0.2em] lg:border-l lg:border-white/15 lg:px-[3.214em] lg:first:border-l-0 lg:first:pl-0 lg:last:pr-0"
+                  style={{ "--d": `${delay}s` } as React.CSSProperties}
+                >
+                  <StatValue
+                    prefix={s.prefix}
+                    value={s.value}
+                    decimals={s.decimals}
+                    suffix={s.suffix}
+                    delayMs={delay * 1000}
+                  />
+                  <span className="text-[0.857em] font-normal leading-none text-white/50 transition-colors duration-300 group-hover:text-white/80">
+                    {s.label}
+                  </span>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
