@@ -83,7 +83,7 @@ export function HeroSection2() {
 
           {/* Paragraph: 14px / 150% */}
           <p
-            className="hero-in mt-[1.5em] max-w-[62em] text-[1em] font-normal leading-[1.5] text-white/70"
+            className="hero-in mt-[1.5em] max-w-[62em] text-[15px] font-normal leading-[1.5] text-white/70"
             style={{ "--d": "0.35s" } as React.CSSProperties}
           >
             <span className="md:block">

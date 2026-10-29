@@ -30,13 +30,13 @@ export function Hero() {
 
       {/* GIF: bilkul plain, koi CSS nahi */}
       <Image
-  src="/images/hero/Final1080.gif"
-  alt="Perpeye trading coins"
-  width={1080}
-  height={1080}
-  unoptimized
-  className="pointer-events-none absolute right-20 top-[39px] w-[634px] select-none md:block"
-/>
+        src="/images/hero/Final1080.gif"
+        alt="Perpeye trading coins"
+        width={1080}
+        height={1080}
+        unoptimized
+        className="pointer-events-none absolute right-32 top-[39px] w-[636px] leading-[20px] select-none md:block"
+      />
 
 
       <div className="relative z-10">
@@ -46,7 +46,7 @@ export function Hero() {
           Perps With Funding.
         </h1>
 
-        <p className="mt-6 max-w-[500px] text-[16px] leading-[21px] text-muted">
+        <p className="mt-6 max-w-[480px] text-[15px] leading-[20px] text-muted/80">
           Trade perpetual markets on-chain with transparent rules, powerful tools,
           and performance-based rewards, all built around your trading skills.
         </p>

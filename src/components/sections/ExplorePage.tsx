@@ -109,9 +109,9 @@ function slideStyle(offset: number, n: number): React.CSSProperties {
   const isLeft = offset === n - 1;
   const visible = isCenter || isRight || isLeft;
 
-  const size = isCenter ? 305 : 158;
-  const left = isCenter ? 187 : isLeft ? 0 : 522;
-  const top = isCenter ? 0 : 71;
+  const size = isCenter ? 285 : 148;
+  const left = isCenter ? 197.5 : isLeft ? 19.5 : 512.5;
+  const top = isCenter ? 7.5 : 76;
 
   return {
     left: `${(left / CW) * 100}%`,
@@ -139,7 +139,7 @@ const VISIBLE_ROWS = 5;
 const ACTIVE_SLOT = 2;
 // slot 0..4 ke liye: bahar ki rows narrow, beech wali sabse wide
 const SLOT_INSET = [34, 17, 0, 17, 34];
-const SLOT_OPACITY = [0.2, 0.6, 1, 0.6, 0.2];
+const SLOT_OPACITY = [0.3, 1, 1, 1, 0.3];
 const SLOT_H = [35, 36, 41, 36, 35];
 const SLOT_TOP = [0, 35, 71, 112, 148];
 const TABLE_H = 183;
@@ -181,7 +181,7 @@ export function ExplorePage() {
   }, []);
 
   return (
-    <main className="min-h-screen font-sans text-foreground">
+    <main className="min-h-screen font-sans text-foreground mt-5">
       {/* Figma frame: 1440px centered, 80px side padding (px-6 mobile / lg:px-20) */}
       <section className="mx-auto flex w-full max-w-none flex-col items-center px-10 py-20 text-center lg:px-20">
         {/* ===== Funding diagram ===== */}
@@ -189,7 +189,7 @@ export function ExplorePage() {
           <h2 className="max-w-[650px] text-[40px] font-normal leading-[0.94] tracking-[-0.05em] text-white md:text-[56px]">
             Built For The Next Generation Of Perp Traders
           </h2>
-          <p className="mt-5 max-w-[520px] text-[16px] leading-[21px] text-muted">
+          <p className="mt-5 max-w-[520px] text-[15px] leading-[21px] text-muted/80">
             Trade perpetual markets on-chain with transparent rules, reliable
             data, and the tools to track your performance from start to finish.
           </p>
@@ -203,14 +203,10 @@ export function ExplorePage() {
           >
             <style>{`
       .wire-draw { stroke-dasharray: 1; stroke-dashoffset: 1; }
-.diagram[data-on="true"] .wire-draw { animation: wire-loop 2.4s ease-in-out infinite; }
+.diagram[data-on="true"] .wire-draw { animation: wire-loop 1.2s ease-in-out forwards; }
 @keyframes wire-loop {
-  0%   { stroke-dashoffset: 1; }   /* wire nahi hai */
-  50%  { stroke-dashoffset: 0; }   /* poori draw ho gayi */
-  100% { stroke-dashoffset: -1; }  /* khatam ho gayi */
-}
-@media (prefers-reduced-motion: reduce) {
-  .wire-draw { animation: none !important; stroke-dashoffset: 0; }
+  0%   { stroke-dashoffset: 1; }
+  100% { stroke-dashoffset: 0; }
 }
     `}</style>
 
@@ -238,7 +234,7 @@ export function ExplorePage() {
             {/* Ring: wires iske neeche se nikalti hain */}
             <div
               className="absolute z-[2]"
-              style={{ left: "calc(529.5 / 1060 * 100%)", top: 0, width: "14.7%", transform: "translateX(-50%)" }}
+              style={{ left: "calc(529.5 / 1060 * 100%)", top: 0, width: "15.9%", transform: "translateX(-50%)" }}
             >
               <Image
                 src="/images/explore/box/ringlogo.png"
@@ -293,7 +289,7 @@ export function ExplorePage() {
             <h2 className="text-[40px] font-normal leading-[1.05] tracking-[-0.03em] text-white md:text-[56px]">
               Trade On Perpetual Markets, 24/7
             </h2>
-            <p className="mt-6 max-w-[430px] text-base leading-relaxed text-white/60">
+            <p className="mt-6 max-w-[430px] text-[15px] leading-relaxed text-muted/80">
               A powerful trading terminal with built-in analytics and risk
               tools. Trade crypto, equities, and commodities around the clock,
               with liquidity powered by Hyperliquid.
@@ -310,16 +306,24 @@ export function ExplorePage() {
               ))}
             </div>
 
-            <a
-              href="#"
-              className="mt-8 inline-flex items-center gap-2 text-sm text-white/60 underline underline-offset-4 transition-colors hover:text-white"
-            >
-              Browse All Markets <span aria-hidden>↗</span>
-            </a>
+            <div className="group mt-8 inline-flex items-center gap-2">
+              <a
+                href="#"
+                className="text-sm text-muted/80 underline underline-offset-4 transition-colors group-hover:text-white"
+              >
+                Browse All Markets
+              </a>
+              <span
+                aria-hidden
+                className="text-sm text-muted/80 transition-colors group-hover:text-white"
+              >
+                ↗
+              </span>
+            </div>
           </div>
 
           {/* Right: rotating boxes */}
-          <div className="flex w-full max-w-[680px] flex-col items-center">
+          <div className="flex w-full max-w-[680px] flex-col items-center lg:-mr-[20px]">
             <div
               className="relative w-full"
               style={{ aspectRatio: `${CW} / ${CH}` }}
@@ -366,7 +370,7 @@ export function ExplorePage() {
           {/* Left: payouts table */}
           <div className="w-full max-w-[455px] lg:shrink-0">
             {/* Legend: Figma mein table ke upar center */}
-            <div className="mb-3 flex items-center justify-center gap-6 text-[11px] text-white/60">
+            <div className="mb-3 flex items-center justify-center gap-6 text-[12px] text-muted/80">
               <span className="flex items-center gap-1.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
                 Live Payouts
@@ -380,11 +384,17 @@ export function ExplorePage() {
             {/* Rotating rows: har row absolute hai, slot ke hisaab se move hoti hai */}
             <div className="relative w-full" style={{ height: TABLE_H }}>
               <div
-                className="absolute border border-white/10 bg-white/[0.03]"
-                style={{ left: 34, right: 34, top: 0, height: TABLE_H }}
+                className="absolute border border-white/10 bg-white/[0.02]"
+                style={{
+                  left: 34,
+                  right: 34,
+                  top: 0,
+                  height: TABLE_H,
+                  clipPath: `polygon(0 0, 100% 0, 100% ${SLOT_TOP[1]}px, 0 ${SLOT_TOP[1]}px, 0 ${SLOT_TOP[1] + SLOT_H[1] + SLOT_H[2] + SLOT_H[3]}px, 100% ${SLOT_TOP[1] + SLOT_H[1] + SLOT_H[2] + SLOT_H[3]}px, 100% 100%, 0 100%)`,
+                }}
               />
               <div
-                className="absolute border border-white/10 bg-white/[0.05]"
+                className="absolute border border-white/10 bg-white/[0.03]"
                 style={{ left: 17, right: 17, top: SLOT_TOP[1], height: SLOT_H[1] + SLOT_H[2] + SLOT_H[3] }}
               />
 
@@ -406,10 +416,10 @@ export function ExplorePage() {
                   >
                     {/* active gold bg */}
                     <div
-                      className={`absolute inset-0 border-l-2 border-[#99804A] bg-gradient-to-r from-[#99804A] to-white transition-opacity duration-700 ${isActive ? "opacity-100" : "opacity-0"}`}
+                      className={`absolute inset-0 bg-gradient-to-r from-[#99804A] to-white transition-opacity duration-700 ${isActive ? "opacity-100" : "opacity-0"}`}
                     />
                     <div className="relative flex h-full items-center justify-between px-[41px]">
-                      <span className={`transition-colors duration-700 ${isActive ? "text-white" : "text-white/60"}`}>
+                      <span className={`transition-colors duration-700 ${isActive ? "text-black" : "text-white/60"}`}>
                         {p.address}
                       </span>
                       <span className={`transition-colors duration-700 ${isActive ? "text-green-600" : "text-green-500"}`}>
@@ -424,10 +434,10 @@ export function ExplorePage() {
 
           {/* Right: content */}
           <div className="w-full lg:w-[650px] lg:shrink-0">
-            <h2 className="text-[40px] font-normal leading-[1] tracking-[-0.03em] text-white md:text-[50px]">
+            <h2 className="text-[40px] font-normal leading-[1] tracking-[-0.03em] text-white md:text-[53px]">
               Get Paid On-Chain In Seconds, Without Waiting For Approval
             </h2>
-            <p className="mt-4 max-w-[540px] text-base leading-relaxed text-white/60">
+            <p className="mt-4 max-w-[540px] text-[15px] leading-relaxed text-muted/80">
               Trade, hit your targets, and get rewarded. Smart contracts handle
               the payouts, delivering a faster, transparent experience with no
               manual approvals.

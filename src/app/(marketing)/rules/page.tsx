@@ -1,5 +1,6 @@
-import { RulesPage } from "@/components/sections/RulesPage";
+import RulesBook from "@/components/sections/RulesBook";
+import { PagePlaceholder } from "@/components/ui/page-placeholder";
 
-export default function Page() {
-  return <RulesPage />;
+export default function FaqPage() {
+  return <RulesBook/>;
 }

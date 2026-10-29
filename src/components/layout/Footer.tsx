@@ -55,7 +55,7 @@ const SOCIALS = [
 export function Footer() {
   return (
     <footer
-      className="w-full border-t border-white/10 bg-transparent px-6 lg:px-20"
+      className="w-full border-t border-white/10 bg-[#101010] px-6 lg:px-20"
       style={{ fontSize: "clamp(14px, calc(100vw * 14 / 1440), 24px)" }}
     >
       <div className="flex flex-col gap-12 pt-[4.786em] lg:flex-row lg:items-start lg:gap-0">
@@ -69,7 +69,7 @@ export function Footer() {
             className="h-[2.07em] w-auto"
           />
 
-          <p className="mt-[1.714em] text-[1em] font-normal leading-[1.286] text-white/40">
+          <p className="mt-[1.714em] text-[15px] leading-[1.286] text-muted/80">
             The Next Generation Trading Platform.
             <br /> Built For Ambitious Traders With Transparency,
             <br /> Security, And Long-Term Growth In Mind.
@@ -83,7 +83,7 @@ export function Footer() {
                 aria-label={label}
                 target="_blank"
                 rel="noreferrer"
-                className="flex h-[2.714em] w-[2.714em] items-center justify-center border border-white/10 bg-white/[0.07] text-white/70 transition-all duration-300 ease-out hover:bg-white/15 hover:text-white"
+                className="flex h-[2.714em] w-[2.714em] items-center justify-center border border-white/10 bg-white/[0.07] text-muted/80 transition-all duration-300 ease-out hover:bg-white/15 hover:text-white"
               >
                 <Icon className="h-[1.35em] w-[1.35em]" aria-hidden />
               </a>
@@ -98,14 +98,14 @@ export function Footer() {
               key={col.title}
               className={`flex flex-col gap-[1.714em] lg:shrink-0 ${col.width}`}
             >
-              <span className="text-[0.857em] font-normal leading-none text-white/30">
+              <span className="text-[14px] leading-none text-muted/60">
                 {col.title}
               </span>
               {col.links.map((l) => (
                 <Link
                   key={l.label}
                   href={l.href}
-                  className="whitespace-nowrap text-[1em] font-normal leading-none text-white/80 transition-colors duration-300 hover:text-white"
+                  className="whitespace-nowrap text-[16px] leading-none text-muted/80 transition-colors duration-300 hover:text-white"
                 >
                   {l.label}
                 </Link>
@@ -115,16 +115,14 @@ export function Footer() {
         </div>
 
         {/* Built on Hyperliquid (swap for the real logo asset if you have one) */}
-        <div className="flex items-center gap-[0.5em] lg:ml-auto lg:translate-y-[0.8em] lg:self-end">
-          <span className="text-[0.929em] font-normal leading-none text-white/40">
-            Built on
-          </span>
-          <span className="flex items-start text-[1.143em] font-normal leading-none tracking-[-0.02em] text-white">
-            <span>
-              Hyper<em className="font-serif italic">liquid</em>
-            </span>
-            <sup className="ml-[0.15em] text-[0.4em] leading-none">®</sup>
-          </span>
+        <div className="flex items-center lg:ml-auto lg:translate-y-[0.8em] lg:self-end">
+          <Image
+            src="/images/nav/footer.svg"
+            alt="Built on Hyperliquid"
+            width={170}
+            height={32}
+            className="h-[25px] w-auto"
+          />
         </div>
       </div>
 

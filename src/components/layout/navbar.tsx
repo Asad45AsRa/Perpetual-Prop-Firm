@@ -46,7 +46,7 @@ export function Navbar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="relative flex h-full items-center text-[14px] font-normal leading-none tracking-normal text-white outline-none transition-opacity hover:opacity-80"
+                className="relative flex h-full items-center text-[14px] font-normal leading-none tracking-normal text-white/80 outline-none transition-opacity hover:opacity-80"
               >
                 {item.label}
                 {isActive && (

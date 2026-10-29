@@ -34,7 +34,7 @@ const FAQS = [
     },
 ];
 
-export function RulesPage() {
+export function Faq() {
     const [open, setOpen] = useState<number | null>(0);
 
     return (
@@ -67,7 +67,7 @@ export function RulesPage() {
                 Sits at the bottom of the section so the colour rises from below. */}
             <div
                 aria-hidden
-                className="rules-glow pointer-events-none absolute bottom-0 left-1/2 h-[19.07em] w-[114.29em] -translate-x-1/2 translate-y-[110%] blur-[12.5em]"
+                className="rules-glow pointer-events-none absolute bottom-0 left-1/2 h-[19.07em] w-[114.29em] -translate-x-1/2 translate-y-[45%] blur-[12.5em]"
                 style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #99804A 100%)" }}
             />
 
@@ -110,44 +110,38 @@ export function RulesPage() {
                                             type="button"
                                             aria-expanded={isOpen}
                                             onClick={() => setOpen(isOpen ? null : i)}
-                                            className={`flex w-full items-center justify-between gap-4 pt-[1.39em] text-left outline-none focus:outline-none ${
-                                                isOpen ? "pb-[0.5em]" : "pb-[1.39em]"
-                                            }`}
+                                            className={`flex w-full items-center justify-between gap-4 pt-[1.39em] text-left outline-none focus:outline-none ${isOpen ? "pb-[0.5em]" : "pb-[1.39em]"
+                                                }`}
                                         >
-                                            <span className="text-[1.143em] font-normal leading-[0.86] tracking-[-0.03em] text-white">
+                                            <span className="text-[1.143em] leading-[0.86] tracking-[-0.03em] text-white">
                                                 {item.q}
                                             </span>
 
                                             {/* Plus has a box; minus is only a plain line (no box, no spot) */}
                                             <span
-                                                className={`flex h-[2.4286em] w-[2.4286em] shrink-0 items-center justify-center ${
-                                                    isOpen ? "" : "bg-white/10"
-                                                }`}
+                                                className={`flex h-[2.1em] w-[2.1em] shrink-0 items-center justify-center ${isOpen ? "" : "bg-white/10"
+                                                    }`}
                                             >
                                                 {isOpen ? (
-                                                    <span
-                                                        aria-hidden
-                                                        className="block h-px w-[1.143em] bg-white"
-                                                    />
+                                                    <span aria-hidden className="block h-px w-[0.95em] bg-[#C9AA6B]" />
                                                 ) : (
                                                     <Image
                                                         src="/images/rules/plus.svg"
                                                         alt=""
                                                         width={16}
                                                         height={16}
-                                                        className="h-[1.143em] w-[1.143em] object-contain"
+                                                        className="h-[0.95em] w-[0.95em] object-contain"
                                                     />
                                                 )}
                                             </span>
                                         </button>
 
                                         <div
-                                            className={`grid transition-[grid-template-rows] duration-300 ease-out motion-reduce:transition-none ${
-                                                isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
-                                            }`}
+                                            className={`grid transition-[grid-template-rows] duration-300 ease-out motion-reduce:transition-none ${isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                                                }`}
                                         >
                                             <div className="overflow-hidden">
-                                                <p className="pb-[2em] pr-[4.375em] text-[1.0714em] font-normal leading-[1.3] text-white/50">
+                                                <p className="pb-[2em] pr-[4.375em] text-[1em] font-normal leading-[1.3] text-white/50">
                                                     {item.a}
                                                 </p>
                                             </div>
