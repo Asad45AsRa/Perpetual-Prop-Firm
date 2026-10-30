@@ -81,10 +81,10 @@ export function AffiliateHero() {
         style={{ WebkitMaskImage: glowMask, maskImage: glowMask }}
       >
         <div
-          className="aff-glow absolute left-1/2 top-[270px] h-[229px] w-[825px] -translate-x-1/2 rounded-[50%] blur-[125px]"
+          className="aff-glow absolute left-1/2 top-[270px] h-[229px] w-[825px] -translate-x-1/2 rounded-[50%] blur-[140px]"
           style={{
             background:
-              "linear-gradient(90deg, rgba(255,255,255,0.45) 0%, #99804A 100%)",
+              "linear-gradient(90deg, rgba(255,255,255,0.45) 0%, #928160ff 100%)",
           }}
         />
       </div>
