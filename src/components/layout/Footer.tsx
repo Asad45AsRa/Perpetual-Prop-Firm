@@ -98,14 +98,14 @@ export function Footer() {
               key={col.title}
               className={`flex flex-col gap-[1.714em] lg:shrink-0 ${col.width}`}
             >
-              <span className="text-[14px] leading-none text-muted/60">
+              <span className="text-[12px] leading-none text-muted/60">
                 {col.title}
               </span>
               {col.links.map((l) => (
                 <Link
                   key={l.label}
                   href={l.href}
-                  className="whitespace-nowrap text-[16px] leading-none text-muted/80 transition-colors duration-300 hover:text-white"
+                  className="whitespace-nowrap text-[14px] leading-none text-muted/80 transition-colors duration-300 hover:text-white"
                 >
                   {l.label}
                 </Link>

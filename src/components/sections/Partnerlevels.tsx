@@ -4,6 +4,8 @@ const levels = [
   {
     tag: "AXIS",
     img: "/images/affiliate/Axis.svg",
+    imgH: 121,
+    glowX: 40,
     title: "0–50 Referrals",
     chips: [
       "Commission: 15%",
@@ -15,6 +17,8 @@ const levels = [
   {
     tag: "ONYX",
     img: "/images/affiliate/Onyx.svg",
+    imgH: 122,
+    glowX: 45,
     title: "51–250 Referrals",
     chips: [
       "Commission: 17%",
@@ -26,6 +30,8 @@ const levels = [
   {
     tag: "APEX",
     img: "/images/affiliate/Apex.svg",
+    imgH: 141,
+    glowX: 40,
     title: "251+ Referrals",
     chips: [
       "Commission: 20%",
@@ -38,17 +44,16 @@ const levels = [
 
 export function PartnerLevels() {
   return (
-    /* data-affiliate-page: globals.css body glow band karta hai; bg-[#111] section ko solid rakhta hai */
     <section
       data-affiliate-page
       className="relative w-full bg-[#111111] px-6 pb-[120px] pt-[70px] md:px-20"
     >
       <div className="mx-auto flex max-w-[1280px] flex-col items-center">
-        <h2 className="text-center text-[32px] font-normal leading-none tracking-[-0.02em] text-white md:text-[48px]">
+        <h2 className="text-center text-[32px] font-normal leading-none tracking-[-0.02em] text-white md:text-[52px]">
           Perpeye Partner Levels
         </h2>
 
-        <p className="mt-[30px] max-w-[500px] text-center text-[16px] leading-[20px] text-white/30">
+        <p className="mt-[30px] max-w-[500px] text-center text-[16px] leading-[20px] text-[#8D8D8D]">
           Trade perpetual markets on-chain with transparent rules, reliable
           data, and the tools to track your performance from start to finish.
         </p>
@@ -57,27 +62,43 @@ export function PartnerLevels() {
           {levels.map((l) => (
             <article
               key={l.tag}
-              className="relative flex min-h-[459px] flex-col items-center overflow-hidden border border-[#2B2B2B] bg-[#111111] pb-[27px]"
+              className="relative flex h-[458px] flex-col items-center overflow-hidden border border-[#2B2B2B] bg-[#111111]"
             >
-              {/* Top glow (card ke andar, Figma jaisa) */}
+              {/* 1) Main glow: upar se halki curved light, neeche smooth fade */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-x-0 top-0 h-[300px]"
+                style={{
+                  background: `radial-gradient(ellipse 75% 90% at ${l.glowX}% 0%, rgba(122,111,86,0.72) 0%, rgba(96,87,67,0.45) 45%, rgba(17,17,17,0) 100%)`,
+                  filter: "blur(10px)",
+                  WebkitMaskImage:
+                    "linear-gradient(to bottom, #000 0%, #000 30%, transparent 100%)",
+                  maskImage:
+                    "linear-gradient(to bottom, #000 0%, #000 30%, transparent 100%)",
+                }}
+              />
+
+              {/* 2) Left side ki halki grey band */}
               <div
                 aria-hidden
                 className="pointer-events-none absolute inset-x-0 top-0 h-[260px]"
                 style={{
                   background:
-                    "radial-gradient(ellipse 80% 100% at 50% 0%, rgba(158,148,122,0.45) 0%, rgba(120,108,82,0.22) 45%, rgba(17,17,17,0) 100%)",
+                    "radial-gradient(ellipse 38% 70% at 0% 15%, rgba(175,171,161,0.32) 0%, rgba(17,17,17,0) 100%)",
+                  filter: "blur(10px)",
                 }}
               />
 
               {/* Gem */}
-              <div className="relative flex h-[209px] w-full items-center justify-center">
+              <div className="relative flex h-[209px] w-full shrink-0 items-center justify-center">
                 <Image
                   src={l.img}
                   alt={`${l.tag} level`}
                   width={200}
                   height={200}
                   unoptimized
-                  className="h-[170px] w-auto translate-y-[4px] select-none object-contain [filter:none]"
+                  style={{ height: l.imgH }}
+                  className="w-auto select-none object-contain [filter:none]"
                 />
               </div>
 
@@ -95,7 +116,7 @@ export function PartnerLevels() {
                 {l.title}
               </h3>
 
-              <div className="relative mt-[20px] flex max-w-[355px] flex-wrap justify-center gap-3 px-4">
+              <div className="relative mt-[20px] flex w-full flex-wrap justify-center gap-3 px-4">
                 {l.chips.map((c) => (
                   <span
                     key={c}

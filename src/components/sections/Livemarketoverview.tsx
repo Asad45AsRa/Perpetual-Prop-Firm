@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { FiSearch } from "react-icons/fi";
+import { FiChevronLeft, FiChevronRight, FiSearch } from "react-icons/fi";
 import { cn } from "@/lib/utils";
 
 /* ----------------------------- config ----------------------------- */
@@ -142,7 +142,7 @@ function CoinIcon({ name, symbol }: { name: string; symbol: string }) {
   const [failed, setFailed] = useState(false);
   if (failed) {
     return (
-      <span className="flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full bg-[#2a2a2a] text-[10px] text-white">
+      <span className="flex h-[28px] w-[28px] shrink-0 items-center justify-center rounded-full bg-[#2a2a2a] text-[11px] text-white">
         {symbol.slice(0, 1)}
       </span>
     );
@@ -152,17 +152,20 @@ function CoinIcon({ name, symbol }: { name: string; symbol: string }) {
     <img
       src={`https://app.hyperliquid.xyz/coins/${name.replace(":", "_")}.svg`}
       alt=""
-      width={22}
-      height={22}
+      width={28}
+      height={28}
       loading="lazy"
       onError={() => setFailed(true)}
-      className="h-[22px] w-[22px] shrink-0 rounded-full"
+      className="h-[28px] w-[28px] shrink-0 rounded-full"
     />
   );
 }
 
+// Figma column positions: Market | Price | 24H | 24H Volume | Market OI | Platform Long / Short
 const GRID =
-  "grid grid-cols-[minmax(150px,341fr)_minmax(90px,133fr)_minmax(70px,103fr)_minmax(80px,136fr)_minmax(100px,193fr)_minmax(110px,126fr)] items-center";
+  "grid grid-cols-[minmax(150px,341fr)_minmax(90px,133fr)_minmax(70px,103fr)_minmax(80px,136fr)_minmax(100px,193fr)_minmax(121px,100fr)] items-center";
+
+const pad2 = (n: number) => String(n).padStart(2, "0");
 
 /* ------------------------------ main ------------------------------ */
 
@@ -228,11 +231,29 @@ export function LiveMarketOverview({ longShort }: Props) {
       data-affiliate-page
       className="relative w-full overflow-hidden bg-[#111111] px-6 pb-[120px] pt-[80px] md:px-20"
     >
+      {/* Left / right side glows (Figma jaisa) — data-affiliate-page body glows band karta hai,
+          isliye yahan section ke andar apne glows hain */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background: [
+            // left glow, section ke neeche tak jaye (boundary par continue)
+            "radial-gradient(ellipse 30% 45% at 0% 100%, rgba(176,171,161,0.20) 0%, rgba(120,112,98,0.08) 50%, transparent 100%)",
+            // right glow, upar
+            "radial-gradient(ellipse 30% 40% at 100% 22%, rgba(176,171,161,0.18) 0%, rgba(120,112,98,0.07) 50%, transparent 100%)",
+          ].join(", "),
+          // sirf TOP par fade, bottom par koi mask nahi
+          WebkitMaskImage: "linear-gradient(to bottom, transparent 0, #000 90px)",
+          maskImage: "linear-gradient(to bottom, transparent 0, #000 90px)",
+        }}
+      />
+
       <div className="relative z-10 flex flex-col items-center text-center">
         <h2 className="text-[40px] font-normal leading-[1] tracking-[-0.02em] text-white md:text-[48px]">
           Live Market Overview
         </h2>
-        <p className="mt-6 max-w-[300px] text-[14px] leading-[17px] text-[#8C887F]">
+        <p className="mt-6 max-w-[390px] text-[16px] leading-[21px] text-muted/80">
           Track real-time prices, market movements, and trading activity—all in
           one place.
         </p>
@@ -240,8 +261,8 @@ export function LiveMarketOverview({ longShort }: Props) {
 
       <div className="relative z-10 mt-[40px] w-full border border-white/10 bg-white/[0.04] backdrop-blur-[20px]">
         {/* toolbar */}
-        <div className="flex flex-col gap-3 border-b border-white/[0.06] bg-white/[0.03] px-[14px] py-[14px] md:h-[60px] md:flex-row md:items-center md:justify-between md:py-0">
-          <div className="flex flex-wrap gap-3">
+        <div className="flex flex-col gap-3 border-b border-white/[0.06] bg-white/[0.03] px-[17px] py-[16px] md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-wrap gap-[15px]">
             {TABS.map((t) => {
               const active = t === tab;
               return (
@@ -253,7 +274,7 @@ export function LiveMarketOverview({ longShort }: Props) {
                     setPage(1);
                   }}
                   className={cn(
-                    "h-[30px] min-w-[56px] px-4 text-[10px] leading-none transition-colors",
+                    "h-[40px] min-w-[68px] px-7 text-[12px] leading-none transition-colors",
                     active
                       ? "text-[#1c1c1c]"
                       : "border border-white/10 bg-white/[0.02] text-[#A8A39A] hover:text-white"
@@ -270,8 +291,8 @@ export function LiveMarketOverview({ longShort }: Props) {
             })}
           </div>
 
-          <label className="flex h-[30px] w-full items-center gap-2 border border-white/10 bg-white/[0.02] px-3 md:w-[207px]">
-            <FiSearch className="h-[12px] w-[12px] shrink-0 text-[#8C887F]" />
+          <label className="flex h-[40px] w-full items-center gap-2 border border-white/10 bg-white/[0.02] px-[14px] md:w-[256px]">
+            <FiSearch className="h-[14px] w-[14px] shrink-0 text-[#8C887F]" />
             <input
               value={query}
               onChange={(e) => {
@@ -279,19 +300,19 @@ export function LiveMarketOverview({ longShort }: Props) {
                 setPage(1);
               }}
               placeholder="Search symbol or name"
-              className="w-full bg-transparent text-[10px] text-white outline-none placeholder:text-[#6f6b63]"
+              className="w-full bg-transparent text-[12px] text-white outline-none placeholder:text-[#6f6b63]"
             />
           </label>
         </div>
 
         {/* table (mobile par horizontal scroll) */}
         <div className="overflow-x-auto">
-          <div className="min-w-[860px] px-[14px]">
+          <div className="min-w-[860px] px-[17px]">
             {/* head */}
             <div
               className={cn(
                 GRID,
-                "h-[46px] border-b border-white/[0.06] text-[9px] uppercase leading-none text-[#6f6b63]"
+                "h-[57px] whitespace-nowrap border-b border-white/[0.06] text-[9px] uppercase leading-none text-[#6f6b63]"
               )}
             >
               <span>Market</span>
@@ -299,75 +320,75 @@ export function LiveMarketOverview({ longShort }: Props) {
               <span>24H</span>
               <span>24H Volume</span>
               <span>Market Open Interest</span>
-              <span className="text-right">Platform Long / Short</span>
+              <span>Platform Long / Short</span>
             </div>
 
             {/* rows */}
             {markets === null
               ? Array.from({ length: PAGE_SIZE }).map((_, i) => (
-                  <div
-                    key={i}
-                    className={cn(GRID, "h-[44px] border-b border-white/[0.06]")}
-                  >
-                    <span className="h-[22px] w-[120px] animate-pulse bg-white/[0.05]" />
-                    <span className="h-[10px] w-[70px] animate-pulse bg-white/[0.05]" />
-                    <span className="h-[10px] w-[40px] animate-pulse bg-white/[0.05]" />
-                    <span className="h-[10px] w-[40px] animate-pulse bg-white/[0.05]" />
-                    <span className="h-[10px] w-[40px] animate-pulse bg-white/[0.05]" />
-                    <span className="ml-auto h-[10px] w-[60px] animate-pulse bg-white/[0.05]" />
-                  </div>
-                ))
+                <div
+                  key={i}
+                  className={cn(GRID, "h-[55px] border-b border-white/[0.06]")}
+                >
+                  <span className="h-[28px] w-[120px] animate-pulse bg-white/[0.05]" />
+                  <span className="h-[10px] w-[70px] animate-pulse bg-white/[0.05]" />
+                  <span className="h-[10px] w-[40px] animate-pulse bg-white/[0.05]" />
+                  <span className="h-[10px] w-[40px] animate-pulse bg-white/[0.05]" />
+                  <span className="h-[10px] w-[40px] animate-pulse bg-white/[0.05]" />
+                  <span className="h-[10px] w-[60px] animate-pulse bg-white/[0.05]" />
+                </div>
+              ))
               : rows.map((m) => {
-                  const ls = longShort?.[m.symbol];
-                  return (
-                    <div
-                      key={m.key}
-                      className={cn(
-                        GRID,
-                        "h-[44px] border-b border-white/[0.06] text-[12px] leading-none text-[#A8A39A]"
-                      )}
-                    >
-                      <div className="flex items-center gap-[7px]">
-                        <CoinIcon name={m.iconName} symbol={m.symbol} />
-                        <div className="flex flex-col gap-[3px]">
-                          <span className="flex items-center gap-[5px] text-[12px] text-white">
-                            {m.symbol}
-                            <span className="bg-white/10 px-[4px] py-[2px] text-[8px] leading-none text-white/80">
-                              {m.leverage}×
-                            </span>
+                const ls = longShort?.[m.symbol];
+                return (
+                  <div
+                    key={m.key}
+                    className={cn(
+                      GRID,
+                      "h-[55px] border-b border-white/[0.06] text-[14px] leading-none text-muted/80"
+                    )}
+                  >
+                    <div className="flex items-center gap-[7px]">
+                      <CoinIcon name={m.iconName} symbol={m.symbol} />
+                      <div className="flex flex-col gap-[4px]">
+                        <span className="flex items-center gap-[7px] text-[13px] text-white">
+                          {m.symbol}
+                          <span className="bg-white/10 px-[4px] py-[2px] text-[8px] leading-none text-white/80">
+                            {m.leverage}×
                           </span>
-                          <span className="text-[10px] text-[#6f6b63]">
-                            Perpetual USD
-                          </span>
-                        </div>
+                        </span>
+                        <span className="text-[12px] text-[#6f6b63]">
+                          Perpetual USD
+                        </span>
                       </div>
-
-                      <span>{formatPrice(m.price)}</span>
-
-                      <span
-                        className={
-                          m.change24h < 0 ? "text-[#ef4444]" : "text-[#22c55e]"
-                        }
-                      >
-                        {formatChange(m.change24h)}
-                      </span>
-
-                      <span>{formatCompact(m.volume24h)}</span>
-                      <span>{formatCompact(m.openInterest)}</span>
-
-                      <span className="text-right">
-                        {ls ? (
-                          <>
-                            <span className="text-[#22c55e]">{Math.round(ls.long)}%</span>{" "}
-                            <span className="text-[#ef4444]">{Math.round(ls.short)}%</span>
-                          </>
-                        ) : (
-                          "—"
-                        )}
-                      </span>
                     </div>
-                  );
-                })}
+
+                    <span>{formatPrice(m.price)}</span>
+
+                    <span
+                      className={
+                        m.change24h < 0 ? "text-[#ef4444]" : "text-[#22c55e]"
+                      }
+                    >
+                      {formatChange(m.change24h)}
+                    </span>
+
+                    <span>{formatCompact(m.volume24h)}</span>
+                    <span>{formatCompact(m.openInterest)}</span>
+
+                    <span>
+                      {ls ? (
+                        <>
+                          <span className="text-[#22c55e]">{Math.round(ls.long)}%</span>{" "}
+                          <span className="text-[#ef4444]">{Math.round(ls.short)}%</span>
+                        </>
+                      ) : (
+                        "—"
+                      )}
+                    </span>
+                  </div>
+                );
+              })}
 
             {markets !== null && rows.length === 0 && (
               <div className="py-10 text-center text-[12px] text-[#6f6b63]">
@@ -378,34 +399,56 @@ export function LiveMarketOverview({ longShort }: Props) {
         </div>
 
         {/* footer */}
-        <div className="flex flex-col gap-4 px-[14px] py-[18px] md:flex-row md:items-end md:justify-between">
+        <div className="flex flex-col gap-4 px-[17px] py-[20px] md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="text-[10px] leading-none text-[#A8A39A]">
+            <p className="text-[11px] leading-none text-[#A8A39A]">
               Showing {rows.length} of {filtered.length} markets
             </p>
-            <p className="mt-3 max-w-[330px] text-[9px] leading-[13px] text-[#6f6b63]">
+            <p className="mt-[10px] max-w-[400px] text-[11px] leading-[16px] text-muted/80">
               Open interest reflects the underlying market · Prices use
               Hyperliquid market data · Long/short reflects our book, with “—”
               shown when we have no position.
             </p>
           </div>
 
-          <div className="flex gap-[6px]">
+          <div className="flex flex-wrap items-center gap-[7px]">
+            {/* prev */}
+            <button
+              type="button"
+              aria-label="Previous page"
+              disabled={current === 1}
+              onClick={() => setPage(Math.max(1, current - 1))}
+              className="flex h-[34px] w-[34px] items-center justify-center border border-white/10 bg-white/[0.04] text-[#A8A39A] transition-colors hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:text-[#A8A39A]"
+            >
+              <FiChevronLeft className="h-[14px] w-[14px]" />
+            </button>
+
             {pages.map((p) => (
               <button
                 key={p}
                 type="button"
                 onClick={() => setPage(p)}
                 className={cn(
-                  "h-[28px] w-[28px] text-[10px] leading-none",
+                  "h-[34px] w-[34px] text-[10px] leading-none",
                   p === current
                     ? "bg-[#99804A] text-[#1c1c1c]"
                     : "border border-white/10 bg-white/[0.04] text-[#A8A39A] hover:text-white"
                 )}
               >
-                {p}
+                {pad2(p)}
               </button>
             ))}
+
+            {/* next */}
+            <button
+              type="button"
+              aria-label="Next page"
+              disabled={current === totalPages}
+              onClick={() => setPage(Math.min(totalPages, current + 1))}
+              className="flex h-[34px] w-[34px] items-center justify-center border border-white/10 bg-white/[0.04] text-[#A8A39A] transition-colors hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:text-[#A8A39A]"
+            >
+              <FiChevronRight className="h-[14px] w-[14px]" />
+            </button>
           </div>
         </div>
       </div>

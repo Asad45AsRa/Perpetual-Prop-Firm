@@ -1357,6 +1357,7 @@ export function RulesBook() {
   const [query, setQuery] = useState("");
   const navRef = useRef<HTMLDivElement>(null);
   const lockRef = useRef(false);
+  const [today, setToday] = useState("");
 
   const q = query.trim().toLowerCase();
 
@@ -1433,6 +1434,18 @@ export function RulesBook() {
     }
   }, [activeId]);
 
+  function formatRuleDate(d: Date) {
+  const day = String(d.getUTCDate()).padStart(2, "0");
+  const mon = d
+    .toLocaleString("en-US", { month: "short", timeZone: "UTC" })
+    .toUpperCase();
+  return `${day} - ${mon} - ${d.getUTCFullYear()}`;
+}
+
+useEffect(() => {
+  setToday(formatRuleDate(new Date()));
+}, []);
+
   return (
     <section className="relative w-full  px-6 pb-[120px] pt-[140px] md:px-20">
       {/* soft gold glow (design ke mutabiq) */}
@@ -1460,7 +1473,7 @@ export function RulesBook() {
             <span className="h-[5px] w-[5px] rounded-full bg-gold-accent" />
             PE-1.1
           </span>
-          <span className="px-4 uppercase">24 - OCT - 2026</span>
+          <span className="px-4 uppercase">{today || "\u00A0"}</span>
         </div>
       </div>
 

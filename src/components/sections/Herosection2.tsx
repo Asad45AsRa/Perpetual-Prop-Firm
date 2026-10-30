@@ -78,7 +78,7 @@ function StatValue({
 export function HeroSection2() {
   return (
     <section
-      className="relative flex min-h-screen w-full flex-col items-center justify-start overflow-x-clip px-6 pb-16 pt-0 mt-0 md:pt-[19.29em] lg:px-20 lg:pb-[6.857em]"
+      className="relative flex min-h-screen w-full flex-col items-center justify-start overflow-x-clip px-6 pb-1 mb-0 pt-0 mt-0 md:pt-[19.29em] lg:px-20 lg:pb-[6.857em]"
       style={{ fontSize: "clamp(14px, calc(100vw * 14 / 1440), 24px)" }}
     >
       <style>{`
@@ -114,9 +114,9 @@ export function HeroSection2() {
         {/* Glow layer 1: Figma gradient (#FFFFFF -> #99804A), brighter + less blur */}
         <div
           aria-hidden
-          className="hero-glow pointer-events-none absolute left-1/2 top-[42%] z-0 h-[21em] w-[114.29em] -translate-x-1/2 -translate-y-1/2 blur-[9em]"
+          className="hero-glow pointer-events-none absolute left-1/2 top-[42%] z-0 h-[30em] w-[114.29em] -translate-x-1/2 -translate-y-1/2 blur-[9em]"
           style={{
-            background: "linear-gradient(180deg, #FFFFFF 0%, #99804A 100%)",
+            background: "linear-gradient(180deg, #FFFFFF 0%, #927f56ff 100%)",
             opacity: 0.95,
           }}
         />

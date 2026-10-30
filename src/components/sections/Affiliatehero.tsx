@@ -35,28 +35,8 @@ function GoldCheck() {
   );
 }
 
-const animationCss = `
-@keyframes aff-reveal {
-  from { opacity: 0; filter: blur(10px); transform: scale(0.98); }
-  to   { opacity: 1; filter: blur(0);    transform: scale(1); }
-}
-@keyframes aff-glow-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-.aff-reveal {
-  animation: aff-reveal 1.1s cubic-bezier(0.22, 0.61, 0.36, 1) both;
-}
-.aff-glow {
-  animation: aff-glow-in 2s ease-out both;
-}
-@media (prefers-reduced-motion: reduce) {
-  .aff-reveal, .aff-glow { animation: none; }
-}
-`;
-
 const glowMask =
-  "linear-gradient(180deg, #000 0%, #000 45%, transparent 80%)";
+  "linear-gradient(180deg, #000 0%, #000 78%, transparent 100%)"
 
 export function AffiliateHero() {
   return (
@@ -66,14 +46,12 @@ export function AffiliateHero() {
     */
     <section
       data-affiliate-page
-      className="relative flex w-full flex-col items-center overflow-hidden bg-[#111111] px-6 pb-[120px] pt-[184px] text-center md:min-h-[720px] md:px-20"
+      className="relative flex w-full flex-col items-center overflow-hidden bg-[#111111] px-6 pb-[120px] pt-[184px] text-center md:min-h-[720px] md:px-20 "
     >
-      <style>{animationCss}</style>
-
       {/*
         Figma glow: Ellipse 825 x 229, Layer blur 250 (~125px in CSS),
         Linear gradient #FFFFFF (alpha) -> #99804A.
-        Mask glow ko section ke end se pehle hi zero kar deta hai (seam khatam).
+        
       */}
       <div
         aria-hidden
@@ -81,45 +59,36 @@ export function AffiliateHero() {
         style={{ WebkitMaskImage: glowMask, maskImage: glowMask }}
       >
         <div
-          className="aff-glow absolute left-1/2 top-[270px] h-[229px] w-[825px] -translate-x-1/2 rounded-[50%] blur-[140px]"
+          className="absolute left-1/2 top-[270px] h-[235px] w-[825px] -translate-x-1/2 rounded-[50%] blur-[125px]"
           style={{
             background:
-              "linear-gradient(90deg, rgba(255,255,255,0.45) 0%, #928160ff 100%)",
+              "linear-gradient(90deg, rgba(255,255,255,0.8) 0%, #99804A 100%)",
           }}
         />
       </div>
 
-      {/* Bottom fade: eased, taake section ke end par koi edge na bache */}
+      {/* Bottom fade:  */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 -bottom-px h-[400px]"
+        className="pointer-events-none absolute inset-x-0 -bottom-px h-[160px]"
         style={{
           background:
-            "linear-gradient(180deg, rgba(17,17,17,0) 0%, rgba(17,17,17,0.2) 25%, rgba(17,17,17,0.55) 50%, rgba(17,17,17,0.85) 75%, #111111 100%)",
+            "linear-gradient(180deg, rgba(17,17,17,0) 0%, rgba(17,17,17,0.15) 30%, rgba(17,17,17,0.5) 60%, rgba(17,17,17,0.85) 85%, #111111 100%)",
         }}
       />
 
       <div className="relative z-10 flex flex-col items-center">
-        <h1
-          className="aff-reveal max-w-[520px] text-[40px]  leading-[1]   md:max-w-[560px] md:text-[60px]"
-          style={{ animationDelay: "0.1s" }}
-        >
+        <h1 className="max-w-[520px] text-[40px]  leading-[1]   md:max-w-[560px] md:text-[60px]">
           Turn Your Marketing Skills Into Income
         </h1>
 
-        <p
-          className="aff-reveal mt-6 max-w-[510px] text-[15px]  text-white/70"
-          style={{ animationDelay: "0.35s" }}
-        >
+        <p className="mt-6 max-w-[510px] text-[15px]  text-white/70">
           Earn up to 20% commissions while unlocking exclusive perks like funded
           challenges, discount codes, and giveaways to elevate your trading
           journey!
         </p>
 
-        <div
-          className="aff-reveal mt-[30px] flex gap-[14px]"
-          style={{ animationDelay: "0.6s" }}
-        >
+        <div className="mt-[30px] flex gap-[14px]">
           <Link
             href=''
             className="inline-flex h-[41px] items-center bg-white px-7 text-[14px] text-ink"
@@ -134,13 +103,12 @@ export function AffiliateHero() {
           </Link>
         </div>
 
-        {/* Pehle 2 badges ek row me, 3rd neeche center me */}
+        {/* Pe*/}
         <ul className="mt-[47px] flex max-w-[640px] flex-wrap justify-center gap-[14px]">
-          {badges.map((text, i) => (
+          {badges.map((text) => (
             <li
               key={text}
-              className="aff-reveal inline-flex h-[34px] items-center gap-3 border border-white/10 bg-white/[0.02] px-4 text-[14px] leading-none text-[#A8A39A]"
-              style={{ animationDelay: `${0.85 + i * 0.15}s` }}
+              className="inline-flex h-[34px] items-center gap-3 border border-white/10 bg-white/[0.02] px-4 text-[14px] leading-none text-[#A8A39A]"
             >
               <GoldCheck />
               {text}

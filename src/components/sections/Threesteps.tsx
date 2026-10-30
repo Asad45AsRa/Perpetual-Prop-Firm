@@ -80,12 +80,13 @@ function StepOneVisual() {
     return (
         <div className="relative mx-auto h-full w-full max-w-[320px]">
 
-            <div className="border-b border-white/15 bg-white/[0.04] p-[9px] pb-[8px]">
+            {/* wrapper: pehle bg-white/[0.04], ab darker + subtle gradient */}
+            <div className="border-b  border-white/20 border-l border-l bg-gradient-to-b from-white/[0.02] to-white/[0.01] p-[9px] pb-[8px]">
                 <div className="space-y-[4px]">
                     {ACCOUNTS.map((label) => (
                         <div
                             key={label}
-                            className="flex h-[56px] items-center gap-2 border-l border-[#99804A]/40 bg-white/[0.04] pl-2.5"
+                            className="flex h-[56px] items-center gap-2 border-l-2 border-[#99804A]/40 bg-white/[0.025] pl-2.5"
                         >
                             <span className="flex h-10 w-10 shrink-0 items-center justify-center bg-[#99804A]/[0.06]">
                                 <Image src={FLAME_SRC} alt="" width={28} height={28} className="h-7 w-7" />
@@ -94,7 +95,7 @@ function StepOneVisual() {
                                 <span className="block text-[13px] text-white/50">
                                     {label}
                                 </span>
-                                <span className="mt-1.5 block text-[8px] uppercase  text-white/40">
+                                <span className="mt-1.5 block text-[8px] uppercase text-white/40">
                                     Challenge phase
                                 </span>
                             </span>
@@ -103,7 +104,7 @@ function StepOneVisual() {
                 </div>
             </div>
 
-            {/* cursor (cursor.svg) */}
+            {/* cursor */}
             <Image
                 src={CURSOR_SRC}
                 alt=""

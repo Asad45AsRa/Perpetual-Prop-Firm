@@ -92,13 +92,13 @@ function tileColor(change: number) {
   const [from, to] =
     change < 0
       ? [
-          [74, 21, 25],
-          [179, 36, 47],
-        ]
+        [74, 21, 25],
+        [179, 36, 47],
+      ]
       : [
-          [23, 56, 30],
-          [67, 176, 92],
-        ];
+        [23, 56, 30],
+        [67, 176, 92],
+      ];
   const c = from.map((f, i) => Math.round(f + (to[i] - f) * e));
   return `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
 }
@@ -274,10 +274,17 @@ export function MarketHeatmap() {
       {/* halka glow: closest-side => edges par bilkul transparent, koi hard line nahi */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-[200px] bottom-[40px] h-[420px] w-[620px]"
+        className="pointer-events-none absolute inset-0"
         style={{
-          background:
-            "radial-gradient(closest-side, rgba(255,255,255,0.06) 0%, transparent 100%)",
+          background: [
+            // left glow, section ke top se shuru (Live ke left glow ka continuation)
+            "radial-gradient(ellipse 30% 45% at 0% 0%, rgba(176,171,161,0.20) 0%, rgba(120,112,98,0.08) 50%, transparent 100%)",
+            // right glow, neeche
+            "radial-gradient(ellipse 30% 45% at 100% 82%, rgba(176,171,161,0.20) 0%, rgba(120,112,98,0.08) 50%, transparent 100%)",
+          ].join(", "),
+          // sirf BOTTOM par fade, top par koi mask nahi
+          WebkitMaskImage: "linear-gradient(to bottom, #000 calc(100% - 90px), transparent 100%)",
+          maskImage: "linear-gradient(to bottom, #000 calc(100% - 90px), transparent 100%)",
         }}
       />
 
@@ -288,7 +295,7 @@ export function MarketHeatmap() {
             <h2 className="text-[40px] font-normal leading-[1] tracking-[-0.02em] text-white md:text-[48px]">
               Market Heatmap
             </h2>
-            <p className="mt-6 max-w-[460px] text-[15px] leading-[21px] text-[#8C887F]">
+            <p className="mt-6 max-w-[460px] text-[16px] leading-[21px] text-muted/90">
               Each tile is sized by 24-hour trading volume and colored by its
               price change over the same period. Hover over a tile to explore
               the details.

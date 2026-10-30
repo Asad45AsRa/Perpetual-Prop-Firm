@@ -3,6 +3,7 @@ import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { FaDiscord } from "react-icons/fa6";
+import { Glow } from "./Glow";
 
 const stats = [
   { value: "$680.1K", label: "Payout reserve" },
@@ -27,6 +28,7 @@ export function Hero() {
         unoptimized
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 h-[670px] w-full select-none object-cover object-right [mask-image:linear-gradient(to_bottom,#000_40%,transparent_100%),linear-gradient(to_right,transparent_0%,#000_35%,#000_100%)] [mask-composite:intersect] [-webkit-mask-composite:source-in]" />
+        
 
       {/* GIF: bilkul plain, koi CSS nahi */}
       <Image

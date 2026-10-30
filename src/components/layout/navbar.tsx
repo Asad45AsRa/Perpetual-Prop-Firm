@@ -103,7 +103,7 @@ export function Navbar() {
                     window.history.pushState(null, "", "/");
                   }
                 }}
-                className="relative flex h-full items-center text-[14px] font-[40px] leading-none tracking-normal text-white/80 outline-none transition-opacity hover:opacity-80"
+                className="relative flex h-full items-center text-[14px] font-[40px] leading-none tracking-normal text-white/70 outline-none transition-opacity hover:opacity-80"
               >
                 {item.label}
                 {isActive && (
