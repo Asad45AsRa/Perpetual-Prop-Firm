@@ -48,7 +48,7 @@ export function PartnerLevels() {
           Perpeye Partner Levels
         </h2>
 
-        <p className="mt-[30px] max-w-[500px] text-center text-[15px] leading-[20px] text-[#8C8C8C]">
+        <p className="mt-[30px] max-w-[500px] text-center text-[16px] leading-[20px] text-white/30">
           Trade perpetual markets on-chain with transparent rules, reliable
           data, and the tools to track your performance from start to finish.
         </p>
@@ -62,10 +62,10 @@ export function PartnerLevels() {
               {/* Top glow (card ke andar, Figma jaisa) */}
               <div
                 aria-hidden
-                className="pointer-events-none absolute inset-x-0 top-0 h-[244px]"
+                className="pointer-events-none absolute inset-x-0 top-0 h-[260px]"
                 style={{
                   background:
-                    "radial-gradient(ellipse 85% 100% at 50% 0%, rgba(158,148,122,0.55) 0%, rgba(120,108,82,0.30) 42%, rgba(17,17,17,0) 100%)",
+                    "radial-gradient(ellipse 80% 100% at 50% 0%, rgba(158,148,122,0.45) 0%, rgba(120,108,82,0.22) 45%, rgba(17,17,17,0) 100%)",
                 }}
               />
 
@@ -77,7 +77,7 @@ export function PartnerLevels() {
                   width={200}
                   height={200}
                   unoptimized
-                  className="h-[170px] w-auto translate-y-[4px] select-none object-contain"
+                  className="h-[170px] w-auto translate-y-[4px] select-none object-contain [filter:none]"
                 />
               </div>
 

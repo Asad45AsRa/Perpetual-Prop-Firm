@@ -55,7 +55,7 @@ const SOCIALS = [
 export function Footer() {
   return (
     <footer
-      className="w-full border-t border-white/10 bg-[#101010] px-6 lg:px-20"
+      className="w-full border-t border-white/10 bg-[#101010] px-6 lg:px-20 pt-0 mt-0"
       style={{ fontSize: "clamp(14px, calc(100vw * 14 / 1440), 24px)" }}
     >
       <div className="flex flex-col gap-12 pt-[4.786em] lg:flex-row lg:items-start lg:gap-0">
@@ -69,7 +69,7 @@ export function Footer() {
             className="h-[2.07em] w-auto"
           />
 
-          <p className="mt-[1.714em] text-[15px] leading-[1.286] text-muted/80">
+          <p className="mt-[1.714em] text-[14px] leading-[1.286] text-muted/80">
             The Next Generation Trading Platform.
             <br /> Built For Ambitious Traders With Transparency,
             <br /> Security, And Long-Term Growth In Mind.

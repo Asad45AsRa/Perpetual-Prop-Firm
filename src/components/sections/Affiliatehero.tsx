@@ -55,6 +55,9 @@ const animationCss = `
 }
 `;
 
+const glowMask =
+  "linear-gradient(180deg, #000 0%, #000 45%, transparent 80%)";
+
 export function AffiliateHero() {
   return (
     /*
@@ -70,27 +73,42 @@ export function AffiliateHero() {
       {/*
         Figma glow: Ellipse 825 x 229, Layer blur 250 (~125px in CSS),
         Linear gradient #FFFFFF (alpha) -> #99804A.
-        Agar white side zyada/kam lage to 0.45 badlo.
+        Mask glow ko section ke end se pehle hi zero kar deta hai (seam khatam).
       */}
       <div
         aria-hidden
-        className="aff-glow pointer-events-none absolute left-1/2 top-[270px] h-[229px] w-[825px] -translate-x-1/2 rounded-[50%] blur-[125px]"
+        className="pointer-events-none absolute inset-0"
+        style={{ WebkitMaskImage: glowMask, maskImage: glowMask }}
+      >
+        <div
+          className="aff-glow absolute left-1/2 top-[270px] h-[229px] w-[825px] -translate-x-1/2 rounded-[50%] blur-[125px]"
+          style={{
+            background:
+              "linear-gradient(90deg, rgba(255,255,255,0.45) 0%, #99804A 100%)",
+          }}
+        />
+      </div>
+
+      {/* Bottom fade: eased, taake section ke end par koi edge na bache */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 -bottom-px h-[400px]"
         style={{
           background:
-            "linear-gradient(90deg, rgba(255,255,255,0.45) 0%, #99804A 100%)",
+            "linear-gradient(180deg, rgba(17,17,17,0) 0%, rgba(17,17,17,0.2) 25%, rgba(17,17,17,0.55) 50%, rgba(17,17,17,0.85) 75%, #111111 100%)",
         }}
       />
 
       <div className="relative z-10 flex flex-col items-center">
         <h1
-          className="aff-reveal max-w-[520px] text-[40px] font-normal leading-[1] tracking-[-0.02em] text-white md:max-w-[560px] md:text-[60px]"
+          className="aff-reveal max-w-[520px] text-[40px]  leading-[1]   md:max-w-[560px] md:text-[60px]"
           style={{ animationDelay: "0.1s" }}
         >
           Turn Your Marketing Skills Into Income
         </h1>
 
         <p
-          className="aff-reveal mt-6 max-w-[510px] text-[15px] leading-[20px] text-[#B0ABA1]"
+          className="aff-reveal mt-6 max-w-[510px] text-[15px]  text-white/70"
           style={{ animationDelay: "0.35s" }}
         >
           Earn up to 20% commissions while unlocking exclusive perks like funded

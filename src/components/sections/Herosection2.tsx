@@ -61,7 +61,7 @@ function StatValue({
 
   return (
     <span
-      className="relative inline-block text-[1.714em] font-normal leading-none text-white transition-transform duration-300 ease-out group-hover:scale-110"
+      className="relative inline-block text-[1.714em] font-normal leading-none text-white transition-transform duration-300 ease-out group-hover:scale-110 mb-0 pb-0"
       aria-label={final}
     >
       {/* invisible final value reserves the width so nothing jumps while counting */}
@@ -78,7 +78,7 @@ function StatValue({
 export function HeroSection2() {
   return (
     <section
-      className="relative flex min-h-screen w-full flex-col items-center justify-start overflow-x-clip px-6 pb-16 pt-32 md:pt-[19.29em] lg:px-20 lg:pb-[6.857em]"
+      className="relative flex min-h-screen w-full flex-col items-center justify-start overflow-x-clip px-6 pb-16 pt-0 mt-0 md:pt-[19.29em] lg:px-20 lg:pb-[6.857em]"
       style={{ fontSize: "clamp(14px, calc(100vw * 14 / 1440), 24px)" }}
     >
       <style>{`
@@ -122,17 +122,17 @@ export function HeroSection2() {
         />
         {/* Glow layer 2: soft warm wash so edges fade to dark like Figma */}
         <div
-        aria-hidden
-        className="hero-glow pointer-events-none absolute inset-x-0 top-[48%] z-0 h-[45em]"
-        style={{
-          background:
-            "radial-gradient(ellipse 70% 70% at 50% 0%, rgba(153,128,74,0.38) 0%, rgba(160, 142, 103, 0.2) 40%, rgba(131, 116, 85, 0.07) 75%, transparent 100%)",
-        }}
-      />
+          aria-hidden
+          className="hero-glow pointer-events-none absolute -inset-x-[10em] top-[48%] z-0 h-[48em]"
+          style={{
+            background:
+              "radial-gradient(ellipse 50% 100% at 50% 0%, rgba(163, 151, 126, 0.38) 0%, rgba(175, 167, 148, 0.2) 35%, rgba(131,116,85,0.06) 65%, transparent 90%)",
+          }}
+        />
 
-        <div className="relative z-10 flex w-full flex-col items-center tracking-normal">
+        <div className="relative z-10 flex w-full flex-col items-center ">
           <h1
-            className="hero-in w-full text-[3em] font-normal leading-[0.86] tracking-[-0.03em] text-white md:text-[4.5em] lg:text-[6.108em]"
+            className="hero-in w-full text-[3em]  leading-[0.86] text-white md:text-[4.5em] lg:text-[6.108em]"
             style={{ "--d": "0.1s" } as React.CSSProperties}
           >
             <span className="md:block">Trade Perpetual Markets. </span>
@@ -140,7 +140,7 @@ export function HeroSection2() {
           </h1>
 
           <p
-            className="hero-in mt-[1.5em] max-w-[62em] text-[15px] font-normal leading-[1.5] text-white/70"
+            className="hero-in mt-[1.5em] max-w-[62em] text-[16px] text-white/70"
             style={{ "--d": "0.35s" } as React.CSSProperties}
           >
             <span className="md:block">

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
-const FLAME_SRC = "/images/checkout/check.png"; // flame icon
+const FLAME_SRC = "/images/checkout/check.svg"; // flame icon
 const COIN_SRC = "/images/checkout/dollers.png";
 const CURSOR_SRC = "/images/checkout/cursor.svg";
 const FUNDED_ICON_SRC = "/images/checkout/Vector.svg";
@@ -91,10 +91,10 @@ function StepOneVisual() {
                                 <Image src={FLAME_SRC} alt="" width={28} height={28} className="h-7 w-7" />
                             </span>
                             <span className="text-left">
-                                <span className="block text-[12px] leading-none tracking-[-0.01em] text-white/60">
+                                <span className="block text-[13px] text-white/50">
                                     {label}
                                 </span>
-                                <span className="mt-1.5 block text-[7px] uppercase leading-none tracking-wide text-white/40">
+                                <span className="mt-1.5 block text-[8px] uppercase  text-white/40">
                                     Challenge phase
                                 </span>
                             </span>
@@ -248,7 +248,7 @@ function StepThreeVisual() {
             />
 
             {/* Funded badge (Vector.svg) */}
-            <span className="absolute left-1/2 top-[30px] ml-[52px] flex h-[28px] items-center gap-1.5 border border-white/10 bg-white/[0.08] px-2.5 text-[12px] leading-none text-muted/80 shadow-[0_4px_14px_rgba(0,0,0,0.35)]">
+            <span className="absolute left-1/2 top-[30px] z-10 ml-[52px] flex h-[28px] items-center gap-1.5 border border-white/10 bg-[#222222] px-2.5 text-[12px] leading-none text-muted/80 shadow-[0_4px_14px_rgba(0,0,0,0.35)]">
                 <Image
                     src={FUNDED_ICON_SRC}
                     alt=""
@@ -280,13 +280,13 @@ export function ThreeSteps() {
                 <h2 className="text-[44px] font-normal leading-[1.05] tracking-[-0.05em] text-white md:whitespace-nowrap md:text-[56px]">
                     Three Steps. Get Funded.
                 </h2>
-                <p className="mx-auto mt-4 max-w-[500px] text-[16px] leading-[21px] tracking-[-0.01em] text-muted">
+                <p className="mx-auto mt-4 max-w-[500px] text-[16px]  text-muted/80">
                     Trade perpetual markets on-chain with transparent rules, reliable
                     data, and the tools to track your performance from start to finish.
                 </p>
             </div>
 
-            <div className="mt-11 grid gap-6 md:grid-cols-3 text-muted/80">
+            <div className="mt-11 grid gap-6 md:grid-cols-3 text-muted/90">
                 <StepCard
                     step={1}
                     title="Start Your Evaluation"

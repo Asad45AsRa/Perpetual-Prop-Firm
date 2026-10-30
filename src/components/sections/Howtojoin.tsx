@@ -1,6 +1,6 @@
 const steps = [
-  { n: "01", title: "Signup Affiliate Account", line: "#9A9A9A" },
-  { n: "02", title: "Copy your Referral Link", line: "#9A9A9A" },
+  { n: "01", title: "Signup Affiliate Account", line: "#A88B45" },
+  { n: "02", title: "Copy your Referral Link", line: "#A88B45" },
   { n: "03", title: "Share Your Link and Start Earning", line: "#A88B45" },
 ];
 
@@ -35,7 +35,7 @@ export function HowToJoin() {
         </h2>
 
         <p
-          className="how-reveal mt-[30px] max-w-[480px] text-center text-[15px] leading-[20px] text-[#8C8C8C]"
+          className="how-reveal mt-[30px] max-w-[480px] text-center text-[15px] leading-[20px] text-white/30"
           style={{ animationDelay: "0.3s" }}
         >
           Join our affiliate program in three simple steps—create your account,

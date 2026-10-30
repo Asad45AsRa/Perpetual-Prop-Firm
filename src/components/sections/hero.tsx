@@ -46,7 +46,7 @@ export function Hero() {
           Perps With Funding.
         </h1>
 
-        <p className="mt-6 max-w-[480px] text-[15px] leading-[20px] text-muted/80">
+        <p className="mt-6 max-w-[480px] text-[15px] leading-[20px] text-muted/90">
           Trade perpetual markets on-chain with transparent rules, powerful tools,
           and performance-based rewards, all built around your trading skills.
         </p>

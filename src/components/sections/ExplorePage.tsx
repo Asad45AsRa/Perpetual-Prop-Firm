@@ -189,7 +189,7 @@ export function ExplorePage() {
           <h2 className="max-w-[650px] text-[40px] font-normal leading-[0.94] tracking-[-0.05em] text-white md:text-[56px]">
             Built For The Next Generation Of Perp Traders
           </h2>
-          <p className="mt-5 max-w-[520px] text-[15px] leading-[21px] text-muted/80">
+          <p className="mt-5 max-w-[520px] text-[15px] leading-[21px] text-muted/90">
             Trade perpetual markets on-chain with transparent rules, reliable
             data, and the tools to track your performance from start to finish.
           </p>
@@ -274,7 +274,7 @@ export function ExplorePage() {
             <Image src="/images/explore/box/ringlogo.png" alt="Logo" width={156} height={156} className="h-auto w-[120px]" />
             <div className="grid w-full max-w-[440px] grid-cols-1 gap-3 sm:grid-cols-2">
               {CARDS.map((c) => (
-                <div key={c.icon} className="h-[80px]">
+                <div key={c.icon} className="h-[80px] font-light">
                   <StatCard {...c} />
                 </div>
               ))}
@@ -289,7 +289,7 @@ export function ExplorePage() {
             <h2 className="text-[40px] font-normal leading-[1.05] tracking-[-0.03em] text-white md:text-[56px]">
               Trade On Perpetual Markets, 24/7
             </h2>
-            <p className="mt-6 max-w-[430px] text-[15px] leading-relaxed text-muted/80">
+            <p className="mt-6 max-w-[430px] text-[16px] leading-relaxed text-muted/90">
               A powerful trading terminal with built-in analytics and risk
               tools. Trade crypto, equities, and commodities around the clock,
               with liquidity powered by Hyperliquid.
@@ -299,7 +299,7 @@ export function ExplorePage() {
               {TAGS.map((t) => (
                 <span
                   key={t}
-                  className="border border-white/10 bg-white/[0.06] px-7 py-3 text-sm leading-none font-[50px] text-white/80"
+                  className="inline-flex items-center gap-[6.9px] border-[0.64px] border-white/20 bg-white/[0.06] px-[28.5px] py-[13.5px] font-sans text-[14px] font-normal leading-none text-white/80 backdrop-blur-[14px]"
                 >
                   {t}
                 </span>
@@ -309,7 +309,7 @@ export function ExplorePage() {
             <div className="group mt-8 inline-flex items-center gap-2">
               <a
                 href="#"
-                className="text-sm text-muted/80 underline underline-offset-4 transition-colors group-hover:text-white"
+                className="text-sm text-white/30 underline underline-offset-4 transition-colors group-hover:text-white"
               >
                 Browse All Markets
               </a>
@@ -370,13 +370,13 @@ export function ExplorePage() {
           {/* Left: payouts table */}
           <div className="w-full max-w-[455px] lg:shrink-0">
             {/* Legend: Figma mein table ke upar center */}
-            <div className="mb-3 flex items-center justify-center gap-6 text-[12px] text-muted/80">
+            <div className="mb-3 flex items-center justify-center gap-6 text-[11px] text-muted/70">
               <span className="flex items-center gap-1.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-green-500 shadow-[0_0_6px_2px_rgba(34,197,94,0.9),0_0_12px_4px_rgba(34,197,94,0.4)]" />
+                <span className="h-1.5 w-1.5 rounded-full bg-green-500 shadow-[0_0_4px_1px_rgba(34,197,94,0.55)]" />
                 Live Payouts
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#99804A] shadow-[0_0_6px_2px_rgba(153,128,74,0.7),0_0_12px_4px_rgba(153,128,74,0.3)]" />
+                <span className="h-1.5 w-1.5 rounded-full bg-[#99804A] shadow-[0_0_3px_1px_rgba(153,128,74,0.45)]" />
                 Perpetual Funding
               </span>
             </div>
@@ -437,7 +437,7 @@ export function ExplorePage() {
             <h2 className="text-[40px] font-normal leading-[1] tracking-[-0.03em] text-white md:text-[53px]">
               Get Paid On-Chain In Seconds, Without Waiting For Approval
             </h2>
-            <p className="mt-4 max-w-[540px] text-[15px] leading-relaxed text-muted/80">
+            <p className="mt-4 max-w-[540px] text-[16px] leading-relaxed text-muted/80">
               Trade, hit your targets, and get rewarded. Smart contracts handle
               the payouts, delivering a faster, transparent experience with no
               manual approvals.
@@ -447,7 +447,7 @@ export function ExplorePage() {
               {PILLS.map((label) => (
                 <span
                   key={label}
-                  className="inline-flex items-center gap-[6.9px] border-[0.64px] border-white/20 bg-white/[0.06] px-[28.5px] py-[13.5px] text-[14px] font-[5px] leading-none text-white/80 backdrop-blur-[14px]"
+                  className="inline-flex items-center gap-[6.9px] border-[0.64px] border-white/20 bg-white/[0.06] px-[28.5px] py-[13.5px] text-[14px] font-[5px] leading-none text-white/70 backdrop-blur-[14px]"
                 >
                   {label}
                 </span>

@@ -40,7 +40,7 @@ export function Faq() {
     return (
         <section
             id="faq"
-            className="relative w-full scroll-mt-20 overflow-x-clip bg-[#121212] px-6 pb-18 pt-32 lg:px-20"
+            className="relative w-full scroll-mt-20 overflow-x-clip px-6  pt-32 lg:px-20"
             /* Figma frame = 1440px, base text = 14px. Scales with the viewport
                but is capped at 16px so it doesn't look oversized on big screens. */
             style={{ fontSize: "clamp(14px, calc(100vw * 14 / 1440), 16px)" }}
@@ -68,8 +68,10 @@ export function Faq() {
                 Sits at the bottom of the section so the colour rises from below. */}
             <div
                 aria-hidden
-                className="rules-glow pointer-events-none absolute bottom-0 left-1/2 h-[19.07em] w-[160em] -translate-x-1/2 translate-y-[40%] blur-[12.5em]"
-                style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #99804A 100%)" }}
+                className="pointer-events-none absolute inset-x-0 bottom-0 h-[220px]"
+                style={{
+                    
+                }}
             />
 
             {/* Content is centered and limited in width, so it matches Figma on wide screens */}
@@ -94,7 +96,7 @@ export function Faq() {
                                     className="h-[1.3em] w-[1.3em] object-contain"
                                 />
                             </span>
-                            <span className=" leading-[100%] tracking-[0] text-white/50">
+                            <span className=" text-white/50">
                                 support.perpeye@gmail.com
                             </span>
                         </a>
@@ -114,7 +116,7 @@ export function Faq() {
                                             className={`flex w-full items-center justify-between gap-4 pt-[1.39em] text-left outline-none focus:outline-none ${isOpen ? "pb-[0.5em]" : "pb-[1.39em]"
                                                 }`}
                                         >
-                                            <span className="text-[16px]  leading-[86%] tracking-[-0.03em] text-white">
+                                            <span className="text-[16px]  leading-[86%] tracking-[-0.03em] text-white/90">
                                                 {item.q}
                                             </span>
 
@@ -142,7 +144,7 @@ export function Faq() {
                                                 }`}
                                         >
                                             <div className="overflow-hidden">
-                                                <p className="pb-[2em] pr-[4.375em] text-[1.143em] font-light leading-[1.3] tracking-normal text-white/50">
+                                                <p className="pb-[2em] pr-[4.375em] text-[16px]  tracking-normal text-white/30">
                                                     {item.a}
                                                 </p>
                                             </div>

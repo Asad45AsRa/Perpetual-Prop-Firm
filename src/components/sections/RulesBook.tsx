@@ -1355,7 +1355,7 @@ const ruleId = (n: string) => `rule-${parseInt(n, 10)}`;
 export function RulesBook() {
   const [activeId, setActiveId] = useState(allItems[0].id);
   const [query, setQuery] = useState("");
-  const navRef = useRef<HTMLElement>(null);
+  const navRef = useRef<HTMLDivElement>(null);
   const lockRef = useRef(false);
 
   const q = query.trim().toLowerCase();
@@ -1434,11 +1434,12 @@ export function RulesBook() {
   }, [activeId]);
 
   return (
-    <section className="relative w-full overflow-hidden px-6 pb-[120px] pt-[140px] md:px-20">
+    <section className="relative w-full  px-6 pb-[120px] pt-[140px] md:px-20">
       {/* soft gold glow (design ke mutabiq) */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-[700px] [background:radial-gradient(60%_60%_at_20%_20%,rgba(120,100,70,0.28)_0%,transparent_70%),radial-gradient(40%_50%_at_85%_60%,rgba(120,90,40,0.12)_0%,transparent_70%)]"
+        className="pointer-events-none fixed inset-0 z-0 bg-cover bg-top bg-no-repeat"
+        style={{ backgroundImage: "url('/images/rules/Rulespage.png')" }}
       />
 
       {/* ───── HERO ───── */}
@@ -1468,8 +1469,11 @@ export function RulesBook() {
       {/* ───── BODY ───── */}
       <div className="relative z-10 mt-[58px] flex flex-col gap-10 lg:flex-row lg:gap-[54px]">
         {/* SIDEBAR */}
-        <aside className="w-full shrink-0 lg:w-[412px]">
-          <div className="flex flex-col border border-line bg-black/20 p-[22px]">
+        <aside className="w-full shrink-0 lg:sticky lg:top-[110px] lg:w-[412px] lg:self-start">
+          <div
+            ref={navRef}
+            className="relative flex flex-col border border-line bg-black/20 p-[22px] lg:max-h-[calc(100vh-130px)] lg:overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
             {/* search */}
             <label className="flex h-[41px] shrink-0 items-center gap-3 border border-line bg-white/[0.03] px-4">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-muted">

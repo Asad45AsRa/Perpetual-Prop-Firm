@@ -47,7 +47,7 @@ const PLANS = [
     label: "40-220×",
     multiplier: CUSTOM_MULTIPLIER,
     tag: "Custom power range",
-    icon: "/images/checked/logo4.png",
+    icon: "/images/checked/logo4.svg",
   },
 ] as const;
 
@@ -210,9 +210,7 @@ function PlanIcon({ icon, selected }: { icon: string; selected: boolean }) {
     <span
       className={cn(
         "flex h-16 w-16 shrink-0 items-center justify-center border transition-colors",
-        selected
-          ? "border-[#99804A]/40 bg-[#99804A]/20"
-          : "border-white/20 bg-white/[0.06]",
+        selected ? "border-[#C2AC7A]/60 bg-[#B8A472]/40" : "border-white/20 bg-white/[0.06]"
       )}
     >
       <Image
@@ -259,7 +257,7 @@ export function CheckoutPage() {
   const sliderFill = ((amount - MIN_AMOUNT) / (MAX_AMOUNT - MIN_AMOUNT)) * 100;
 
   return (
-    <main className="min-h-screen pt-[78px] text-foreground">
+    <main className="min-h-screen pt-[120px] text-foreground">
       {/* Figma: 1440 frame, 80px side padding */}
       <section className="w-full px-6 pb-24 pt-11 lg:px-20">
         <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_466px] lg:items-stretch lg:gap-6">
@@ -270,7 +268,7 @@ export function CheckoutPage() {
               <br />
               Greater Trading Potential.
             </h1>
-            <p className="mt-5 max-w-[560px] text-[15px] leading-[20px] text-muted">
+            <p className="mt-5 max-w-[560px] text-[16px] leading-[20px] text-muted/90">
               Pick your account size, customize your payment amount, and check
               out with crypto in just a few steps. Your pricing stays protected
               throughout the checkout process.
@@ -295,7 +293,7 @@ export function CheckoutPage() {
                         el.style.setProperty(
                           "background",
                           selected
-                            ? "radial-gradient(32% 75% at 88% 105%, rgba(195,176,128,0.50) 0%, rgba(153,128,74,0.20) 55%, rgba(153,128,74,0) 100%), linear-gradient(180deg, rgba(153,128,74,0.16) 0%, rgba(153,128,74,0) 30%, rgba(153,128,74,0) 60%, rgba(153,128,74,0.14) 100%), linear-gradient(120deg, #26221A 0%, #1B1813 50%, #231F17 100%)"
+                            ? "linear-gradient(180deg, rgba(168,150,108,0.38) 0%, rgba(140,118,72,0.14) 28%, rgba(110,90,50,0) 55%), radial-gradient(60% 120% at 100% 115%, rgba(168,150,108,0.95) 0%, rgba(140,118,72,0.55) 40%, rgba(110,90,50,0) 85%), radial-gradient(70% 90% at 0% 0%, rgba(92,76,40,0.55) 0%, rgba(92,76,40,0) 70%), linear-gradient(135deg, #3B3322 0%, #2C2618 45%, #241F14 100%)"
                             : "linear-gradient(135deg, #1C1C1C 0%, #141414 100%)",
                           "important",
                         );
@@ -495,20 +493,20 @@ export function CheckoutPage() {
           <aside className="flex min-w-0 flex-col lg:pt-3">            {/* Fee -> Balance */}
             <div className="flex items-start justify-end gap-6">
               <div>
-                <p className="text-[10px] leading-4 text-white/50">Challenge Fee</p>
+                <p className="text-[11px] leading-4 text-white/30">Challenge Fee</p>
                 <p className="mt-1.5 text-[26px] leading-[28px] text-white">
                   {money(amount)}
                 </p>
               </div>
               <span className="mt-6 text-white/40">→</span>
               <div>
-                <p className="text-[10px] leading-4 text-white/50">Account Balance</p>
+                <p className="text-[11px] leading-4 text-white/30">Account Balance</p>
                 <p className="mt-1.5 text-[26px] leading-[28px] text-white">
                   {money(balance)}
                 </p>
               </div>
             </div>
-            <div className="mt-5 flex items-center justify-end gap-4 text-[10px] leading-4 text-white/50">
+            <div className="mt-5 flex items-center justify-end gap-4 text-[12px] leading-4 text-white/30">
               <span className="flex items-center gap-1.5">
                 <CheckBadge /> No KYC required
               </span>
@@ -526,7 +524,7 @@ export function CheckoutPage() {
               <span className="flex items-center gap-3">
                 <span className="flex h-9 w-9 items-center justify-center border border-white/10 bg-white/[0.06]">
                   <Image
-                    src="/images/checked/btc.png"
+                    src="/images/checked/btc.svg"
                     alt="Bitcoin"
                     width={20}
                     height={20}
@@ -534,10 +532,10 @@ export function CheckoutPage() {
                   />
                 </span>
                 <span>
-                  <span className="block text-[12px] leading-4 text-white">
+                  <span className="block text-[12px] leading-4 text-white/80">
                     Cryptocurrency
                   </span>
-                  <span className="mt-0.5 block text-[10px] leading-3 text-white/40">
+                  <span className="mt-0.5 block text-[10px] leading-3 text-white/30">
                     Choose your coin and network at checkout
                   </span>
                 </span>
@@ -546,7 +544,7 @@ export function CheckoutPage() {
             </button>
 
             {/* Your Challenge */}
-            <div className="mt-6">
+            <div className="mt-6 text-[13px] text-muted/30">
               <SectionChip>Your Challenge</SectionChip>
             </div>
 
@@ -564,7 +562,7 @@ export function CheckoutPage() {
               </div>
 
               {/* Rules */}
-              <div className="space-y-4 px-6 py-7 text-muted/90 font-light">
+              <div className="space-y-4 px-6 py-7 text-muted/80 text-[19px]">
                 <SummaryRow label="Challenge phase" value="Yes" />
                 <SummaryRow label="Profit target" value={profitTarget} />
                 <SummaryRow label="Max loss" value={dailyLoss} />
@@ -645,12 +643,12 @@ export function CheckoutPage() {
                   Get Funded
                 </button>
 
-                <div className="mt-6 flex items-center gap-2 text-[10px] leading-3 text-white/40">
+                <div className="mt-6 flex items-center gap-2 text-[10px] text-white/40">
                   <CoinStack small />
                   Crypto Accepted
                 </div>
 
-                <p className="mt-4 text-[10px] leading-4 text-white/40">
+                <p className="mt-4 text-[11px] text-white/30">
                   Your plan determines your trading power and account size.
                   Discounts apply only to the activation fee and do not change
                   your selected account size. The activation fee covers access
