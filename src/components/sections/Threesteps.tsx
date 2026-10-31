@@ -82,7 +82,7 @@ function StepOneVisual() {
         <div className="relative mx-auto h-full w-full max-w-[320px]">
 
             {/* wrapper: pehle bg-white/[0.04], ab darker + subtle gradient */}
-            <div className="border-b-[2px]  border-white/20 border-l border-t-[0.5px] border-r bg-gradient-to-b from-white/[0.02] to-white/[0.01] p-[9px] pb-[8px]">
+            <div className="border-b-[2px]  border-white/15 border-l border-t-[0.5px] border-r bg-gradient-to-b from-white/[0.02] to-white/[0.01] p-[9px] pb-[8px]">
                 <div className="space-y-[4px]">
                     {ACCOUNTS.map((label) => (
                         <div

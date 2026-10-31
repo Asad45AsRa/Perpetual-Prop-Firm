@@ -19,6 +19,18 @@ type AccountType = (typeof ACCOUNT_TYPES)[number];
 
 const GREEN = "#4CAF50";
 
+const DAY_MS = 24 * 60 * 60 * 1000;
+const TICK_MS = REFRESH_MS; // har 5s par percentages thodi change hongi
+const EPOCH = Date.UTC(2026, 9, 31); // sirf SSR ka pehla render, phir Date.now() lag jata hai
+
+// Har plan ka base pass rate (live drift isi ke around hota hai)
+const PLAN_BASE: Record<Plan, number> = {
+    Elite: 22.5,
+    Breeze: 33.8,
+    Instant: 18.2,
+    "Capital Your Way": 25.9,
+};
+
 /* ------------------------------ types ----------------------------- */
 
 export type PassRateData = {
@@ -100,6 +112,83 @@ function smoothPath(pts: { x: number; y: number }[]) {
         d += ` C ${c1x} ${c1y}, ${c2x} ${c2y}, ${p2.x} ${p2.y}`;
     }
     return d;
+}
+
+// deterministic hash: same input -> same output (reload par bhi)
+function hash(n: number) {
+    let h = Math.imul((n | 0) ^ 0x9e3779b9, 2654435761);
+    h ^= h >>> 15;
+    h = Math.imul(h, 2246822519);
+    h ^= h >>> 13;
+    return h >>> 0;
+}
+
+function fmtDate(ms: number) {
+    return new Date(ms).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        timeZone: "UTC",
+    });
+}
+
+// rate -> chart level (left axis 0..4000)
+function levelOf(rate: number) {
+    return 1000 + rate * 80;
+}
+
+/** Local live generator: pass rate + chart + dates (30d / 90d alag graph) */
+function buildPassRate(plan: Plan, period: Period, now: number): PassRateData {
+    const pi = PLANS.indexOf(plan);
+    const days = period === "30d" ? 30 : 90;
+    const tick = Math.floor(now / TICK_MS);
+    const dayIdx = Math.floor(now / DAY_MS);
+
+    // rate: base ke around +-0.3 drift
+    const drift = ((hash(tick * 4 + pi) % 61) - 30) / 100;
+    const rate = Math.round((PLAN_BASE[plan] + drift) * 10) / 10;
+
+    // successful / unsuccessful
+    const total = (days === 30 ? 300 : 860) + (hash(tick * 7 + pi + 55) % 21);
+    const successful = Math.round((total * rate) / 100);
+    const unsuccessful = total - successful;
+
+    // chart: har din ka ek point (aaj ka point live rate se juda hai)
+    const series: number[] = [];
+    for (let k = 0; k < days; k++) {
+        const d = dayIdx - (days - 1 - k);
+        const base = k === days - 1 ? rate : PLAN_BASE[plan];
+        const noise = ((hash(d * 4 + pi) % 1001) - 500) * 0.8;
+        const wave = Math.sin(d / 3 + pi) * 250;
+        const v = levelOf(base) + noise + wave;
+        series.push(Math.min(3950, Math.max(300, Math.round(v))));
+    }
+
+    // x labels: current date tak, 8 evenly spaced
+    const labels = Array.from({ length: 8 }, (_, i) =>
+        fmtDate(now - days * (1 - i / 7) * DAY_MS)
+    );
+
+    return { rate, successful, unsuccessful, series, labels };
+}
+
+/** Local live generator: market shares / volume / trades */
+function buildMarkets(type: AccountType, period: Period, now: number): PopularMarket[] {
+    const tick = Math.floor(now / TICK_MS);
+    const ti = ACCOUNT_TYPES.indexOf(type);
+    const pi = period === "30d" ? 0 : 1;
+
+    return DEFAULT_MARKETS.map((m, i) => {
+        const d = ((hash(tick * 13 + i * 3 + ti * 101 + pi * 1009) % 161) - 80) / 100; // +-0.8
+        const off = ti === 1 ? ((hash(i + 500) % 301) - 150) / 100 : 0; // Demo ka alag mix
+        const share = Math.max(1, Math.round((m.share + d + off) * 10) / 10);
+        const k = (share / m.share) * (pi ? 2.8 : 1) * (ti ? 0.4 : 1);
+        return {
+            ...m,
+            share,
+            volume: m.volume * k,
+            trades: Math.round(m.trades * k),
+        };
+    }).sort((a, b) => b.volume - a.volume);
 }
 
 /* ---------------------------- sub-components ---------------------- */
@@ -239,8 +328,27 @@ export function TraderPerformance({ apiUrl, passRate, markets }: Props) {
     const [plan, setPlan] = useState<Plan>("Elite");
     const [type, setType] = useState<AccountType>("Paid");
 
-    const [pass, setPass] = useState<PassRateData>(passRate ?? DEFAULT_PASS_RATE);
-    const [popular, setPopular] = useState<PopularMarket[]>(markets ?? DEFAULT_MARKETS);
+    const [now, setNow] = useState(EPOCH);
+
+    // props / API se aaya data (na ho to neeche local live data use hota hai)
+    const [passState, setPass] = useState<PassRateData | null>(passRate ?? null);
+    const [popularState, setPopular] = useState<PopularMarket[] | null>(markets ?? null);
+
+    // clock: har 5s par refresh (dates + percentages live rehte hain)
+    useEffect(() => {
+        setNow(Date.now());
+        const id = setInterval(() => setNow(Date.now()), TICK_MS);
+        return () => clearInterval(id);
+    }, []);
+
+    const livePass = useMemo(() => buildPassRate(plan, period, now), [plan, period, now]);
+    const liveMarkets = useMemo(
+        () => buildMarkets(type, marketPeriod, now),
+        [type, marketPeriod, now]
+    );
+
+    const pass = passState ?? livePass;
+    const popular = popularState ?? liveMarkets;
 
     // props update ho to state sync
     useEffect(() => {
@@ -315,7 +423,7 @@ export function TraderPerformance({ apiUrl, passRate, markets }: Props) {
                 {/* ------------------------- Pass rate trends ------------------------- */}
                 <div className="border border-white/10 bg-white/[0.04] px-[20px] pb-[28px] pt-[22px] backdrop-blur-[20px]">
                     <div className="flex items-start justify-between">
-                        <span className="pt-[2px] text-[10px] uppercase leading-none text-[#6f6b63]">
+                        <span className="pt-[2px] text-[11px] uppercase leading-none text-[#6f6b63]">
                             Pass Rate Trends
                         </span>
                         <PeriodToggle value={period} onChange={setPeriod} />
@@ -360,7 +468,7 @@ export function TraderPerformance({ apiUrl, passRate, markets }: Props) {
                 {/* ----------------------- Most popular markets ----------------------- */}
                 <div className="border border-white/10 bg-white/[0.04] px-[20px] pb-[22px] pt-[22px] backdrop-blur-[20px]">
                     <div className="flex items-start justify-between">
-                        <span className="pt-[2px] text-[10px] uppercase leading-none text-[#6f6b63]">
+                        <span className="pt-[2px] text-[11px] uppercase leading-none text-[#6f6b63]">
                             The most popular markets among traders
                         </span>
                         <PeriodToggle value={marketPeriod} onChange={setMarketPeriod} />

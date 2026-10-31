@@ -7,6 +7,7 @@ import { RightGlow } from "@/components/sections/RightGlow";
 /* ----------------------------- config ----------------------------- */
 
 const STEP_MS = 10 * 60 * 1000; // har 10 minute par naya payout
+const ROW_MS = 8300;
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 // Fixed anchor: step count isi se nikalta hai, reload par values reset nahi hotin
@@ -145,8 +146,10 @@ function fmtDate(ms: number) {
 }
 
 function timeAgo(ms: number) {
-    const m = Math.floor(ms / 60000);
-    if (m < 1) return "just now";
+    const s = Math.max(0, Math.floor(ms / 1000));
+    if (s < 5) return "just now";
+    if (s < 60) return `${s}s ago`;
+    const m = Math.floor(s / 60);
     if (m < 60) return `${m} min ago`;
     const h = Math.floor(m / 60);
     if (h < 24) return `${h} ${h === 1 ? "hour" : "hours"} ago`;
@@ -190,7 +193,7 @@ export function FundedPayouts() {
     // clock: 15s par refresh (payout step har 10 min par badalta hai)
     useEffect(() => {
         setNow(Date.now());
-        const id = setInterval(() => setNow(Date.now()), 15000);
+        const id = setInterval(() => setNow(Date.now()), 1000);
         return () => clearInterval(id);
     }, []);
 
@@ -261,11 +264,12 @@ export function FundedPayouts() {
         hover = { x: xAt(hoverT), y: yAt(v), v };
     }
 
+    const rowStep = Math.max(0, Math.floor((now - EPOCH) / ROW_MS));
     const rows = Array.from({ length: ROWS }, (_, k) => {
-        const i = step - k;
+        const i = rowStep - k;
         return {
             i,
-            age: now - (EPOCH + i * STEP_MS),
+            age: now - (EPOCH + i * ROW_MS),
             addr: addrOf(i),
             amount: amountOf(i),
             avg: avgTimeOf(i),
@@ -462,8 +466,10 @@ export function FundedPayouts() {
                             </span>
                         </div>
                         <a
-                            href="#"
-                            className="pt-[8px] text-[12px] leading-none text-[#A8A39A] underline underline-offset-2 transition-colors hover:text-white"
+                            href="https://btcscan.org"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="pt-[8px] text-[12px] ..."
                         >
                             Verify every payment record
                         </a>

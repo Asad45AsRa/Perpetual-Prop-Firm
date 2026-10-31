@@ -85,9 +85,9 @@ export function Faq() {
 
                         <a
                             href="mailto:support.perpeye@gmail.com"
-                            className="inline-flex items-center gap-[0.571em] border border-white/10 bg-white/[0.03] p-[0.5em] pr-[1.43em]"
+                            className="inline-flex items-center gap-[0.571em] border border-white/15 bg-white/[0.03] p-[0.5em] pr-[1.43em]"
                         >
-                            <span className="flex h-[2.4286em] w-[2.4286em] shrink-0 items-center justify-center bg-white/10">
+                            <span className="flex h-[2.4286em] w-[2.4286em] border border-white/10 shrink-0 items-center justify-center bg-white/10">
                                 <Image
                                     src="/images/rules/mail.svg"
                                     alt=""

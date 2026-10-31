@@ -15,40 +15,52 @@ import { LeftGlow } from "../../components/sections/LeftGlow";
 /* Data                                                                */
 /* ------------------------------------------------------------------ */
 
-const CUSTOM_MULTIPLIER = 105;
+const CUSTOM_MULTIPLIER = 115;
 
 const PLANS = [
   {
     id: "elite",
     name: "Elite",
-    label: "120×",
-    multiplier: 120,
+    label: "115×",
+    multiplier: 115,
+    challenge: true,
+    rules: { profitTarget: "10%", maxLoss: "6%", dailyLoss: "3%", profitSplit: "80%" },
     tag: "Highest capital access",
-    icon: "/images/checked/logo1.svg",
+    icon: "/images/checked/EliteDefaultIcon.svg",
+    iconGolden: "/images/checked/EliteGoldenIcon.svg",
   },
   {
     id: "breeze",
     name: "Breeze",
-    label: "80×",
-    multiplier: 80,
+    label: "75×",
+    multiplier: 75,
+    challenge: true,
+    rules: { profitTarget: "10%", maxLoss: "6%", dailyLoss: "3%", profitSplit: "80%" }, // TODO: cashed Flex se confirm
     tag: "Trader favorite",
-    icon: "/images/checked/logo2.png",
+    icon: "/images/checked/BreezeDefaultIcon.svg",
+    iconGolden: "/images/checked/BreezeGoldenIcon.svg",
   },
   {
     id: "instant",
     name: "Instant",
-    label: "40×",
-    multiplier: 40,
+    label: "35×",
+    multiplier: 35,
+    challenge: false,
+    rules: { profitTarget: "10%", maxLoss: "6%", dailyLoss: "3%", profitSplit: "80%" }, // TODO: cashed Instant se confirm
     tag: "Immediate funding",
-    icon: "/images/checked/logo3.png",
+    icon: "/images/checked/InstantDefaultIcon.svg", // file ka exact naam check karna
+    iconGolden: "/images/checked/Instant Golden Icon.svg",
   },
   {
     id: "custom",
     name: "Capital Your Way",
-    label: "40-220×",
+    label: "35-215×",
     multiplier: CUSTOM_MULTIPLIER,
+    challenge: true,
+    rules: null,
     tag: "Custom power range",
-    icon: "/images/checked/logo4.svg",
+    icon: "/images/checked/CapitalYouWayDefaultIcon.svg", // note: "YouWay" (r nahi hai, aapki file mein aise hi hai)
+    iconGolden: "/images/checked/CapitalYourWayGoldenIcon.svg",
   },
 ] as const;
 
@@ -61,6 +73,15 @@ const PRESETS = [5, 100, 1000, 1500];
 const MIN_AMOUNT = 5;
 const MAX_AMOUNT = 1500;
 
+
+const RULE_HASH = {
+  elite: "#rule-3",   // Elite
+  breeze: "#rule-4",  // Breeze (Flex)
+  instant: "#rule-5", // Instant
+  custom: "#rule-6",  // Capital Your Way (Build Your Own)
+} as const;
+
+
 /* ------------------------------------------------------------------ */
 /* Helpers                                                             */
 /* ------------------------------------------------------------------ */
@@ -71,7 +92,13 @@ const money = (n: number) =>
     maximumFractionDigits: 2,
   })}`;
 
-const pct = (s: string) => parseFloat(s) / 100;
+// Cashed account balance / floors ko whole dollars mein dikhata hai
+const moneyWhole = (n: number) =>
+  `$${Math.round(n).toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
+
+// integer percent se floor nikalta hai (float error se bachne ke liye)
+const floorOf = (balance: number, s: string) =>
+  Math.round((balance * (100 - parseFloat(s))) / 100);
 
 /* ------------------------------------------------------------------ */
 /* Small UI pieces                                                     */
@@ -206,16 +233,24 @@ function CoinStack({ small = false }: { small?: boolean }) {
   );
 }
 
-function PlanIcon({ icon, selected }: { icon: string; selected: boolean }) {
+function PlanIcon({
+  icon,
+  iconGolden,
+  selected,
+}: {
+  icon: string;
+  iconGolden: string;
+  selected: boolean;
+}) {
   return (
     <span
       className={cn(
         "flex h-16 w-16 shrink-0 items-center justify-center border transition-colors",
-        selected ? "border-[#C2AC7A]/60 bg-[#B8A472]/20" : "border-white/30 bg-white/[0.06]"
+        selected ? "border-[#C2AC7A]/10 bg-[#D2C29A]/[0.38]" : "border-white/30 bg-white/[0.06]"
       )}
     >
       <Image
-        src={icon}
+        src={selected ? iconGolden : icon}
         alt=""
         width={40}
         height={40}
@@ -245,12 +280,25 @@ export function CheckoutPage() {
 
   const plan = PLANS.find((p) => p.id === planId)!;
   const isCustom = planId === "custom";
+  // Custom par dropdowns ki values, baqi plans par un ki apni fixed rules
+  const r: {
+    profitTarget: string;
+    maxLoss: string;
+    dailyLoss: string;
+    profitSplit: string;
+  } = isCustom
+      ? { profitTarget, maxLoss: drawdown, dailyLoss, profitSplit }
+      : plan.rules!;
   const balance = amount * plan.multiplier;
   const discount = 0; // coupon logic yahan connect karna
   const total = Math.max(amount - discount, 0);
 
-  const setClamped = (n: number) =>
-    setAmount(Math.min(MAX_AMOUNT, Math.max(MIN_AMOUNT, Math.round(n) || MIN_AMOUNT)));
+  const STEP = 5;
+
+  const setClamped = (n: number) => {
+    const snapped = Math.round(n / STEP) * STEP; // nearest multiple of 5
+    setAmount(Math.min(MAX_AMOUNT, Math.max(MIN_AMOUNT, snapped || MIN_AMOUNT)));
+  };
 
   // Preset buttons add karte hain: $5 x3 = 15, $100 x2 = 200
   const addAmount = (n: number) => setClamped(amount + n);
@@ -303,7 +351,7 @@ export function CheckoutPage() {
                           "background",
                           selected
 
-                            ? "radial-gradient(55% 110% at 100% 110%, rgba(231, 228, 220, 0.55) 0%, rgba(160,145,105,0.25) 45%, rgba(153,128,74,0) 80%), linear-gradient(180deg, rgba(168,150,108,0.22) 0%, rgba(153,128,74,0) 45%), linear-gradient(rgba(230, 224, 211, 0.19), rgba(153,128,74,0.19)), #141414"
+                            ? "radial-gradient(55% 110% at 100% 110%, rgba(238, 235, 226, 0.55) 0%, rgba(168, 149, 96, 0.25) 45%, rgba(175, 151, 100, 0) 80%), linear-gradient(180deg, rgba(168,150,108,0.22) 0%, rgba(153,128,74,0) 45%), linear-gradient(rgba(230, 224, 211, 0.19), rgba(153,128,74,0.19)), #141414"
                             : "linear-gradient(135deg, #1C1C1C 0%, #141414 100%)",
 
                         );
@@ -320,7 +368,7 @@ export function CheckoutPage() {
                       )}
                     >
                       <span className="flex items-center gap-3.5">
-                        <PlanIcon icon={p.icon} selected={selected} />
+                        <PlanIcon icon={p.icon} iconGolden={p.iconGolden} selected={selected} />
                         <span>
                           <span
                             className={cn(
@@ -358,7 +406,7 @@ export function CheckoutPage() {
                           <LuInfo className="h-3 w-3" />
                         </span>
                         <span className="text-[12px]  leading-none text-white">
-                          {money(price)}
+                          {moneyWhole(price)}
                         </span>
                       </span>
                     </button>
@@ -375,11 +423,11 @@ export function CheckoutPage() {
                     Build Your Rules · {plan.multiplier}× Multiplier
                   </SectionChip>
                 ) : (
-                  <SectionChip>Account Rules</SectionChip>
+                  ''
                 )}
                 <a
-                  href="/rules"
-                  className="group inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap text-[11px] text-white/80 hover:text-white"
+                  href={`/rules${RULE_HASH[planId]}`}
+                  className="group ml-auto inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap text-[11px] text-white/80 hover:text-white"
                 >
                   <span className="underline underline-offset-2">
                     Compare Account Rules
@@ -432,6 +480,7 @@ export function CheckoutPage() {
                       inputMode="numeric"
                       min={MIN_AMOUNT}
                       max={MAX_AMOUNT}
+                      step={STEP}
                       value={amount}
                       onChange={(e) => setClamped(Number(e.target.value))}
                       className="-ml-1.5 w-12 bg-transparent text-[13px] font-medium text-white outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
@@ -460,7 +509,7 @@ export function CheckoutPage() {
                   type="range"
                   min={MIN_AMOUNT}
                   max={MAX_AMOUNT}
-                  step={1}
+                  step={STEP}
                   value={amount}
                   onChange={(e) => setClamped(Number(e.target.value))}
                   aria-label="Payment amount"
@@ -512,7 +561,7 @@ export function CheckoutPage() {
               <div>
                 <p className="text-[11px] leading-4 text-white/30">Account Balance</p>
                 <p className="mt-1.5 text-[26px] leading-[28px] text-white">
-                  {money(balance)}
+                  {moneyWhole(balance)}
                 </p>
               </div>
             </div>
@@ -563,7 +612,7 @@ export function CheckoutPage() {
               <div className="bg-white/[0.02] px-6 pb-3 pt-3">
                 <p className="text-[12px] leading-4 text-white/60">You&apos;ll Trade With</p>
                 <p className="mt-2 text-[36px] leading-[36px] text-white">
-                  {money(balance)}
+                  {moneyWhole(balance)}
                 </p>
                 <p className="mt-2 text-[10px] leading-[14px] text-white/50">
                   {plan.multiplier}× on your {money(amount)} payment · Capital
@@ -573,21 +622,21 @@ export function CheckoutPage() {
 
               {/* Rules */}
               <div className="space-y-4 px-6 py-7 text-muted/80 text-[19px]">
-                <SummaryRow label="Challenge phase" value="Yes" />
-                <SummaryRow label="Profit target" value={profitTarget} />
-                <SummaryRow label="Max loss" value={dailyLoss} />
-                <SummaryRow label="Daily loss limit" value={drawdown} />
+                <SummaryRow label="Challenge phase" value={plan.challenge ? "Yes" : "No"} />
+                <SummaryRow label="Profit target" value={r.profitTarget} />
+                <SummaryRow label="Max loss" value={r.maxLoss} />
+                <SummaryRow label="Daily loss limit" value={r.dailyLoss} />
                 <SummaryRow label="Account access" value="Personal" />
                 <SummaryRow
                   label="Initial daily equity floor"
-                  value={money(balance * (1 - pct(drawdown)))}
+                  value={moneyWhole(floorOf(balance, r.dailyLoss))}
                 />
                 <SummaryRow
                   label="Static equity floor"
-                  value={money(balance * (1 - pct(dailyLoss)))}
+                  value={moneyWhole(floorOf(balance, r.maxLoss))}
                 />
                 <SummaryRow label="Minimum days" value="0" />
-                <SummaryRow label="Payout split" value={profitSplit} />
+                <SummaryRow label="Payout split" value={r.profitSplit} />
                 <SummaryRow
                   label="Payout frequency"
                   value="One per account every 24 hours"
