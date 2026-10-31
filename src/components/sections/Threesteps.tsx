@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { RightGlow } from "../../components/sections/RightGlow";
 
 const FLAME_SRC = "/images/checkout/check.svg"; // flame icon
 const COIN_SRC = "/images/checkout/dollers.png";
@@ -81,7 +82,7 @@ function StepOneVisual() {
         <div className="relative mx-auto h-full w-full max-w-[320px]">
 
             {/* wrapper: pehle bg-white/[0.04], ab darker + subtle gradient */}
-            <div className="border-b  border-white/20 border-l border-l bg-gradient-to-b from-white/[0.02] to-white/[0.01] p-[9px] pb-[8px]">
+            <div className="border-b-[2px]  border-white/20 border-l border-t-[0.5px] border-r bg-gradient-to-b from-white/[0.02] to-white/[0.01] p-[9px] pb-[8px]">
                 <div className="space-y-[4px]">
                     {ACCOUNTS.map((label) => (
                         <div
@@ -276,7 +277,16 @@ function StepThreeVisual() {
 export function ThreeSteps() {
     return (
         /* lg:px-20 = same side padding as navbar -> cards start at logo, end at Get Funded button */
-        <section className="w-full px-6 pb-28 pt-[72px] lg:px-20">
+        <section className="relative isolate w-full px-6 pb-28 pt-[72px] lg:px-20">
+            <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-x-clip">
+                <RightGlow
+                    width={380}
+                    height={460}
+                    right={-200}
+                    opacity={0.2}
+                    className="bottom-[-160px]"
+                />
+            </div>
             <div className="mx-auto max-w-[760px] text-center">
                 <h2 className="text-[44px] font-normal leading-[1.05] tracking-[-0.05em] text-white md:whitespace-nowrap md:text-[56px]">
                     Three Steps. Get Funded.

@@ -2,6 +2,9 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { GLOW_IN_HERO, SEAM_GAP } from "@/config/glowSeam";
+import { RightGlow } from "../../components/sections/RightGlow";
+import { LeftGlow } from "../../components/sections/LeftGlow"
 
 /* ---------- Funding diagram data ---------- */
 // Diagram canvas: 1060 x 360 (sab positions isi ke hisaab se hain)
@@ -183,7 +186,16 @@ export function ExplorePage() {
   return (
     <main className="min-h-screen font-sans text-foreground mt-5">
       {/* Figma frame: 1440px centered, 80px side padding (px-6 mobile / lg:px-20) */}
-      <section className="mx-auto flex w-full max-w-none flex-col items-center px-10 py-20 text-center lg:px-20">
+      <section className="relative isolate mx-auto flex w-full max-w-none flex-col items-center px-10 py-20 text-center lg:px-20">
+        <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-x-clip">
+          <RightGlow
+            trim={60}
+            height={610}
+            right={-320}
+            className="top-[380px]"
+            opacity={0.17}
+          />
+        </div>
         {/* ===== Funding diagram ===== */}
         <div className="flex w-full flex-col items-center">
           <h2 className="max-w-[650px] text-[40px] font-normal leading-[0.94] tracking-[-0.05em] text-white md:text-[56px]">
@@ -366,7 +378,16 @@ export function ExplorePage() {
         </div>
 
         {/* ===== Payouts section ===== */}
-        <div className="mt-24 flex w-full flex-col gap-12 text-left lg:mt-[200px] lg:flex-row lg:items-center lg:justify-between lg:gap-8">
+        <div className="relative mt-24 flex w-full flex-col gap-12 text-left lg:mt-[200px] lg:flex-row lg:items-center lg:justify-between lg:gap-8">
+          {/* Left glow: section ke padding se bahar nikal kar screen ke left edge par */}
+          <div aria-hidden className="pointer-events-none absolute -left-10 top-1/2 -z-10 lg:-left-20">
+            <LeftGlow
+              trim={60}
+              height={480}
+              opacity={0.14}
+              className="left-[-320px] top-[-250px]"
+            />
+          </div>
           {/* Left: payouts table */}
           <div className="w-full max-w-[455px] lg:shrink-0">
             {/* Legend: Figma mein table ke upar center */}

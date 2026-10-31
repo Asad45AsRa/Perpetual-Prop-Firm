@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { RightGlow } from "../../components/sections/RightGlow";
 
 /* ----------------------------- config ----------------------------- */
 
@@ -269,23 +270,18 @@ export function MarketHeatmap() {
   return (
     <section
       data-affiliate-page
-      className="relative w-full overflow-hidden bg-[#111111] px-6 pb-[120px] pt-[80px] md:px-20"
+      className="relative w-full px-6 pb-[120px] pt-[80px] md:px-20"
     >
       {/* halka glow: closest-side => edges par bilkul transparent, koi hard line nahi */}
       <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background: [
-            // left glow, section ke top se shuru (Live ke left glow ka continuation)
-            "radial-gradient(ellipse 30% 45% at 0% 0%, rgba(176,171,161,0.20) 0%, rgba(120,112,98,0.08) 50%, transparent 100%)",
-            // right glow, neeche
-            "radial-gradient(ellipse 30% 45% at 100% 82%, rgba(176,171,161,0.20) 0%, rgba(120,112,98,0.08) 50%, transparent 100%)",
-          ].join(", "),
-          // sirf BOTTOM par fade, top par koi mask nahi
-          WebkitMaskImage: "linear-gradient(to bottom, #000 calc(100% - 90px), transparent 100%)",
-          maskImage: "linear-gradient(to bottom, #000 calc(100% - 90px), transparent 100%)",
-        }}
+      />
+      <RightGlow
+        className="bottom-[-40px] z-0"
+        right={-200}
+        width={538}
+        height={495}
+        opacity={0.1}
+        blur={150}
       />
 
       <div className="relative z-10">

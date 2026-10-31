@@ -62,19 +62,19 @@ export function PartnerLevels() {
           {levels.map((l) => (
             <article
               key={l.tag}
-              className="relative flex h-[458px] flex-col items-center overflow-hidden border border-[#2B2B2B] bg-[#111111]"
+              className="relative flex h-[458px] flex-col items-center overflow-hidden border border-white/[0.14] bg-[#111111]"
             >
               {/* 1) Main glow: upar se halki curved light, neeche smooth fade */}
               <div
                 aria-hidden
-                className="pointer-events-none absolute inset-x-0 top-0 h-[300px]"
+                className="pointer-events-none absolute inset-x-0 top-0 h-[340px]"
                 style={{
-                  background: `radial-gradient(ellipse 75% 90% at ${l.glowX}% 0%, rgba(122,111,86,0.72) 0%, rgba(96,87,67,0.45) 45%, rgba(17,17,17,0) 100%)`,
+                  background: `radial-gradient(ellipse 80% 90% at ${l.glowX}% 0%, rgba(221, 218, 212, 0.55) 0%, rgba(129, 117, 91, 0.32) 45%, rgba(167, 139, 16, 0) 100%)`,
                   filter: "blur(10px)",
                   WebkitMaskImage:
-                    "linear-gradient(to bottom, #000 0%, #000 30%, transparent 100%)",
+                    "linear-gradient(to bottom, #000 0%, #000 35%, transparent 100%)",
                   maskImage:
-                    "linear-gradient(to bottom, #000 0%, #000 30%, transparent 100%)",
+                    "linear-gradient(to bottom, #000 0%, #000 35%, transparent 100%)",
                 }}
               />
 

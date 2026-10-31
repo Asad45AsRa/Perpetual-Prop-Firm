@@ -75,7 +75,7 @@ export function JoinCta() {
     */
     <section
       data-affiliate-page
-      className="relative w-full px-6 pb-[40px] pt-[84px] md:px-20 pb-32"
+      className="relative w-full overflow-x-clip px-6 pb-[40px] pt-[84px] md:px-20 mb-16"
     >
       {/*
         Figma: Rectangle 1600 x 267, left -80, Linear gradient #FFFFFF -> #99804A (top -> bottom),

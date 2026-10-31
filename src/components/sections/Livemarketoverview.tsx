@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { FiChevronLeft, FiChevronRight, FiSearch } from "react-icons/fi";
 import { cn } from "@/lib/utils";
+import { RightGlow } from "../../components/sections/RightGlow";
+import { LeftGlow } from "../../components/sections//LeftGlow";
 
 /* ----------------------------- config ----------------------------- */
 
@@ -229,25 +231,20 @@ export function LiveMarketOverview({ longShort }: Props) {
   return (
     <section
       data-affiliate-page
-      className="relative w-full overflow-hidden bg-[#111111] px-6 pb-[120px] pt-[80px] md:px-20"
+      className="relative w-full px-6 pb-[120px] pt-[80px] md:px-20"
     >
       {/* Left / right side glows (Figma jaisa) — data-affiliate-page body glows band karta hai,
           isliye yahan section ke andar apne glows hain */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background: [
-            // left glow, section ke neeche tak jaye (boundary par continue)
-            "radial-gradient(ellipse 30% 45% at 0% 100%, rgba(176,171,161,0.20) 0%, rgba(120,112,98,0.08) 50%, transparent 100%)",
-            // right glow, upar
-            "radial-gradient(ellipse 30% 40% at 100% 22%, rgba(176,171,161,0.18) 0%, rgba(120,112,98,0.07) 50%, transparent 100%)",
-          ].join(", "),
-          // sirf TOP par fade, bottom par koi mask nahi
-          WebkitMaskImage: "linear-gradient(to bottom, transparent 0, #000 90px)",
-          maskImage: "linear-gradient(to bottom, transparent 0, #000 90px)",
-        }}
-      />
+      <div aria-hidden className="pointer-events-none absolute inset-0">
+        <RightGlow
+          width={420}
+          height={480}
+          right={-200}
+          opacity={0.2}
+          className="top-[110px]"
+        />
+       
+      </div>
 
       <div className="relative z-10 flex flex-col items-center text-center">
         <h2 className="text-[40px] font-normal leading-[1] tracking-[-0.02em] text-white md:text-[48px]">

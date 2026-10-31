@@ -82,7 +82,7 @@ export function AffiliateHero() {
           Turn Your Marketing Skills Into Income
         </h1>
 
-        <p className="mt-6 max-w-[510px] text-[15px]  text-white/70">
+        <p className="mt-6 max-w-[510px] text-[15px] font-normal leading-[20px] tracking-[-0.01em] text-white/50">
           Earn up to 20% commissions while unlocking exclusive perks like funded
           challenges, discount codes, and giveaways to elevate your trading
           journey!
@@ -97,7 +97,7 @@ export function AffiliateHero() {
           </Link>
           <Link
             href=''
-            className="inline-flex h-[41px] items-center border border-white/15 bg-white/[0.12] px-7 text-[14px] text-white/90"
+            className="inline-flex h-[41px] items-center border border-white/10 bg-white/[0.06] px-7 text-[14px] font-normal tracking-[-0.01em] text-white/70"
           >
             Affiliate Login
           </Link>

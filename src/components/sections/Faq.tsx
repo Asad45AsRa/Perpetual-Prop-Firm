@@ -96,7 +96,7 @@ export function Faq() {
                                     className="h-[1.3em] w-[1.3em] object-contain"
                                 />
                             </span>
-                            <span className=" text-white/50">
+                            <span className="text-[14px] font-normal leading-none text-muted">
                                 support.perpeye@gmail.com
                             </span>
                         </a>
@@ -116,7 +116,7 @@ export function Faq() {
                                             className={`flex w-full items-center justify-between gap-4 pt-[1.39em] text-left outline-none focus:outline-none ${isOpen ? "pb-[0.5em]" : "pb-[1.39em]"
                                                 }`}
                                         >
-                                            <span className="text-[16px]  leading-[86%] tracking-[-0.03em] text-white/90">
+                                            <span className="text-[16px] leading-[20px] tracking-[-0.03em] text-white/80">
                                                 {item.q}
                                             </span>
 
@@ -144,7 +144,7 @@ export function Faq() {
                                                 }`}
                                         >
                                             <div className="overflow-hidden">
-                                                <p className="pb-[2em] pr-[4.375em] text-[16px]  tracking-normal text-white/30">
+                                                <p className="pb-[2em] pr-[4.375em] text-[15px] font-normal leading-[20px] text-muted/90">
                                                     {item.a}
                                                 </p>
                                             </div>

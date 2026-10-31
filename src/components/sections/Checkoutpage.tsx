@@ -9,6 +9,7 @@ import {
   LuChevronsUpDown,
   LuInfo,
 } from "react-icons/lu";
+import { LeftGlow } from "../../components/sections/LeftGlow";
 
 /* ------------------------------------------------------------------ */
 /* Data                                                                */
@@ -259,7 +260,15 @@ export function CheckoutPage() {
   return (
     <main className="min-h-screen pt-[120px] text-foreground">
       {/* Figma: 1440 frame, 80px side padding */}
-      <section className="w-full px-6 pb-24 pt-11 lg:px-20">
+      <section className="relative isolate w-full px-6 pb-24 pt-11 lg:px-20">
+        <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-x-clip">
+          <LeftGlow
+            trim={60}
+            height={480}
+            opacity={0.14}
+            className="left-[-320px] bottom-[-120px]"
+          />
+        </div>
         <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_466px] lg:items-stretch lg:gap-6">
           {/* ============================ LEFT ============================ */}
           <div className="min-w-0">
@@ -293,7 +302,7 @@ export function CheckoutPage() {
                         el.style.setProperty(
                           "background",
                           selected
-                            ? "linear-gradient(180deg, rgba(168,150,108,0.38) 0%, rgba(140,118,72,0.14) 28%, rgba(110,90,50,0) 55%), radial-gradient(60% 120% at 100% 115%, rgba(168,150,108,0.95) 0%, rgba(140,118,72,0.55) 40%, rgba(110,90,50,0) 85%), radial-gradient(70% 90% at 0% 0%, rgba(92,76,40,0.55) 0%, rgba(92,76,40,0) 70%), linear-gradient(135deg, #3B3322 0%, #2C2618 45%, #241F14 100%)"
+                            ? "linear-gradient(180deg, rgba(168,150,108,0.38) 0%, rgba(140,118,72,0.14) 28%, rgba(110,90,50,0) 55%), radial-gradient(60% 120% at 100% 115%, rgba(194, 187, 171, 0.95) 0%, rgba(140,118,72,0.55) 40%, rgba(110,90,50,0) 85%), radial-gradient(70% 90% at 0% 0%, rgba(92,76,40,0.55) 0%, rgba(92,76,40,0) 70%), linear-gradient(135deg, #3B3322 0%, #2C2618 45%, #241F14 100%)"
                             : "linear-gradient(135deg, #1C1C1C 0%, #141414 100%)",
                           "important",
                         );
@@ -550,7 +559,7 @@ export function CheckoutPage() {
 
             <Panel className="mt-6 flex flex-1 flex-col">
               {/* You'll trade with */}
-              <div className="bg-white/[0.05] px-6 pb-3 pt-3">
+              <div className="bg-white/[0.02] px-6 pb-3 pt-3">
                 <p className="text-[12px] leading-4 text-white/60">You&apos;ll Trade With</p>
                 <p className="mt-2 text-[36px] leading-[36px] text-white">
                   {money(balance)}

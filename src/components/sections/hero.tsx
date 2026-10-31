@@ -3,7 +3,8 @@ import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { FaDiscord } from "react-icons/fa6";
-import { Glow } from "./Glow";
+import { LeftGlow } from "../../components/sections/LeftGlow";
+import { GLOW_H, GLOW_IN_HERO } from "../../config/glowSeam";
 
 const stats = [
   { value: "$680.1K", label: "Payout reserve" },
@@ -18,6 +19,10 @@ const rows = [stats.slice(0, 3), stats.slice(3)];
 export function Hero() {
   return (
     <section className="relative w-full overflow-hidden px-6 pb-0 pt-[184px] md:min-h-[720px] md:px-20">
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        
+      </div>
+
       {/* BG: header.png sirf top par, neeche se fade taake hard edge na aaye */}
       <Image
         src="/images/header.png"
@@ -28,7 +33,7 @@ export function Hero() {
         unoptimized
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 h-[670px] w-full select-none object-cover object-right [mask-image:linear-gradient(to_bottom,#000_40%,transparent_100%),linear-gradient(to_right,transparent_0%,#000_35%,#000_100%)] [mask-composite:intersect] [-webkit-mask-composite:source-in]" />
-        
+
 
       {/* GIF: bilkul plain, koi CSS nahi */}
       <Image
