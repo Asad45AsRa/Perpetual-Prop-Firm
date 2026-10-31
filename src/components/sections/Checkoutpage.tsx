@@ -100,7 +100,7 @@ function Panel({
   children: React.ReactNode;
 }) {
   return (
-    <div className={cn("border border-white/10 bg-white/[0.03]", className)}>
+    <div className={cn("border border-white/10 ", className)}>
       {children}
     </div>
   );
@@ -124,7 +124,7 @@ function SelectField({
         <select
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="h-10 w-full appearance-none border border-white/10 bg-white/[0.05] px-3 text-[12px] font-medium text-white outline-none focus:border-[#99804A]/60"
+          className="h-10 w-full appearance-none border border-white/10 bg-white/[0.04] px-3 text-[12px] font-medium text-white outline-none focus:border-[#99804A]/60"
         >
           {options.map((o) => (
             <option key={o} value={o} className="bg-[#111111]">
@@ -211,7 +211,7 @@ function PlanIcon({ icon, selected }: { icon: string; selected: boolean }) {
     <span
       className={cn(
         "flex h-16 w-16 shrink-0 items-center justify-center border transition-colors",
-        selected ? "border-[#C2AC7A]/60 bg-[#B8A472]/40" : "border-white/20 bg-white/[0.06]"
+        selected ? "border-[#C2AC7A]/60 bg-[#B8A472]/20" : "border-white/30 bg-white/[0.06]"
       )}
     >
       <Image
@@ -302,9 +302,10 @@ export function CheckoutPage() {
                         el.style.setProperty(
                           "background",
                           selected
-                            ? "linear-gradient(180deg, rgba(168,150,108,0.38) 0%, rgba(140,118,72,0.14) 28%, rgba(110,90,50,0) 55%), radial-gradient(60% 120% at 100% 115%, rgba(194, 187, 171, 0.95) 0%, rgba(140,118,72,0.55) 40%, rgba(110,90,50,0) 85%), radial-gradient(70% 90% at 0% 0%, rgba(92,76,40,0.55) 0%, rgba(92,76,40,0) 70%), linear-gradient(135deg, #3B3322 0%, #2C2618 45%, #241F14 100%)"
+
+                            ? "radial-gradient(55% 110% at 100% 110%, rgba(231, 228, 220, 0.55) 0%, rgba(160,145,105,0.25) 45%, rgba(153,128,74,0) 80%), linear-gradient(180deg, rgba(168,150,108,0.22) 0%, rgba(153,128,74,0) 45%), linear-gradient(rgba(230, 224, 211, 0.19), rgba(153,128,74,0.19)), #141414"
                             : "linear-gradient(135deg, #1C1C1C 0%, #141414 100%)",
-                          "important",
+
                         );
                         el.style.setProperty("border-width", "0.7px", "important");
                       }}

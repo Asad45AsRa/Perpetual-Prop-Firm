@@ -31,7 +31,7 @@ export function ExploreHero() {
         <div className="mt-6 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <p className="max-w-[610px] text-[16px] leading-[22px] tracking-normal text-muted/90">
             Growth, trader outcomes, execution quality, payouts, and the
-            on-chain reserve that backs all of it — with every on-chain figure
+            on-chain reserve that backs all of it with every on-chain figure
             reproducible by anyone.
           </p>
 

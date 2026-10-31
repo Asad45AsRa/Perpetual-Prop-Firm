@@ -251,7 +251,7 @@ export function PathToFunding() {
           {/* ------------------------- left card ------------------------- */}
           <div className="border border-white/10 bg-[#141414] p-5">
             <div className="flex items-start justify-between">
-              <span className="pt-[5px] text-[10px] uppercase leading-none tracking-[0.02em] text-[#6f6b63]">
+              <span className="pt-[5px] text-[11px] uppercase leading-none tracking-[0.02em] text-[#6f6b63]">
                 Signup to paid conversion
               </span>
               <div className="flex gap-[9px]">
@@ -445,7 +445,7 @@ export function PathToFunding() {
 
           {/* ------------------------ right card ------------------------- */}
           <div className="border border-white/10 bg-[#141414] p-5">
-            <span className="block pt-[5px] text-[10px] uppercase leading-none tracking-[0.02em] text-[#6f6b63]">
+            <span className="block pt-[5px] text-[11px] uppercase leading-none tracking-[0.02em] text-[#6f6b63]">
               All-time · From paid evaluation to payout
             </span>
 
@@ -453,7 +453,7 @@ export function PathToFunding() {
               <Donut />
             </div>
 
-            <div className="mt-[30px] flex flex-col gap-[26px]">
+            <div className="mt-[30px] text-muted/70 text-[11px] flex flex-col gap-[26px]">
               <LegendItem
                 color={COLORS.white}
                 title="Signed Up Only"

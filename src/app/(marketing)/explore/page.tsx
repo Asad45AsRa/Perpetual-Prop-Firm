@@ -27,17 +27,28 @@ export default function ExplorePage() {
         <MarketHeatmap />
         <PathToFunding />
 
-        {/* seam anchor: PathToFunding aur FundedPayouts ke beech */}
+        {/* seam anchor: PathToFunding aur FundedPayouts  */}
         <div aria-hidden className="relative h-0">
           <LeftGlow
-            trim={60}
+            trim={160}
             height={520}
-            opacity={0.17}
-            className="-z-10 left-[-320px] top-[-260px]"
+            opacity={0.22}
+            blur={150}
+            className="z-30 mix-blend-screen left-[-320px] top-[-300px]"
           />
         </div>
 
+
         <FundedPayouts />
+        <div aria-hidden className="relative h-0">
+          <LeftGlow
+            trim={160}
+            height={620}
+            opacity={0.22}
+            blur={150}
+            className="z-30 mix-blend-screen left-[-320px] top-[-300px]"
+          />
+        </div>
         <TraderPerformance />
       </div>
     </>

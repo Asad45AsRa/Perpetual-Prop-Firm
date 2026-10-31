@@ -251,7 +251,7 @@ export function LiveMarketOverview({ longShort }: Props) {
           Live Market Overview
         </h2>
         <p className="mt-6 max-w-[390px] text-[16px] leading-[21px] text-muted/80">
-          Track real-time prices, market movements, and trading activity—all in
+          Track real time prices, market movements, and trading activity all in
           one place.
         </p>
       </div>
@@ -401,7 +401,7 @@ export function LiveMarketOverview({ longShort }: Props) {
             <p className="text-[11px] leading-none text-[#A8A39A]">
               Showing {rows.length} of {filtered.length} markets
             </p>
-            <p className="mt-[10px] max-w-[400px] text-[11px] leading-[16px] text-muted/80">
+            <p className="mt-[10px] max-w-[400px] text-[12px] leading-[16px] text-muted/80">
               Open interest reflects the underlying market · Prices use
               Hyperliquid market data · Long/short reflects our book, with “—”
               shown when we have no position.
