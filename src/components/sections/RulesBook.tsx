@@ -1358,6 +1358,7 @@ export function RulesBook() {
   const navRef = useRef<HTMLDivElement>(null);
   const lockRef = useRef(false);
   const [today, setToday] = useState("");
+  const [searchOpen, setSearchOpen] = useState(false);
 
   const q = query.trim().toLowerCase();
 
@@ -1384,6 +1385,9 @@ export function RulesBook() {
     window.setTimeout(() => (lockRef.current = false), 900);
     el.scrollIntoView({ behavior: "smooth", block: "start" });
     window.history.replaceState(null, "", item.id === "overview" ? "#overview" : `#${el.id}`);
+    setActiveId(item.id);
+    setSearchOpen(false);
+    lockRef.current = true;
   };
 
   /* scroll-spy: jo rule screen par hai uska item active */
@@ -1435,16 +1439,16 @@ export function RulesBook() {
   }, [activeId]);
 
   function formatRuleDate(d: Date) {
-  const day = String(d.getUTCDate()).padStart(2, "0");
-  const mon = d
-    .toLocaleString("en-US", { month: "short", timeZone: "UTC" })
-    .toUpperCase();
-  return `${day} - ${mon} - ${d.getUTCFullYear()}`;
-}
+    const day = String(d.getUTCDate()).padStart(2, "0");
+    const mon = d
+      .toLocaleString("en-US", { month: "short", timeZone: "UTC" })
+      .toUpperCase();
+    return `${day} - ${mon} - ${d.getUTCFullYear()}`;
+  }
 
-useEffect(() => {
-  setToday(formatRuleDate(new Date()));
-}, []);
+  useEffect(() => {
+    setToday(formatRuleDate(new Date()));
+  }, []);
 
   return (
     <section className="relative w-full  px-6 pb-[120px] pt-[140px] md:px-20">
@@ -1495,6 +1499,7 @@ useEffect(() => {
               </svg>
               <input
                 value={query}
+                onFocus={() => setSearchOpen(true)}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search a rule"
                 className="w-full bg-transparent text-[12px] text-white outline-none placeholder:text-muted"
@@ -1502,7 +1507,7 @@ useEffect(() => {
             </label>
 
             {/* list: poori height, koi scroll nahi */}
-            <nav ref={navRef} className="mt-6 max-lg:hidden">
+            <nav ref={navRef} className={cn("mt-6 max-lg:max-h-[400px] max-lg:overflow-y-auto", !searchOpen && "max-lg:hidden")}>
               {filteredGroups.map((g) => (
                 <div key={g.label} className="mb-6 last:mb-0">
                   <p className="mb-3 text-[10px] uppercase tracking-[0.04em] text-muted">{g.label}</p>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
 
@@ -119,23 +119,42 @@ export function JoinCta() {
         </div>
 
         {/* Stats: har column px-[45px], beech me 1px divider */}
-        <dl className="mt-[55px] grid w-full grid-cols-2 md:flex md:w-auto md:flex-wrap md:justify-center md:gap-y-6">
+        {/* Stats: mobile = 3 + 2 layout, desktop = pehle jaisa (unchanged) */}
+        <dl className="mt-[55px] grid w-full grid-cols-6 gap-y-6 md:flex md:w-auto md:flex-wrap md:justify-center md:gap-y-6">
           {stats.map((s, i) => (
-            <div
-              key={s.label}
-              className={
-                "px-2 text-center max-md:border-b max-md:border-white/10 max-md:py-6 md:px-[45px]" +
-                (i > 0 ? " md:border-l md:border-white/10" : "") +
-                (i % 2 === 1 ? " max-md:border-l max-md:border-white/10" : "")
-              }
-            >
-              <dt className="text-[26px] leading-none text-white">
-                <Counter value={s.value} />
-              </dt>
-              <dd className="mt-[11px] text-[12px] leading-none text-white/60">
-                {s.label}
-              </dd>
-            </div>
+            <Fragment key={s.label}>
+              {/* mobile: pehli row ke baad poori width ki horizontal line (items se alag) */}
+              {i === 3 && (
+                <div
+                  aria-hidden
+                  className="col-span-6 mx-auto h-px w-[calc(100%-24px)] bg-white/10 md:hidden"
+                />
+              )}
+
+              <div
+                className={
+                  "relative px-2 text-center md:px-[45px]" +
+                  (i < 3 ? " max-md:col-span-2" : " max-md:col-span-3") +
+                  /* desktop: pehle jaisa */
+                  (i > 0 ? " md:border-l md:border-white/10" : "")
+                }
+              >
+                {/* mobile: chhota vertical divider, sirf 40% height, beech mein */}
+                {(i === 1 || i === 2 || i === 4) && (
+                  <span
+                    aria-hidden
+                    className="absolute left-0 top-1/2 h-[40px] w-px -translate-y-1/2 bg-white/10 md:hidden"
+                  />
+                )}
+
+                <dt className="text-[26px] leading-none text-white">
+                  <Counter value={s.value} />
+                </dt>
+                <dd className="mt-[11px] text-[12px] leading-none text-white/60">
+                  {s.label}
+                </dd>
+              </div>
+            </Fragment>
           ))}
         </dl>
       </div>

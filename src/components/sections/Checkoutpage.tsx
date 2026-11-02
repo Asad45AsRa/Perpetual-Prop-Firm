@@ -254,7 +254,7 @@ function PlanIcon({
         alt=""
         width={40}
         height={40}
-        className="h-7 w-7 object-contain"
+        className={cn("h-7 w-7 object-contain", icon.includes("Breeze") && "scale-[1.7]")}
       />
     </span>
   );
@@ -421,7 +421,7 @@ export function CheckoutPage() {
               <div className="flex flex-wrap items-center justify-between gap-3">
                 {isCustom ? (
                   <SectionChip>
-                    Build Your Rules · {plan.multiplier}× Multiplier
+                    Build Your Rules.
                   </SectionChip>
                 ) : (
                   ''

@@ -10,7 +10,7 @@ const levels = [
     chips: [
       "Commission: 15%",
       "Recurring Commissions: 10%",
-      "3x 5K Giveaway for the partner’s community",
+      "3x 5K Giveaway for the community",
       "1x 10K Challenge Account",
     ],
   },
@@ -23,7 +23,7 @@ const levels = [
     chips: [
       "Commission: 17%",
       "Recurring Commissions: 10%",
-      "5x 5K Giveaway for the partner’s community",
+      "5x 5K Giveaway for the community",
       "1x 25K Challenge Account",
     ],
   },
@@ -36,7 +36,7 @@ const levels = [
     chips: [
       "Commission: 20%",
       "Recurring Commissions: 10%",
-      "5x 10K Giveaway for the partner’s community",
+      "5x 10K Giveaway for the community",
       "1x 100K Challenge Account",
     ],
   },

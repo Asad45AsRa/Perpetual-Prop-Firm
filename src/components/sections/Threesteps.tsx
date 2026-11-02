@@ -32,7 +32,8 @@ function StepCard({
     return (
         <article
             className={cn(
-                "flex flex-col items-center border border-white/10 bg-gradient-to-b from-white/[0.05] to-white/[0.01] px-6 pb-8 pt-[26px] text-center lg:h-[405px]",
+                /* mobile: min-w-0 + overflow-hidden so the card never grows past the screen */
+                "flex flex-col items-center border border-white/10 bg-gradient-to-b from-white/[0.05] to-white/[0.01] px-6 pb-8 pt-[26px] text-center max-md:min-w-0 max-md:overflow-hidden lg:h-[405px]",
                 className,
             )}
         >
@@ -79,7 +80,7 @@ function GoldLabel({
 
 function StepOneVisual() {
     return (
-        <div className="relative mx-auto h-full w-full max-w-[320px]">
+        <div className="relative mx-auto h-full w-full max-w-[320px] max-md:max-w-[270px] max-md:-translate-x-2">
 
             {/* wrapper: pehle bg-white/[0.04], ab darker + subtle gradient */}
             <div className="border-b-[2px]  border-white/15 border-l border-t-[0.5px] border-r bg-gradient-to-b from-white/[0.02] to-white/[0.01] p-[9px] pb-[8px]">
@@ -168,7 +169,7 @@ const CHART_LINE = smoothPath(CHART_POINTS);
 
 function StepTwoVisual() {
     return (
-        <div className="absolute inset-x-[-24px] inset-y-0">
+        <div className="absolute inset-x-[-24px] inset-y-0 max-md:inset-x-auto max-md:left-1/2 max-md:w-[425px] max-md:origin-top max-md:-translate-x-1/2 max-md:scale-[0.62] min-[380px]:max-md:scale-[0.68] min-[420px]:max-md:scale-[0.76] min-[460px]:max-md:scale-[0.86] min-[500px]:max-md:scale-100">
             <svg
                 aria-hidden
                 viewBox="0 0 411 185"
@@ -227,7 +228,7 @@ function StepTwoVisual() {
 
 function StepThreeVisual() {
     return (
-        <div className="relative mx-auto h-full w-full max-w-[340px]">
+        <div className="relative mx-auto h-full w-full max-w-[340px] max-md:left-1/2 max-md:w-[340px] max-md:origin-top max-md:-translate-x-[48%] max-md:scale-[0.58] min-[380px]:max-md:scale-[0.64] min-[420px]:max-md:scale-[0.74] min-[450px]:max-md:scale-[0.85] min-[500px]:max-md:scale-100">
             {/* outer ring */}
             <span
                 className="absolute left-1/2 top-[26px] h-[144px] w-[144px] -translate-x-1/2 rounded-full"
@@ -263,7 +264,7 @@ function StepThreeVisual() {
             </span>
 
             {/* payout chip */}
-            <span className="absolute bg-[#222222] left-1/2 top-[147px] ml-[-153px] flex h-[28px] items-center whitespace-nowrap border border-white/10 bg-white/[0.08] px-3 text-[12px] leading-none text-white/60 shadow-[0_4px_14px_rgba(0,0,0,0.35)]">
+            <span className="absolute left-1/2 top-[147px] ml-[-153px] flex h-[28px] items-center whitespace-nowrap border border-white/10 bg-[#222222] px-3 text-[12px] leading-none text-white/60 shadow-[0_4px_14px_rgba(0,0,0,0.35)]">
                 +3,555.00 USDC
             </span>
         </div>
@@ -297,7 +298,8 @@ export function ThreeSteps() {
                 </p>
             </div>
 
-            <div className="mt-11 grid gap-6 md:grid-cols-3 text-muted/90">
+            {/* mobile: single column locked to screen width (minmax(0,1fr)), desktop: unchanged md:grid-cols-3 */}
+            <div className="mt-11 grid gap-6 max-md:grid-cols-[minmax(0,1fr)] md:grid-cols-3 text-muted/90">
                 <StepCard
                     step={1}
                     title="Start Your Evaluation"
@@ -326,3 +328,5 @@ export function ThreeSteps() {
         </section>
     );
 }
+
+//Asad ul 

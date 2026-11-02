@@ -20,7 +20,7 @@ export function Hero() {
   return (
     <section className="relative w-full overflow-hidden px-6 pb-0 pt-[96px] md:min-h-[720px] md:px-20 md:pt-[184px]">
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        
+
       </div>
 
       {/* BG: header.png only at the top, fades out toward the bottom so no hard edge shows */}
@@ -44,7 +44,7 @@ export function Hero() {
         width={1080}
         height={1080}
         unoptimized
-       className="pointer-events-none relative mx-auto mb-6 block w-full max-w-[420px] select-none leading-[20px] md:absolute md:right-32 md:top-[39px] md:m-0 md:w-[636px] md:px-2 md:max-w-none"
+        className="pointer-events-none relative mx-auto mb-6 block w-full max-w-[420px] select-none leading-[20px] max-md:-translate-x-[6%] md:absolute md:right-32 md:top-[39px] md:m-0 md:w-[636px] md:px-2 md:max-w-none"
       />
 
 

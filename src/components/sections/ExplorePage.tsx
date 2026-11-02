@@ -285,9 +285,18 @@ export function ExplorePage() {
             style={{ "--u": "1px" } as React.CSSProperties}
           >
             <Image src="/images/explore/box/ringlogo.png" alt="Logo" width={156} height={156} className="h-auto w-[120px]" />
+            <Image
+              src="/images/explore/wires.png"
+              alt=""
+              width={1077}
+              height={580}
+              unoptimized
+              aria-hidden
+              className="pointer-events-none -mb-8 -mt-8 h-auto w-full max-w-[440px] select-none sm:hidden"
+            />
             <div className="grid w-full max-w-[440px] grid-cols-1 gap-3 sm:grid-cols-2">
               {CARDS.map((c) => (
-                <div key={c.icon} className="h-[80px] font-light">
+                <div key={c.icon} className="h-[80px]">
                   <StatCard {...c} />
                 </div>
               ))}
@@ -441,7 +450,7 @@ export function ExplorePage() {
                     <div
                       className={`absolute inset-0 bg-gradient-to-r from-[#99804A] to-white transition-opacity duration-700 ${isActive ? "opacity-100" : "opacity-0"}`}
                     />
-                    <div className="relative flex h-full items-center justify-between px-[41px]">
+                    <div className="relative flex h-full items-center justify-between gap-4 px-3 md:gap-0 md:px-[41px]">
                       <span className={`transition-colors duration-700 ${isActive ? "text-black" : "text-white/60"}`}>
                         {p.address}
                       </span>

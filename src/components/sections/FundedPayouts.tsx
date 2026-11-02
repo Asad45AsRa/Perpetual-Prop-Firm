@@ -490,14 +490,17 @@ export function FundedPayouts() {
                                 Every payment recorded on-chain
                             </span>
                         </div>
+                        <div>
                         <a
                             href="https://btcscan.org"
                             target="_blank"
-                            rel="noopener noreferrer"
-                            className="pt-[8px] text-[12px] ..."
+                            rel="noopener noreferrer" 
+                            className="pt-[8px] text-[12px] px-1 underline underline-offset-4"
                         >
-                            Verify every payment record
+                            Verify records
                         </a>
+                        <span>↗</span>
+                        </div>
                     </div>
 
                     <div className="mt-[24px] overflow-x-auto">

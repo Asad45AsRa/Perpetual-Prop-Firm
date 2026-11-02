@@ -179,14 +179,13 @@ export function HeroSection2() {
           </div>
 
           {/* Stats with count-up */}
-          <div className="mt-[3.57em] grid w-full grid-cols-2 gap-y-8 max-lg:gap-y-0 lg:flex lg:w-auto lg:justify-center lg:gap-y-0">
+          <div className="mt-[3.57em] grid w-full grid-cols-6 gap-y-8 max-lg:gap-y-0 lg:flex lg:w-auto lg:justify-center lg:gap-y-0">
             {STATS.map((s, i) => {
               const delay = 0.95 + i * 0.12;
               return (
                 <div
                   key={s.label}
-                  className={`hero-in group flex flex-col items-center gap-[0.857em] py-[0.2em] max-lg:border-b max-lg:border-white/15 max-lg:py-6 lg:border-l lg:border-white/15 lg:px-[3.214em] lg:first:border-l-0 lg:first:pl-0 lg:last:pr-0 ${i % 2 === 1 ? "max-lg:border-l max-lg:border-white/15" : ""
-                    }`}
+                  className={`hero-in group max-lg:relative flex flex-col items-center gap-[0.857em] py-[0.2em] max-lg:col-span-2 max-lg:py-6 lg:border-l lg:border-white/15 lg:px-[3.214em] lg:first:border-l-0 lg:first:pl-0 lg:last:pr-0 ${i < 3 ? "max-lg:border-b max-lg:border-white/15" : ""} ${i === 3 ? "max-lg:col-start-2 max-lg:pr-3" : ""} ${i === 4 ? "max-lg:pl-3" : ""} ${i === 1 || i === 2 || i === 4 ? "max-lg:before:absolute max-lg:before:left-0 max-lg:before:top-4 max-lg:before:bottom-4 max-lg:before:w-px max-lg:before:bg-white/15" : ""}`}
                   style={{ "--d": `${delay}s` } as React.CSSProperties}
                 >
                   <StatValue
