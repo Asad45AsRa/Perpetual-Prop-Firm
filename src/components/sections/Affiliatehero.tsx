@@ -90,13 +90,13 @@ export function AffiliateHero() {
 
         <div className="mt-[30px] flex gap-[14px]">
           <Link
-            href=''
+            href="/affiliates/join"
             className="inline-flex h-[41px] items-center bg-white px-7 text-[14px] text-ink"
           >
             Join Affiliate
           </Link>
           <Link
-            href=''
+            href="/affiliates/join"
             className="inline-flex h-[41px] items-center border border-white/10 bg-white/[0.06] px-7 text-[14px] font-normal tracking-[-0.01em] text-white/70"
           >
             Affiliate Login
