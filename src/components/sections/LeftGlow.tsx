@@ -2,17 +2,17 @@
 import type { CSSProperties } from "react";
 import { cn } from "@/lib/utils";
 
-type LeftGlowProps = {    
+type LeftGlowProps = {
   className?: string;
   style?: CSSProperties;
-  width?: number;   
-  height?: number;  
-  color?: string;    
-  opacity?: number;  
-  blur?: number;     
+  width?: number;
+  height?: number;
+  color?: string;
+  opacity?: number;
+  blur?: number;
   rotate?: number;
-  from?: number;     
-  to?: number;       
+  from?: number;
+  to?: number;
   trim?: number;
 };
 
@@ -34,7 +34,7 @@ export function LeftGlow({
   const sigma = blur / 2;      // Figma blur = 2 x CSS blur
   const ext = sigma * 3;       // blur ko cut hone se bachane ka margin
   const visibleH = height * (t - f);
-   const w = Math.max(width - trim, 1);
+  const w = Math.max(width - trim, 1);
 
   // sirf wo side kategi jahan split hai, baqi sides pe blur free rahega
   const cutTop = f > 0 ? 0 : -ext;
@@ -45,7 +45,7 @@ export function LeftGlow({
       aria-hidden
       className={cn("pointer-events-none absolute select-none", className)}
       style={{
-        width : w,
+        width: w,
         height: visibleH,
         clipPath: `inset(${cutTop}px ${-ext}px ${cutBottom}px ${-ext}px)`,
         ...style,
@@ -56,13 +56,11 @@ export function LeftGlow({
           position: "absolute",
           left: 0,
           top: -height * f,
-          width : w,
+          width: w,
           height,
-          background: color,
+          background: `radial-gradient(closest-side, ${color} 0%, rgba(255,255,255,0.5) 40%, transparent 100%)`,
           opacity,
-          filter: `blur(${sigma}px)`,
           transform: `rotate(${rotate}deg)`,
-          borderRadius: 9999,
         }}
       />
     </div>

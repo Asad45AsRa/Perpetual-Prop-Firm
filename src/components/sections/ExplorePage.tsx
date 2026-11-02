@@ -189,11 +189,12 @@ export function ExplorePage() {
       <section className="relative isolate mx-auto flex w-full max-w-none flex-col items-center px-10 py-20 text-center lg:px-20">
         <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-x-clip">
           <RightGlow
-            trim={60}
-            height={610}
-            right={-320}
-            className="top-[380px]"
-            opacity={0.17}
+            width={760}
+            trim={0}
+            height={790}
+            right={-450}
+            className="top-[320px]"
+            opacity={0.3}
           />
         </div>
         {/* ===== Funding diagram ===== */}
@@ -382,10 +383,11 @@ export function ExplorePage() {
           {/* Left glow: section ke padding se bahar nikal kar screen ke left edge par */}
           <div aria-hidden className="pointer-events-none absolute -left-10 top-1/2 -z-10 lg:-left-20">
             <LeftGlow
+              width={830}
+              height={760}
               trim={60}
-              height={480}
-              opacity={0.14}
-              className="left-[-320px] top-[-250px]"
+              opacity={0.28}
+              className="left-[-420px] top-[-420px]"
             />
           </div>
           {/* Left: payouts table */}

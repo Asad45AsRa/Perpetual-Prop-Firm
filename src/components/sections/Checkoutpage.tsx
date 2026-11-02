@@ -246,7 +246,7 @@ function PlanIcon({
     <span
       className={cn(
         "flex h-16 w-16 shrink-0 items-center justify-center border transition-colors",
-        selected ? "border-[#C2AC7A]/10 bg-[#D2C29A]/[0.38]" : "border-white/30 bg-white/[0.06]"
+        selected ? "border-white/10 bg-[99804A]/70" : "border-white/30 bg-white/[0.06]"
       )}
     >
       <Image
@@ -311,10 +311,11 @@ export function CheckoutPage() {
       <section className="relative isolate w-full px-6 pb-24 pt-11 lg:px-20">
         <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-x-clip">
           <LeftGlow
-            trim={60}
-            height={480}
-            opacity={0.14}
-            className="left-[-320px] bottom-[-120px]"
+           width={790}
+            trim={0}
+            height={800}
+            opacity={0.24}
+            className="left-[-320px] bottom-[-220px]"
           />
         </div>
         <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_466px] lg:items-stretch lg:gap-6">
@@ -351,8 +352,8 @@ export function CheckoutPage() {
                           "background",
                           selected
 
-                            ? "radial-gradient(55% 110% at 100% 110%, rgba(238, 235, 226, 0.55) 0%, rgba(168, 149, 96, 0.25) 45%, rgba(175, 151, 100, 0) 80%), linear-gradient(180deg, rgba(168,150,108,0.22) 0%, rgba(153,128,74,0) 45%), linear-gradient(rgba(230, 224, 211, 0.19), rgba(153,128,74,0.19)), #141414"
-                            : "linear-gradient(135deg, #1C1C1C 0%, #141414 100%)",
+                            ? "radial-gradient(45% 80% at 0% 0%, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0) 100%), radial-gradient(55% 110% at 100% 110%, rgba(238, 235, 226, 0.55) 0%, rgba(168, 149, 96, 0.25) 45%, rgba(175, 151, 100, 0) 80%), linear-gradient(180deg, rgba(168,150,108,0.22) 0%, rgba(153,128,74,0) 45%), linear-gradient(rgba(230, 224, 211, 0.19), rgba(153,128,74,0.19)), #141414"
+                           : "radial-gradient(45% 80% at 0% 0%, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0) 100%), radial-gradient(45% 80% at 100% 100%, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 100%), linear-gradient(135deg, #1A1A1A 0%, #121212 100%)",
 
                         );
                         el.style.setProperty("border-width", "0.7px", "important");
@@ -372,7 +373,7 @@ export function CheckoutPage() {
                         <span>
                           <span
                             className={cn(
-                              "block text-[12px] leading-4",
+                              "block text-[15px] leading-4",
                               selected ? "text-[#E3D3A6]" : "text-white/70",
                             )}
                           >
@@ -381,7 +382,7 @@ export function CheckoutPage() {
                           <span
                             className={cn(
                               "mt-1 block text-[28px] leading-[32px]",
-                              selected ? "text-[#B79F68]" : "text-white",
+                              selected ? "text-[#99804A]" : "text-white",
                             )}
                           >
                             {p.label}

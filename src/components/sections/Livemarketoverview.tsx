@@ -237,13 +237,14 @@ export function LiveMarketOverview({ longShort }: Props) {
           isliye yahan section ke andar apne glows hain */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
         <RightGlow
-          width={420}
-          height={480}
-          right={-200}
-          opacity={0.2}
-          className="top-[110px]"
+          width={1000}
+          trim={0}
+          height={1000}
+          right={-700}
+          opacity={0.4}
+          className="top-[-250px]"
         />
-       
+
       </div>
 
       <div className="relative z-10 flex flex-col items-center text-center">

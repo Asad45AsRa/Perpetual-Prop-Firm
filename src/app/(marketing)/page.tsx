@@ -4,7 +4,7 @@ import { CheckoutPage } from "@/components/sections/Checkoutpage";
 import { ThreeSteps } from "@/components/sections/Threesteps";
 import { Faq } from "@/components/sections/Faq";
 import { HeroSection2 } from "@/components/sections/Herosection2";
-import { LeftGlow } from "../../components/sections/LeftGlow"; // jo path Hero mein chal raha hai wahi rakhen
+import { LeftGlow } from "../../components/sections/LeftGlow";
 
 export default function HomePage() {
   return (
@@ -14,10 +14,11 @@ export default function HomePage() {
       {/* seam anchor: height 0, Hero aur Explore ke beech */}
       <div aria-hidden className="relative h-0">
         <LeftGlow
-          trim={60}
-          height={380}
-          className="-z-10 left-[-320px] top-[-85px]"
-          opacity={0.16}
+          width={800}
+          trim={2}
+          height={700}
+          className="-z-10 left-[-450px] top-[-195px]"
+          opacity={0.2}
         />
       </div>
 

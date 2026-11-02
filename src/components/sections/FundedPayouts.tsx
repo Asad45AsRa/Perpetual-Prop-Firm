@@ -282,9 +282,10 @@ export function FundedPayouts() {
             className="relative w-full px-6 pb-[120px] pt-[80px] md:px-20"
         >
             <RightGlow
+            width={850}
                 right={-440}
                 trim={0}
-                height={760}
+                height={900}
                 opacity={0.2}
                 blur={150}
                 className="z-30 mix-blend-screen top-[380px]"

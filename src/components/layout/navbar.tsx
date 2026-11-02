@@ -11,14 +11,14 @@ const links = [
   { label: "Explore", href: "/explore" },
   { label: "Rules", href: "/rules" },
   { label: "Affiliates", href: "/affiliates" },
-  { label: "FAQ", href: "/#faq" }, // ab Challenges page ke FAQ section par jayega
+  { label: "FAQ", href: "/#faq" }, 
 ];
 
 export function Navbar() {
   const pathname = usePathname();
   const [faqInView, setFaqInView] = useState(false);
 
-  // Home page par FAQ section screen par aaye to FAQ active dikhao
+  
   useEffect(() => {
     if (pathname !== "/") {
       setFaqInView(false);
@@ -32,7 +32,7 @@ export function Navbar() {
 
     const observer = new IntersectionObserver(
       ([entry]) => setFaqInView(entry.isIntersecting),
-      { rootMargin: "-40% 0px -40% 0px" } // jab section screen ke beech mein ho
+      { rootMargin: "-40% 0px -40% 0px" } 
     );
 
     observer.observe(el);
@@ -88,7 +88,7 @@ export function Navbar() {
                 key={item.label}
                 href={item.href}
                 onClick={(e) => {
-                  // Home page par ho to seedha FAQ tak scroll
+                  // Home page FAQ scroll
                   if (isFaq && pathname === "/") {
                     e.preventDefault();
                     document
@@ -96,14 +96,14 @@ export function Navbar() {
                       ?.scrollIntoView({ behavior: "smooth", block: "start" });
                     window.history.pushState(null, "", "/#faq");
                   }
-                  // Challenges par click: top par jao
+                  // Challenges 
                   if (isChallenges && pathname === "/") {
                     e.preventDefault();
                     window.scrollTo({ top: 0, behavior: "smooth" });
                     window.history.pushState(null, "", "/");
                   }
                 }}
-                className="relative flex h-full items-center text-[14px] font-light leading-none tracking-normal text-white/70 outline-none transition-opacity hover:opacity-80"
+                className="relative flex h-full items-center text-[14px] leading-none tracking-normal text-white/70 outline-none transition-opacity hover:opacity-80"
               >
                 {item.label}
                 {isActive && (

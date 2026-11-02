@@ -20,10 +20,10 @@ type AccountType = (typeof ACCOUNT_TYPES)[number];
 const GREEN = "#4CAF50";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
-const TICK_MS = REFRESH_MS; // har 5s par percentages thodi change hongi
-const EPOCH = Date.UTC(2026, 9, 31); // sirf SSR ka pehla render, phir Date.now() lag jata hai
+const TICK_MS = REFRESH_MS; // clock refresh interval (keeps date labels current; percentages no longer change here)
+const EPOCH = Date.UTC(2026, 9, 31); // only used for the first SSR render, then replaced by Date.now()
 
-// Har plan ka base pass rate (live drift isi ke around hota hai)
+// Base pass rate of each plan (the monthly drift is applied around it)
 const PLAN_BASE: Record<Plan, number> = {
     Elite: 22.5,
     Breeze: 33.8,
@@ -54,7 +54,7 @@ type Props = {
      * Live data endpoint (optional). GET ?period=30d&plan=Elite&type=Paid
      * Expected response:
      * { passRate: PassRateData, markets: PopularMarket[] }
-     * Har 5s par refresh hota hai. Na ho to neeche wala default data show hota hai.
+     * Refreshes every 5s. If not provided, the default data below is shown.
      */
     apiUrl?: string;
     passRate?: PassRateData;
@@ -114,7 +114,7 @@ function smoothPath(pts: { x: number; y: number }[]) {
     return d;
 }
 
-// deterministic hash: same input -> same output (reload par bhi)
+// deterministic hash: same input -> same output (even after a reload)
 function hash(n: number) {
     let h = Math.imul((n | 0) ^ 0x9e3779b9, 2654435761);
     h ^= h >>> 15;
@@ -131,39 +131,48 @@ function fmtDate(ms: number) {
     });
 }
 
+// Number of calendar months elapsed since EPOCH (UTC)
+function monthIndex(ms: number) {
+    const d = new Date(ms);
+    const e = new Date(EPOCH);
+    return Math.max(
+        0,
+        (d.getUTCFullYear() - e.getUTCFullYear()) * 12 +
+            (d.getUTCMonth() - e.getUTCMonth())
+    );
+}
+
 // rate -> chart level (left axis 0..4000)
 function levelOf(rate: number) {
     return 1000 + rate * 80;
 }
 
-/** Local live generator: pass rate + chart + dates (30d / 90d alag graph) */
+/** Local generator: pass rate + chart + dates (30d / 90d have separate graphs). Values change monthly only. */
 function buildPassRate(plan: Plan, period: Period, now: number): PassRateData {
     const pi = PLANS.indexOf(plan);
     const days = period === "30d" ? 30 : 90;
-    const tick = Math.floor(now / TICK_MS);
-    const dayIdx = Math.floor(now / DAY_MS);
+    const month = monthIndex(now);
 
-    // rate: base ke around +-0.3 drift
-    const drift = ((hash(tick * 4 + pi) % 61) - 30) / 100;
+    // rate: +-0.3 drift around the base (fixed for the whole month)
+    const drift = ((hash(month * 4 + pi) % 61) - 30) / 100;
     const rate = Math.round((PLAN_BASE[plan] + drift) * 10) / 10;
 
     // successful / unsuccessful
-    const total = (days === 30 ? 300 : 860) + (hash(tick * 7 + pi + 55) % 21);
+    const total = (days === 30 ? 300 : 860) + (hash(month * 7 + pi + 55) % 21);
     const successful = Math.round((total * rate) / 100);
     const unsuccessful = total - successful;
 
-    // chart: har din ka ek point (aaj ka point live rate se juda hai)
+    // chart: one point per day (the last point is tied to the current rate), shape fixed for the month
     const series: number[] = [];
     for (let k = 0; k < days; k++) {
-        const d = dayIdx - (days - 1 - k);
         const base = k === days - 1 ? rate : PLAN_BASE[plan];
-        const noise = ((hash(d * 4 + pi) % 1001) - 500) * 0.8;
-        const wave = Math.sin(d / 3 + pi) * 250;
+        const noise = ((hash((month * 1000 + k) * 4 + pi) % 1001) - 500) * 0.8;
+        const wave = Math.sin(k / 3 + pi) * 250;
         const v = levelOf(base) + noise + wave;
         series.push(Math.min(3950, Math.max(300, Math.round(v))));
     }
 
-    // x labels: current date tak, 8 evenly spaced
+    // x labels: up to the current date, 8 evenly spaced
     const labels = Array.from({ length: 8 }, (_, i) =>
         fmtDate(now - days * (1 - i / 7) * DAY_MS)
     );
@@ -171,15 +180,15 @@ function buildPassRate(plan: Plan, period: Period, now: number): PassRateData {
     return { rate, successful, unsuccessful, series, labels };
 }
 
-/** Local live generator: market shares / volume / trades */
+/** Local generator: market shares / volume / trades (change monthly only) */
 function buildMarkets(type: AccountType, period: Period, now: number): PopularMarket[] {
-    const tick = Math.floor(now / TICK_MS);
+    const month = monthIndex(now);
     const ti = ACCOUNT_TYPES.indexOf(type);
     const pi = period === "30d" ? 0 : 1;
 
     return DEFAULT_MARKETS.map((m, i) => {
-        const d = ((hash(tick * 13 + i * 3 + ti * 101 + pi * 1009) % 161) - 80) / 100; // +-0.8
-        const off = ti === 1 ? ((hash(i + 500) % 301) - 150) / 100 : 0; // Demo ka alag mix
+        const d = ((hash(month * 13 + i * 3 + ti * 101 + pi * 1009) % 161) - 80) / 100; // +-0.8
+        const off = ti === 1 ? ((hash(i + 500) % 301) - 150) / 100 : 0; // separate mix for Demo
         const share = Math.max(1, Math.round((m.share + d + off) * 10) / 10);
         const k = (share / m.share) * (pi ? 2.8 : 1) * (ti ? 0.4 : 1);
         return {
@@ -330,11 +339,11 @@ export function TraderPerformance({ apiUrl, passRate, markets }: Props) {
 
     const [now, setNow] = useState(EPOCH);
 
-    // props / API se aaya data (na ho to neeche local live data use hota hai)
+    // data coming from props / API (if absent, the local generated data below is used)
     const [passState, setPass] = useState<PassRateData | null>(passRate ?? null);
     const [popularState, setPopular] = useState<PopularMarket[] | null>(markets ?? null);
 
-    // clock: har 5s par refresh (dates + percentages live rehte hain)
+    // clock: refreshes every 5s (keeps the date labels current; data itself changes monthly)
     useEffect(() => {
         setNow(Date.now());
         const id = setInterval(() => setNow(Date.now()), TICK_MS);
@@ -350,7 +359,7 @@ export function TraderPerformance({ apiUrl, passRate, markets }: Props) {
     const pass = passState ?? livePass;
     const popular = popularState ?? liveMarkets;
 
-    // props update ho to state sync
+    // sync state when props update
     useEffect(() => {
         if (passRate) setPass(passRate);
     }, [passRate]);
@@ -358,7 +367,7 @@ export function TraderPerformance({ apiUrl, passRate, markets }: Props) {
         if (markets) setPopular(markets);
     }, [markets]);
 
-    // Real-time: har 5s par refresh (sirf jab apiUrl diya ho)
+    // Real-time: refresh every 5s (only when apiUrl is provided)
     useEffect(() => {
         if (!apiUrl) return;
         let alive = true;
@@ -384,7 +393,7 @@ export function TraderPerformance({ apiUrl, passRate, markets }: Props) {
                 if (json.passRate) setPass(json.passRate);
                 if (json.markets) setPopular(json.markets);
             } catch {
-                /* abort / network error — purana data rehne do */
+                /* abort / network error — keep the old data */
             }
         }
 
@@ -402,10 +411,11 @@ export function TraderPerformance({ apiUrl, passRate, markets }: Props) {
     return (
         <section className="relative w-full px-6 pb-[80px] pt-[40px] md:px-20 mb-10">
             <RightGlow
+            width={890}
                 right={-440}
                 trim={0}
-                height={560}
-                opacity={0.2}
+                height={760}
+                opacity={0.19}
                 blur={150}
                 className="z-30 mix-blend-screen bottom-[-380px]"
             />

@@ -280,10 +280,10 @@ export function ThreeSteps() {
         <section className="relative isolate w-full px-6 pb-28 pt-[72px] lg:px-20">
             <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-x-clip">
                 <RightGlow
-                    width={380}
-                    height={460}
+                    width={680}
+                    height={760}
                     right={-200}
-                    opacity={0.2}
+                    opacity={0.24}
                     className="bottom-[-160px]"
                 />
             </div>

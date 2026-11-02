@@ -5,18 +5,18 @@ import { cn } from "@/lib/utils";
 
 /* ----------------------------- config ----------------------------- */
 
-const STEP_MS = 10 * 60 * 1000; // har 10 minute
+const STEP_MS = 10 * 60 * 1000; // every 10 minutes
 const DAY_MS = 24 * 60 * 60 * 1000;
 
-// Fixed anchor: step count isi se nikalta hai, is liye reload par bhi same value rehti hai
+// Fixed anchor: the step count is derived from it, so the value stays the same even after a reload
 const EPOCH = Date.UTC(2026, 9, 31);
 
-// 3 up, 2 down, 4 up, 1 down -> phir loop
+// 3 up, 2 down, 4 up, 1 down -> then loops
 const PATTERN = [1, 1, 1, -1, -1, 1, 1, 1, 1, -1];
 
 const BASE = { signups: 10000, demo: 2700, paid: 1500 };
 
-// har step par move ka size [min, max]
+// size of the move on each step [min, max]
 const STEP_SIZE = {
     signups: [2, 4],
     demo: [1, 2],
@@ -29,7 +29,7 @@ const RANGES = {
 } as const;
 type RangeKey = keyof typeof RANGES;
 
-// signups right axis (0-10K) par plot hota hai, baqi left axis (0-4K) par
+// signups are plotted on the right axis (0-10K), the rest on the left axis (0-4K)
 const RIGHT_AXIS_RATIO = 2.5;
 
 const COLORS = {
@@ -40,7 +40,7 @@ const COLORS = {
     white: "#FFFFFF",
 };
 
-// Figma curve ka shape: [t (0..1 time), fraction of final value]
+// Shape of the Figma curve: [t (0..1 time), fraction of final value]
 type Profile = [number, number][];
 const P_SIGNUPS: Profile = [
     [0, 0], [0.202, 0.375], [0.326, 0.455], [0.442, 0.39], [0.527, 0.54],
@@ -70,14 +70,14 @@ const DONUT = [
     { key: "payout", pct: 10, color: COLORS.orange, text: "#fff" },
 ];
 
-function dailyDonut(day: number) {
-    const r = (((day + 1) * 9301 + 49297) % 233280) / 233280; // 0..1, har din ke liye fixed
+function monthlyDonut(month: number) {
+    const r = (((month + 1) * 9301 + 49297) % 233280) / 233280; // 0..1, fixed for each month
     const signed = 46 + Math.floor(r * 11); // 46..56
     const rest = 100 - signed;
     const funded = Math.round((rest * 14) / 52);
     const evalu = Math.round((rest * 18) / 52);
     const failed = Math.round((rest * 10) / 52);
-    const payout = rest - funded - evalu - failed; // total hamesha 100
+    const payout = rest - funded - evalu - failed; // total is always 100
 
     const pcts: Record<string, number> = {
         signed,
@@ -98,7 +98,17 @@ function mag(j: number, [lo, hi]: readonly [number, number] | readonly number[],
     return lo + ((j * 7 + seed) % (hi - lo + 1));
 }
 
-// Step n tak ki total values (pattern loop ke saath)
+// Number of calendar months elapsed since EPOCH (UTC)
+function monthIndex(ms: number) {
+    const d = new Date(ms);
+    const e = new Date(EPOCH);
+    return (
+        (d.getUTCFullYear() - e.getUTCFullYear()) * 12 +
+        (d.getUTCMonth() - e.getUTCMonth())
+    );
+}
+
+// Total values up to step n (with the pattern looping)
 function liveTotals(step: number) {
     let signups = BASE.signups;
     let demo = BASE.demo;
@@ -146,7 +156,7 @@ function valueAt(profile: Profile, t: number) {
     return profile[profile.length - 1][1];
 }
 
-// monotone cubic smooth path (plateaus bina overshoot ke)
+// monotone cubic smooth path (plateaus without overshoot)
 function monotonePath(p: [number, number][]) {
     const n = p.length;
     if (n < 2) return "";
@@ -179,7 +189,7 @@ export function PathToFunding() {
     const [hoverT, setHoverT] = useState<number | null>(null);
     const boxRef = useRef<HTMLDivElement>(null);
 
-    // Har 10 minute par naya step
+    // New step every 10 minutes
     useEffect(() => {
         let id: ReturnType<typeof setTimeout>;
         const tick = () => {
@@ -204,8 +214,8 @@ export function PathToFunding() {
 
     const step = Math.max(0, Math.floor((now - EPOCH) / STEP_MS));
     const live = useMemo(() => liveTotals(step), [step]);
-    const day = Math.max(0, Math.floor((now - EPOCH) / DAY_MS));
-    const donutData = useMemo(() => dailyDonut(day), [day]);
+    const month = Math.max(0, monthIndex(now));
+    const donutData = useMemo(() => monthlyDonut(month), [month]);
 
     const { days, scale } = RANGES[range];
     const totals = {

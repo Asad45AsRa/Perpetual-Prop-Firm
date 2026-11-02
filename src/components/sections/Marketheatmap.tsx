@@ -276,11 +276,11 @@ export function MarketHeatmap() {
       <div
       />
       <RightGlow
-        className="bottom-[-40px] z-0"
+        className="bottom-[-100px] z-0"
         right={-200}
-        width={538}
-        height={495}
-        opacity={0.1}
+        width={638}
+        height={795}
+        opacity={0.2}
         blur={150}
       />
 
