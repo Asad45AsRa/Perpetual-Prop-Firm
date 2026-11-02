@@ -23,16 +23,18 @@ export function Hero() {
 
       </div>
 
-      {/* BG: header.png only at the top, fades out toward the bottom so no hard edge shows */}
+      {/* BG: Figma's exported hero background (dark base + top-right light beam, 1440×821).
+          Covers the hero, pinned top-right so the glow stays in the corner at every width;
+          fades out at the bottom so it blends into the page colour with no visible edge. */}
       <Image
-        src="/images/header.png"
+        src="/images/hero/hero-bg.png"
         alt=""
-        width={1920}
-        height={670}
+        width={1440}
+        height={821}
         priority
         unoptimized
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-[670px] w-full select-none object-cover object-right [mask-image:linear-gradient(to_bottom,#000_40%,transparent_100%),linear-gradient(to_right,transparent_0%,#000_35%,#000_100%)] [mask-composite:intersect] [-webkit-mask-composite:source-in]" />
+        className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover object-right-top [mask-image:linear-gradient(to_bottom,#000_80%,transparent_100%)]" />
 
 
       {/* GIF: no visual effects applied.
