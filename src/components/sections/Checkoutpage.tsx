@@ -421,7 +421,7 @@ export function CheckoutPage() {
               <div className="flex flex-wrap items-center justify-between gap-3">
                 {isCustom ? (
                   <SectionChip>
-                    Build Your Rules.
+                    Capital You Way
                   </SectionChip>
                 ) : (
                   ''

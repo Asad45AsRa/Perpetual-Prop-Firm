@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { FaBars, FaXmark } from "react-icons/fa6"; // temporary icons, swap later
 import { siteConfig } from "@/config/site";
 
 const links = [
@@ -20,7 +19,6 @@ export function Navbar() {
   const [faqInView, setFaqInView] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
-
   useEffect(() => {
     if (pathname !== "/") {
       setFaqInView(false);
@@ -29,8 +27,6 @@ export function Navbar() {
 
     const el = document.getElementById("faq");
     if (!el) return;
-
-
 
     const observer = new IntersectionObserver(
       ([entry]) => setFaqInView(entry.isIntersecting),
@@ -120,9 +116,8 @@ export function Navbar() {
 
   return (
     <>
-      <header
-        className="fixed inset-x-0 top-0 z-50 h-20 border-b-[0.5px] border-white/[0.12] bg-[rgba(20,10,6,0.35)] backdrop-blur-[18px] [-webkit-backdrop-filter:blur(18px)]"
-      >
+      {/* Desktop keeps the original blur (backdrop-blur-nav), mobile uses the new 18px blur */}
+      <header className="fixed inset-x-0 top-0 z-50 h-20 border-b border-white/5 bg-nav/60 lg:backdrop-blur-nav max-lg:backdrop-blur-[18px] max-lg:[-webkit-backdrop-filter:blur(18px)]">
         <div className="relative flex h-full w-full items-center justify-between px-6 lg:px-20">
           {/* Logo */}
           <Link href="/" className="flex items-center outline-none focus:outline-none">
@@ -166,7 +161,7 @@ export function Navbar() {
                         ?.scrollIntoView({ behavior: "smooth", block: "start" });
                       window.history.pushState(null, "", "/#faq");
                     }
-                    // Challenges 
+                    // Challenges
                     if (isChallenges && pathname === "/") {
                       e.preventDefault();
                       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -207,30 +202,34 @@ export function Navbar() {
             onClick={() => setMenuOpen((o) => !o)}
             className="flex h-8 w-8 min-h-8 min-w-8 items-center justify-center p-0 text-white outline-none lg:hidden [-webkit-tap-highlight-color:transparent]"
           >
-            {menuOpen ? (
-              <FaXmark className="pointer-events-none h-8 w-8" />
-            ) : (
-              <FaBars className="pointer-events-none h-8 w-8" />
-            )}
+            <Image
+              src={menuOpen ? "/images/nav/X.png" : "/images/nav/Manue.png"}
+              alt=""
+              aria-hidden
+              width={32}
+              height={32}
+              unoptimized
+              className="pointer-events-none h-8 w-8 object-contain"
+            />
           </button>
         </div>
       </header>
 
-      {/* Mobile menu panel: solid background so the page behind it is fully hidden.
-        Sits below the header (top-20), so logo and close button stay visible. */}
+      {/* Mobile menu panel: sits below the header (top-20), so logo and close button stay visible. */}
       <div
         aria-hidden={!menuOpen}
-        className={`fixed inset-x-0 bottom-0 top-20 z-40 flex flex-col bg-[#111111] px-[14px] pb-[22px] pt-[18px] lg:hidden ${menuOpen
+        className={`fixed inset-x-0 bottom-0 top-20 z-40 flex flex-col bg-nav/60 px-[14px] pb-[22px] pt-[18px] backdrop-blur-[18px] [-webkit-backdrop-filter:blur(18px)] lg:hidden ${
+          menuOpen
             ? "visible translate-y-0 opacity-100"
             : "pointer-events-none invisible -translate-y-[10px] opacity-0"
-          }`}
+        }`}
         style={{
           transition:
             "opacity .30s ease, transform .36s cubic-bezier(.22,.61,.36,1), visibility .30s ease",
         }}
       >
         <nav className="flex flex-col">
-          {links.map((item, i) => {
+          {links.map((item) => {
             const isActive = getActive(item);
             return (
               <Link
@@ -238,8 +237,9 @@ export function Navbar() {
                 href={item.href}
                 tabIndex={menuOpen ? 0 : -1}
                 onClick={(e) => handleMobileClick(e, item)}
-                className={`flex items-center justify-between border-b border-white/10 py-5 text-[22px] leading-none outline-none ${isActive ? "text-white" : "text-white/60"
-                  }`}
+                className={`flex items-center justify-between border-b border-white/10 py-5 text-[22px] leading-none outline-none ${
+                  isActive ? "text-white" : "text-white/60"
+                }`}
               >
                 {item.label}
                 {isActive && (
@@ -261,8 +261,9 @@ export function Navbar() {
           href={siteConfig.links.getFunded}
           tabIndex={menuOpen ? 0 : -1}
           onClick={() => setMenuOpen(false)}
-          className={`mt-8 flex h-[45px] w-full items-center justify-center rounded-[2px] bg-white text-[14px] font-normal leading-none text-black outline-none transition-all duration-500 ease-out ${menuOpen ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
-            }`}
+          className={`mt-8 flex h-[45px] w-full items-center justify-center rounded-[2px] bg-white text-[14px] font-normal leading-none text-black outline-none transition-all duration-500 ease-out ${
+            menuOpen ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
+          }`}
           style={{ transitionDelay: menuOpen ? `${80 + links.length * 50}ms` : "0ms" }}
         >
           Get Funded

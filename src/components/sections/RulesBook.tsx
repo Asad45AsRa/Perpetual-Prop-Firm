@@ -1359,6 +1359,7 @@ export function RulesBook() {
   const lockRef = useRef(false);
   const [today, setToday] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
+  const asideRef = useRef<HTMLElement>(null);
 
   const q = query.trim().toLowerCase();
 
@@ -1388,7 +1389,10 @@ export function RulesBook() {
     setActiveId(item.id);
     setSearchOpen(false);
     lockRef.current = true;
+
   };
+
+
 
   /* scroll-spy: jo rule screen par hai uska item active */
   useEffect(() => {
@@ -1429,7 +1433,7 @@ export function RulesBook() {
 
   /* active item sidebar ke andar visible rakho */
   useEffect(() => {
-    const nav = navRef.current;
+    const nav = (navRef.current?.closest(".lg\\:overflow-y-auto") as HTMLElement | null) ?? navRef.current;
     const btn = nav?.querySelector<HTMLElement>(`[data-nav-item="${activeId}"]`);
     if (!nav || !btn) return;
     const top = btn.offsetTop - nav.offsetTop;
@@ -1488,8 +1492,7 @@ export function RulesBook() {
         {/* SIDEBAR */}
         <aside className="w-full shrink-0 lg:sticky lg:top-[110px] lg:w-[412px] lg:self-start">
           <div
-            ref={navRef}
-            className="relative flex flex-col border border-line bg-black/20 p-[22px] lg:max-h-[calc(100vh-130px)] lg:overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="relative flex flex-col border border-line bg-black/20 p-[22px] max-lg:fixed max-lg:left-6 max-lg:right-6 max-lg:top-[80px] max-lg:z-40 max-lg:bg-[#0d0c0a] lg:max-h-[calc(100vh-130px)] lg:overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {/* search */}
             <label className="flex h-[41px] shrink-0 items-center gap-3 border border-line bg-white/[0.03] px-4">

@@ -95,6 +95,8 @@ function formatCompact(n: number) {
     return `$${n.toFixed(0)}`;
 }
 
+const MOBILE_LABEL_IDX = [0, 2, 4, 5, 7];
+
 /** smooth (catmull-rom -> bezier) path through points */
 function smoothPath(pts: { x: number; y: number }[]) {
     if (pts.length < 2) return "";
@@ -329,10 +331,18 @@ function PassRateChart({ series, labels }: { series: number[]; labels: string[] 
 
             {/* x labels */}
             <div className="mt-[18px] flex justify-between pl-[50px] pr-[50px] text-[10px] leading-none text-[#6f6b63]/70">
-                {labels.map((l) => (
-                    <span key={l}>{l}</span>
-                ))}
-            </div>
+    {labels.map((l, i) => (
+        <span
+            key={l}
+            className={cn(
+                // mobile par sirf 5 labels (index 0, 2, 4, 5, 7 ... neeche dekhein), desktop par sab
+                !MOBILE_LABEL_IDX.includes(i) && "max-md:hidden"
+            )}
+        >
+            {l}
+        </span>
+    ))}
+</div>
         </div>
     );
 }

@@ -78,7 +78,7 @@ function StatValue({
 export function HeroSection2() {
   return (
     <section
-      className="relative flex min-h-screen w-full flex-col items-center justify-start overflow-x-clip px-6 pb-1 mb-0 pt-0 mt-0 md:pt-[19.29em] lg:px-20 lg:pb-[6.857em]"
+      className="relative flex w-full flex-col items-center justify-start overflow-x-clip px-6 pb-1 mb-0 pt-0 mt-0 max-md:min-h-0 md:min-h-screen md:pt-[19.29em] lg:px-20 lg:pb-[6.857em]"
       style={{ fontSize: "clamp(14px, calc(100vw * 14 / 1440), 24px)" }}
     >
       <style>{`

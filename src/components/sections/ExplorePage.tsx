@@ -281,20 +281,21 @@ export function ExplorePage() {
 
           {/* ---- Mobile: wires ki jagah simple stack (layout na toote) ---- */}
           <div
-            className="mt-8 flex w-full flex-col items-center gap-8 md:hidden"
+            className="mt-8 flex w-full flex-col items-center md:hidden"
             style={{ "--u": "1px" } as React.CSSProperties}
           >
-            <Image src="/images/explore/box/ringlogo.png" alt="Logo" width={156} height={156} className="h-auto w-[120px]" />
-            <Image
-              src="/images/explore/wires.png"
-              alt=""
-              width={1077}
-              height={580}
-              unoptimized
-              aria-hidden
-              className="pointer-events-none -mb-8 -mt-8 h-auto w-full max-w-[440px] select-none sm:hidden"
-            />
-            <div className="grid w-full max-w-[440px] grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="w-full max-w-[440px] pb-3">
+              <Image
+                src="/images/explore/wireswith.png"
+                alt="Logo"
+                width={1077}
+                height={580}
+                unoptimized
+                priority
+                className="pointer-events-none mx-auto h-auto w-[88%] select-none"
+              />
+            </div>
+            <div className="-mt-px grid w-full max-w-[440px] grid-cols-1 gap-2 sm:grid-cols-2">
               {CARDS.map((c) => (
                 <div key={c.icon} className="h-[80px]">
                   <StatCard {...c} />
