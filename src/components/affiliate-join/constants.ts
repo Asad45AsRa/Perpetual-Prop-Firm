@@ -16,7 +16,6 @@ export const PROMO_STEPS = [
   "Request and receive a payout",
 ] as const;
 
-// TODO: point at the affiliate dashboard once it exists.
-export const AFFILIATE_DASHBOARD_ROUTE = "/dashboard";
+export const AFFILIATE_DASHBOARD_ROUTE = "/affiliates/dashboard";
 
 export const OTP_LENGTH = 6;
