@@ -1502,7 +1502,7 @@ useEffect(() => {
             </label>
 
             {/* list: poori height, koi scroll nahi */}
-            <nav ref={navRef} className="mt-6">
+            <nav ref={navRef} className="mt-6 max-lg:hidden">
               {filteredGroups.map((g) => (
                 <div key={g.label} className="mb-6 last:mb-0">
                   <p className="mb-3 text-[10px] uppercase tracking-[0.04em] text-muted">{g.label}</p>

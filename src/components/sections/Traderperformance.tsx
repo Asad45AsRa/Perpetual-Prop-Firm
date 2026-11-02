@@ -138,7 +138,7 @@ function monthIndex(ms: number) {
     return Math.max(
         0,
         (d.getUTCFullYear() - e.getUTCFullYear()) * 12 +
-            (d.getUTCMonth() - e.getUTCMonth())
+        (d.getUTCMonth() - e.getUTCMonth())
     );
 }
 
@@ -185,17 +185,25 @@ function buildMarkets(type: AccountType, period: Period, now: number): PopularMa
     const month = monthIndex(now);
     const ti = ACCOUNT_TYPES.indexOf(type);
     const pi = period === "30d" ? 0 : 1;
+    const dayCount = Math.max(0, Math.floor((now - EPOCH) / DAY_MS));
 
     return DEFAULT_MARKETS.map((m, i) => {
         const d = ((hash(month * 13 + i * 3 + ti * 101 + pi * 1009) % 161) - 80) / 100; // +-0.8
         const off = ti === 1 ? ((hash(i + 500) % 301) - 150) / 100 : 0; // separate mix for Demo
         const share = Math.max(1, Math.round((m.share + d + off) * 10) / 10);
         const k = (share / m.share) * (pi ? 2.8 : 1) * (ti ? 0.4 : 1);
+
+        // har din 75-100 naye traders (deterministic random, reload par same rehta hai)
+        let extra = 0;
+        for (let day = 1; day <= dayCount; day++) {
+            extra += 75 + (hash(day * 31 + i * 7 + ti * 101 + pi * 1009 + 9001) % 26);
+        }
+
         return {
             ...m,
             share,
             volume: m.volume * k,
-            trades: Math.round(m.trades * k),
+            trades: Math.round(m.trades * k) + extra,
         };
     }).sort((a, b) => b.volume - a.volume);
 }
@@ -411,7 +419,7 @@ export function TraderPerformance({ apiUrl, passRate, markets }: Props) {
     return (
         <section className="relative w-full px-6 pb-[80px] pt-[40px] md:px-20 mb-10">
             <RightGlow
-            width={890}
+                width={890}
                 right={-440}
                 trim={0}
                 height={760}
@@ -432,14 +440,14 @@ export function TraderPerformance({ apiUrl, passRate, markets }: Props) {
             <div className="relative z-10 mt-[40px] grid w-full grid-cols-1 gap-[24px] lg:grid-cols-2">
                 {/* ------------------------- Pass rate trends ------------------------- */}
                 <div className="border border-white/10 bg-white/[0.04] px-[20px] pb-[28px] pt-[22px] backdrop-blur-[20px]">
-                    <div className="flex items-start justify-between">
-                        <span className="pt-[2px] text-[11px] uppercase leading-none text-[#6f6b63]">
-                            Pass Rate Trends
+                    <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between md:gap-0">
+                        <span className="pt-[2px] text-[11px] uppercase leading-[16px] text-[#6f6b63] md:leading-none">
+                            The most popular markets among traders
                         </span>
-                        <PeriodToggle value={period} onChange={setPeriod} />
+                        <PeriodToggle value={marketPeriod} onChange={setMarketPeriod} />
                     </div>
 
-                    <div className="mt-[22px] flex items-baseline gap-[10px]">
+                    <div className="mt-4 flex gap-[10px] md:-mt-[8px]">
                         <span
                             className="text-[40px] font-normal leading-none"
                             style={{ color: GREEN }}
@@ -477,14 +485,14 @@ export function TraderPerformance({ apiUrl, passRate, markets }: Props) {
 
                 {/* ----------------------- Most popular markets ----------------------- */}
                 <div className="border border-white/10 bg-white/[0.04] px-[20px] pb-[22px] pt-[22px] backdrop-blur-[20px]">
-                    <div className="flex items-start justify-between">
-                        <span className="pt-[2px] text-[11px] uppercase leading-none text-[#6f6b63]">
+                    <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between xl:gap-0">
+                        <span className="pt-[2px] text-[11px] uppercase leading-[16px] text-[#6f6b63] xl:leading-none">
                             The most popular markets among traders
                         </span>
                         <PeriodToggle value={marketPeriod} onChange={setMarketPeriod} />
                     </div>
 
-                    <div className="-mt-[8px] flex gap-[10px]">
+                    <div className="mt-4 flex gap-[10px] xl:-mt-[8px]">
                         {ACCOUNT_TYPES.map((t) => {
                             const active = t === type;
                             return (

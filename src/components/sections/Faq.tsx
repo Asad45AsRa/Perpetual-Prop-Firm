@@ -40,7 +40,7 @@ export function Faq() {
     return (
         <section
             id="faq"
-            className="relative w-full scroll-mt-20 overflow-x-clip px-6  pt-32 lg:px-20"
+            className="relative w-full scroll-mt-20 overflow-x-clip px-6 pb-16 pt-32 lg:px-20 lg:pb-0"
             /* Figma frame = 1440px, base text = 14px. Scales with the viewport
                but is capped at 16px so it doesn't look oversized on big screens. */
             style={{ fontSize: "clamp(14px, calc(100vw * 14 / 1440), 16px)" }}

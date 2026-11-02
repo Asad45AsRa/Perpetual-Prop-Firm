@@ -62,9 +62,11 @@ export function PartnerLevels() {
           {levels.map((l) => (
             <article
               key={l.tag}
-              className="relative flex h-[458px] flex-col items-center overflow-hidden border border-white/[0.14] bg-[#111111]"
+              /* Mobile: height follows the content (no fixed height) and gets bottom padding.
+                 md and up: original fixed 458px height. */
+              className="relative flex flex-col items-center overflow-hidden border border-white/[0.14] bg-[#111111] max-md:pb-6 md:h-[458px]"
             >
-              {/* 1) Main glow: upar se halki curved light, neeche smooth fade */}
+              {/* 1) Main glow: soft curved light from the top, smooth fade downward */}
               <div
                 aria-hidden
                 className="pointer-events-none absolute inset-x-0 top-0 h-[340px]"
@@ -78,7 +80,7 @@ export function PartnerLevels() {
                 }}
               />
 
-              {/* 2) Left side ki halki grey band */}
+              {/* 2) Light grey band on the left side */}
               <div
                 aria-hidden
                 className="pointer-events-none absolute inset-x-0 top-0 h-[260px]"
@@ -89,22 +91,28 @@ export function PartnerLevels() {
                 }}
               />
 
-              {/* Gem */}
-              <div className="relative flex h-[209px] w-full shrink-0 items-center justify-center">
+              {/* Gem: shorter wrapper on mobile, original 209px on md and up */}
+              <div className="relative flex w-full shrink-0 items-center justify-center max-md:h-[160px] md:h-[209px]">
                 <Image
                   src={l.img}
                   alt={`${l.tag} level`}
                   width={200}
                   height={200}
                   unoptimized
-                  style={{ height: l.imgH }}
-                  className="w-auto select-none object-contain [filter:none]"
+                  /* Two CSS variables: mobile (smaller gem) and desktop (original height) */
+                  style={
+                    {
+                      "--gem-h": `${l.imgH}px`,
+                      "--gem-h-sm": `${Math.round(l.imgH * 0.72)}px`,
+                    } as React.CSSProperties
+                  }
+                  className="h-[var(--gem-h-sm)] w-auto select-none object-contain [filter:none] md:h-[var(--gem-h)]"
                 />
               </div>
 
-              {/* Tag */}
+              {/* Tag: shrink-0 keeps its full 28px height so it looks the same as desktop */}
               <span
-                className="relative inline-flex h-[28px] items-center px-5 text-[11px] leading-none text-[#1a1a1a]"
+                className="relative inline-flex h-[28px] shrink-0 items-center px-5 text-[11px] leading-none text-[#1a1a1a]"
                 style={{
                   background: "linear-gradient(90deg, #FFFFFF 0%, #B9A06A 100%)",
                 }}
@@ -112,7 +120,7 @@ export function PartnerLevels() {
                 {l.tag}
               </span>
 
-              <h3 className="relative mt-[30px] text-[22px] font-normal leading-[28px] text-white">
+              <h3 className="relative mt-[30px] shrink-0 text-[22px] font-normal leading-[28px] text-white max-md:mt-5">
                 {l.title}
               </h3>
 
@@ -120,7 +128,9 @@ export function PartnerLevels() {
                 {l.chips.map((c) => (
                   <span
                     key={c}
-                    className="inline-flex h-[30px] items-center border border-[#2C2C2C] bg-[#1B1B1B] px-3 text-[13px] leading-none text-[#8D8D8D]"
+                    /* Mobile: chip grows with its text (no fixed height) so long text wraps cleanly.
+                       md and up: original fixed 30px height. */
+                    className="inline-flex h-[30px] items-center border border-[#2C2C2C] bg-[#1B1B1B] px-3 text-[13px] leading-none text-[#8D8D8D] max-md:h-auto max-md:min-h-[30px] max-md:justify-center max-md:py-2 max-md:text-center max-md:leading-[16px]"
                   >
                     {c}
                   </span>

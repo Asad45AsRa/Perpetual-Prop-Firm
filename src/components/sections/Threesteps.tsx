@@ -263,7 +263,7 @@ function StepThreeVisual() {
             </span>
 
             {/* payout chip */}
-            <span className="absolute left-1/2 top-[147px] ml-[-153px] flex h-[28px] items-center whitespace-nowrap border border-white/10 bg-white/[0.08] px-3 text-[12px] leading-none text-white/60 shadow-[0_4px_14px_rgba(0,0,0,0.35)]">
+            <span className="absolute bg-[#222222] left-1/2 top-[147px] ml-[-153px] flex h-[28px] items-center whitespace-nowrap border border-white/10 bg-white/[0.08] px-3 text-[12px] leading-none text-white/60 shadow-[0_4px_14px_rgba(0,0,0,0.35)]">
                 +3,555.00 USDC
             </span>
         </div>

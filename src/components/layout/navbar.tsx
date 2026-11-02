@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { FaBars, FaXmark } from "react-icons/fa6"; // temporary icons, swap later
 import { siteConfig } from "@/config/site";
 
 const links = [
@@ -17,6 +18,7 @@ const links = [
 export function Navbar() {
   const pathname = usePathname();
   const [faqInView, setFaqInView] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   
   useEffect(() => {
@@ -51,7 +53,73 @@ export function Navbar() {
     return () => clearTimeout(t);
   }, [pathname]);
 
+  // Close the mobile menu on route change
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+
+  // Lock page scroll while the mobile menu is open, close on Escape
+  useEffect(() => {
+    if (!menuOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [menuOpen]);
+
+  // If the screen grows to desktop size, make sure the mobile menu is closed
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const onChange = () => {
+      if (mq.matches) setMenuOpen(false);
+    };
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  const getActive = (item: (typeof links)[number]) => {
+    const isFaq = item.label === "FAQ";
+    const isChallenges = item.label === "Challenges";
+    if (isFaq) return pathname === "/" && faqInView;
+    if (isChallenges) return pathname === "/" && !faqInView;
+    return pathname === item.href || pathname.startsWith(item.href + "/");
+  };
+
+  // Mobile link click: close the menu first, then run the same scroll logic as desktop
+  const handleMobileClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    item: (typeof links)[number]
+  ) => {
+    const isFaq = item.label === "FAQ";
+    const isChallenges = item.label === "Challenges";
+    setMenuOpen(false);
+
+    if (isFaq && pathname === "/") {
+      e.preventDefault();
+      setTimeout(() => {
+        document
+          .getElementById("faq")
+          ?.scrollIntoView({ behavior: "smooth", block: "start" });
+        window.history.pushState(null, "", "/#faq");
+      }, 60);
+    }
+    if (isChallenges && pathname === "/") {
+      e.preventDefault();
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        window.history.pushState(null, "", "/");
+      }, 60);
+    }
+  };
+
   return (
+    <>
     <header className="fixed inset-x-0 top-0 z-50 h-20 border-b border-white/5 bg-nav/60 backdrop-blur-nav">
       <div className="relative flex h-full w-full items-center justify-between px-6 lg:px-20">
         {/* Logo */}
@@ -67,8 +135,8 @@ export function Navbar() {
           />
         </Link>
 
-        {/* Nav links */}
-        <nav className="absolute left-1/2 top-0 flex h-full -translate-x-1/2 items-center gap-10">
+        {/* Nav links (desktop only: below lg the mobile menu is used) */}
+        <nav className="absolute left-1/2 top-0 flex h-full -translate-x-1/2 items-center gap-10 max-lg:hidden">
           {links.map((item) => {
             const isFaq = item.label === "FAQ";
             const isChallenges = item.label === "Challenges";
@@ -121,14 +189,88 @@ export function Navbar() {
           })}
         </nav>
 
-        {/* Get Funded */}
+        {/* Get Funded (desktop only: on mobile it lives inside the menu) */}
         <Link
           href={siteConfig.links.getFunded}
-          className="flex h-[41px] w-[126px] items-center justify-center font-[50px] rounded-[2px] bg-white text-[14px] font-normal leading-none text-black outline-none"
+          className="flex h-[41px] w-[126px] items-center justify-center font-[50px] rounded-[2px] bg-white text-[14px] font-normal leading-none text-black outline-none max-lg:hidden"
         >
           Get Funded
         </Link>
+
+        {/* Mobile menu button: only exists below lg */}
+        <button
+          type="button"
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((o) => !o)}
+          className="relative flex h-[41px] w-[41px] items-center justify-center text-white outline-none lg:hidden"
+        >
+          <FaBars
+            className={`absolute h-[20px] w-[20px] transition-all duration-300 ease-out ${
+              menuOpen ? "rotate-90 scale-50 opacity-0" : "rotate-0 scale-100 opacity-100"
+            }`}
+          />
+          <FaXmark
+            className={`absolute h-[24px] w-[24px] transition-all duration-300 ease-out ${
+              menuOpen ? "rotate-0 scale-100 opacity-100" : "-rotate-90 scale-50 opacity-0"
+            }`}
+          />
+        </button>
       </div>
     </header>
+
+    {/* Mobile menu panel: solid background so the page behind it is fully hidden.
+        Sits below the header (top-20), so logo and close button stay visible. */}
+    <div
+      aria-hidden={!menuOpen}
+      className={`fixed inset-x-0 bottom-0 top-20 z-40 flex flex-col bg-[#111111] px-6 pb-10 pt-8 transition-all duration-300 ease-out lg:hidden ${
+        menuOpen
+          ? "visible translate-y-0 opacity-100"
+          : "pointer-events-none invisible -translate-y-3 opacity-0"
+      }`}
+    >
+      <nav className="flex flex-col">
+        {links.map((item, i) => {
+          const isActive = getActive(item);
+          return (
+            <Link
+              key={item.label}
+              href={item.href}
+              tabIndex={menuOpen ? 0 : -1}
+              onClick={(e) => handleMobileClick(e, item)}
+              className={`flex items-center justify-between border-b border-white/10 py-5 text-[22px] leading-none outline-none transition-all duration-500 ease-out ${
+                isActive ? "text-white" : "text-white/60"
+              } ${menuOpen ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"}`}
+              style={{ transitionDelay: menuOpen ? `${80 + i * 50}ms` : "0ms" }}
+            >
+              {item.label}
+              {isActive && (
+                <span
+                  aria-hidden
+                  className="h-[2px] w-8"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(90deg, #FFFFFF 0%, #99804A 100%)",
+                  }}
+                />
+              )}
+            </Link>
+          );
+        })}
+      </nav>
+
+      <Link
+        href={siteConfig.links.getFunded}
+        tabIndex={menuOpen ? 0 : -1}
+        onClick={() => setMenuOpen(false)}
+        className={`mt-8 flex h-[45px] w-full items-center justify-center rounded-[2px] bg-white text-[14px] font-normal leading-none text-black outline-none transition-all duration-500 ease-out ${
+          menuOpen ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
+        }`}
+        style={{ transitionDelay: menuOpen ? `${80 + links.length * 50}ms` : "0ms" }}
+      >
+        Get Funded
+      </Link>
+    </div>
+    </>
   );
 }

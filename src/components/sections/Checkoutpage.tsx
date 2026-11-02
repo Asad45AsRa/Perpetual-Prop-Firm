@@ -333,7 +333,7 @@ export function CheckoutPage() {
             </p>
 
             {/* ---------- Choose Your Path ---------- */}
-            <div className="mt-9">
+            <div className="mt-9 text-/muted">
               <SectionChip>Choose Your Path To Funding</SectionChip>
 
               <div className="mt-6 grid gap-[14px] sm:grid-cols-2">
@@ -374,7 +374,7 @@ export function CheckoutPage() {
                           <span
                             className={cn(
                               "block text-[15px] leading-4",
-                              selected ? "text-[#E3D3A6]" : "text-white/70",
+                              selected ? "text-white/70" : "text-white/70",
                             )}
                           >
                             {p.name}
@@ -616,8 +616,7 @@ export function CheckoutPage() {
                   {moneyWhole(balance)}
                 </p>
                 <p className="mt-2 text-[10px] leading-[14px] text-white/50">
-                  {plan.multiplier}× on your {money(amount)} payment · Capital
-                  your way
+                  {plan.multiplier}× on your {money(amount)} payment · {plan.name}
                 </p>
               </div>
 

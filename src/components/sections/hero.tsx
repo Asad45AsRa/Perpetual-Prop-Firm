@@ -18,12 +18,12 @@ const rows = [stats.slice(0, 3), stats.slice(3)];
 
 export function Hero() {
   return (
-    <section className="relative w-full overflow-hidden px-6 pb-0 pt-[184px] md:min-h-[720px] md:px-20">
+    <section className="relative w-full overflow-hidden px-6 pb-0 pt-[96px] md:min-h-[720px] md:px-20 md:pt-[184px]">
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         
       </div>
 
-      {/* BG: header.png sirf top par, neeche se fade taake hard edge na aaye */}
+      {/* BG: header.png only at the top, fades out toward the bottom so no hard edge shows */}
       <Image
         src="/images/header.png"
         alt=""
@@ -35,14 +35,16 @@ export function Hero() {
         className="pointer-events-none absolute inset-x-0 top-0 h-[670px] w-full select-none object-cover object-right [mask-image:linear-gradient(to_bottom,#000_40%,transparent_100%),linear-gradient(to_right,transparent_0%,#000_35%,#000_100%)] [mask-composite:intersect] [-webkit-mask-composite:source-in]" />
 
 
-      {/* GIF: bilkul plain, koi CSS nahi */}
+      {/* GIF: no visual effects applied.
+          Small screens: sits in normal flow, centered, above the text.
+          md and up: absolutely positioned on the right (same as the original desktop layout). */}
       <Image
         src="/images/hero/Final1080.gif"
         alt="Perpeye trading coins"
         width={1080}
         height={1080}
         unoptimized
-        className="pointer-events-none absolute right-32 top-[39px] w-[636px] leading-[20px] select-none md:block"
+       className="pointer-events-none relative mx-auto mb-6 block w-full max-w-[420px] select-none leading-[20px] md:absolute md:right-32 md:top-[39px] md:m-0 md:w-[636px] md:px-2 md:max-w-none"
       />
 
 
@@ -74,18 +76,24 @@ export function Hero() {
           </Link>
         </div>
 
-        <div className="mt-[47px] w-fit">
+        {/* Stats: full width on small screens, shrink-to-fit on md and up */}
+        <div className="mt-[47px] w-full md:w-fit">
           {rows.map((row, i) => (
             <dl
               key={i}
-              className={cn("flex", i > 0 && "mt-[25px] border-t border-line pt-[25px]")}
+              /* Small screens: 3 equal columns so both rows share the same column grid
+                 and the vertical dividers line up. md and up: original flex layout. */
+              className={cn(
+                "grid grid-cols-3 md:flex",
+                i > 0 && "mt-[25px] border-t border-line pt-[25px]"
+              )}
             >
               {row.map((s, j) => (
                 <div
                   key={s.label}
                   className={cn(
-                    j > 0 && "border-l border-line pl-[44px]",
-                    j < row.length - 1 && "pr-[45px]"
+                    j > 0 && "border-l border-line pl-3 md:pl-[44px]",
+                    j < row.length - 1 && "pr-2 md:pr-[45px]"
                   )}
                 >
                   <dt className="text-[26px] leading-none text-gold-accent">{s.value}</dt>

@@ -211,7 +211,7 @@ export function ExplorePage() {
           <div
             ref={diagramRef}
             data-on={seen}
-            className="diagram relative mt-8 aspect-[1060/360] w-full max-w-[1060px] [container-type:inline-size] md:block"
+            className="diagram relative mt-8 aspect-[1060/360] w-full max-w-[1060px] [container-type:inline-size] max-md:hidden md:block"
             style={{ "--u": "calc(100cqw / 1060)" } as React.CSSProperties}
           >
             <style>{`
@@ -379,7 +379,7 @@ export function ExplorePage() {
         </div>
 
         {/* ===== Payouts section ===== */}
-        <div className="relative mt-24 flex w-full flex-col gap-12 text-left lg:mt-[200px] lg:flex-row lg:items-center lg:justify-between lg:gap-8">
+        <div className="relative mt-24 flex w-full flex-col-reverse gap-12 text-left lg:mt-[200px] lg:flex-row lg:items-center lg:justify-between lg:gap-8">
           {/* Left glow: section ke padding se bahar nikal kar screen ke left edge par */}
           <div aria-hidden className="pointer-events-none absolute -left-10 top-1/2 -z-10 lg:-left-20">
             <LeftGlow

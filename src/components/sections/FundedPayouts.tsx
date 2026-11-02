@@ -6,8 +6,10 @@ import { RightGlow } from "@/components/sections/RightGlow";
 
 /* ----------------------------- config ----------------------------- */
 
-const STEP_MS = 10 * 60 * 1000; // har 10 minute par naya payout
-const ROW_MS = 8300;
+const STEP_MS = 10 * 60 * 1000;
+const GAP_MIN_MS = 2 * 60 * 1000;
+const GAP_MAX_MS = 3 * 60 * 1000;
+const WINDOW_MS = 60 * 60 * 1000;
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 // Fixed anchor: step count isi se nikalta hai, reload par values reset nahi hotin
@@ -93,6 +95,19 @@ function avgTimeOf(i: number) {
 function addrOf(i: number) {
     const n = BTC_ADDRESSES.length;
     return BTC_ADDRESSES[((i % n) + n) % n];
+}
+
+function windowPayouts(w: number) {
+    const start = EPOCH + w * WINDOW_MS;
+    const out: { id: number; t: number }[] = [];
+    let t = start;
+    let j = 0;
+    while (t < start + WINDOW_MS) {
+        out.push({ id: w * 100 + j, t });
+        j++;
+        t += GAP_MIN_MS + (hash(w * 100 + j + 4242) % (GAP_MAX_MS - GAP_MIN_MS + 1));
+    }
+    return out;
 }
 
 function shortAddr(a: string) {
@@ -251,10 +266,14 @@ export function FundedPayouts() {
     const last = pts[pts.length - 1];
     const area = `${line} L${last[0]},${plotB} L${pts[0][0]},${plotB} Z`;
 
-    const xLabels = Array.from({ length: 8 }, (_, i) => ({
-        x: plotL + 19 + (i / 7) * Math.max(plotW - 48, 0),
-        label: fmtDate(now - days * (1 - i / 7) * DAY_MS),
-    }));
+    const xCount = w > 0 && w < 480 ? 4 : 8;
+    const xLabels = Array.from({ length: xCount }, (_, i) => {
+        const f = i / (xCount - 1);
+        return {
+            x: plotL + 19 + f * Math.max(plotW - 48, 0),
+            label: fmtDate(now - days * (1 - f) * DAY_MS),
+        };
+    });
 
     let hover: { x: number; y: number; v: number } | null = null;
     if (hoverT !== null && n > 1) {
@@ -264,17 +283,22 @@ export function FundedPayouts() {
         hover = { x: xAt(hoverT), y: yAt(v), v };
     }
 
-    const rowStep = Math.max(0, Math.floor((now - EPOCH) / ROW_MS));
-    const rows = Array.from({ length: ROWS }, (_, k) => {
-        const i = rowStep - k;
-        return {
-            i,
-            age: now - (EPOCH + i * ROW_MS),
-            addr: addrOf(i),
-            amount: amountOf(i),
-            avg: avgTimeOf(i),
-        };
-    });
+    const rows = useMemo(() => {
+        const w0 = Math.max(0, Math.floor((now - EPOCH) / WINDOW_MS));
+        const list: { id: number; t: number }[] = [];
+        for (let w = w0; w >= 0 && list.length < ROWS; w--) {
+            list.push(...windowPayouts(w).filter((x) => x.t <= now).reverse());
+        }
+        return list.slice(0, ROWS).map(({ id, t }) => ({
+            i: id,
+            age: now - t,
+            addr: addrOf(id),
+            amount: amountOf(id),
+            avg: avgTimeOf(id),
+        }));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [Math.floor(now / 1000)]);
+
 
     return (
         <section
@@ -282,7 +306,7 @@ export function FundedPayouts() {
             className="relative w-full px-6 pb-[120px] pt-[80px] md:px-20"
         >
             <RightGlow
-            width={850}
+                width={850}
                 right={-440}
                 trim={0}
                 height={900}
@@ -304,7 +328,7 @@ export function FundedPayouts() {
 
                 {/* ------------------------ payout overview ------------------------ */}
                 <div className="mt-[44px] border border-white/10  p-5">
-                    <div className="flex items-start justify-between">
+                    <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                         <div>
                             <span className="block text-[12px] uppercase leading-none text-white">
                                 Payout overview
@@ -313,7 +337,7 @@ export function FundedPayouts() {
                                 Daily and total payouts recorded on-chain
                             </span>
                         </div>
-                        <div className="flex gap-[9px]">
+                        <div className="flex w-full gap-[9px] md:w-auto">
                             {MODE_KEYS.map((k) => {
                                 const active = k === mode;
                                 return (
@@ -322,7 +346,7 @@ export function FundedPayouts() {
                                         type="button"
                                         onClick={() => setMode(k)}
                                         className={cn(
-                                            "h-[40px] w-[79px] text-[11px] leading-none transition-colors",
+                                            "h-[40px] min-w-0 flex-1 text-[11px] leading-none transition-colors md:w-[79px] md:flex-none",
                                             active
                                                 ? "border border-white/30 bg-white/[0.12] text-white"
                                                 : "border border-transparent bg-white/[0.05] text-[#A8A39A] hover:text-white"

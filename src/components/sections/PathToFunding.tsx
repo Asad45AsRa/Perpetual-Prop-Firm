@@ -245,9 +245,11 @@ export function PathToFunding() {
         return { ...s, d: monotonePath(pts), end: pts[pts.length - 1] };
     });
 
-    const xLabels = Array.from({ length: 8 }, (_, i) => {
-        const x = plotL + 20 + (i / 7) * Math.max(plotW - 35, 0);
-        const ms = now - (days - days * (i / 7)) * DAY_MS;
+    const xCount = w > 0 && w < 480 ? 4 : 8;
+    const xLabels = Array.from({ length: xCount }, (_, i) => {
+        const f = i / (xCount - 1);
+        const x = plotL + 20 + f * Math.max(plotW - 35, 0);
+        const ms = now - (days - days * f) * DAY_MS;
         return { x, label: fmtDate(ms) };
     });
 
@@ -490,7 +492,7 @@ export function PathToFunding() {
                                 title="Signed Up Only"
                                 sub="Registered without a paid evaluation"
                             />
-                            <div className="grid grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] gap-y-[26px]">
+                            <div className="grid grid-cols-1 gap-y-[26px] md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
                                 <LegendItem
                                     color={COLORS.blue}
                                     title="In Evaluation"
@@ -564,7 +566,7 @@ function LegendItem({
         <div className="flex items-center gap-[10px]">
             <span className="h-[44px] w-[4px] shrink-0" style={{ background: color }} />
             <div className="flex flex-col gap-[8px]">
-                <span className="text-[13px] leading-none text-white">{title}</span>
+                <span className="text-[13px] leading-none text-white max-md:whitespace-nowrap">{title}</span>
                 <span className="text-[11px] leading-none text-[#6f6b63]">{sub}</span>
             </div>
         </div>
@@ -586,7 +588,7 @@ function Donut({ data }: { data: typeof DONUT }) {
     ];
 
     let acc = 0;
-    const segs = data.map((s) =>  {
+    const segs = data.map((s) => {
         const a0 = (acc / 100) * Math.PI * 2;
         acc += s.pct;
         const a1 = (acc / 100) * Math.PI * 2;

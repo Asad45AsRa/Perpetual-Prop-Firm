@@ -119,13 +119,14 @@ export function JoinCta() {
         </div>
 
         {/* Stats: har column px-[45px], beech me 1px divider */}
-        <dl className="mt-[55px] flex flex-wrap justify-center gap-y-6">
+        <dl className="mt-[55px] grid w-full grid-cols-2 md:flex md:w-auto md:flex-wrap md:justify-center md:gap-y-6">
           {stats.map((s, i) => (
             <div
               key={s.label}
               className={
-                "px-[45px] text-center" +
-                (i > 0 ? " md:border-l md:border-white/10" : "")
+                "px-2 text-center max-md:border-b max-md:border-white/10 max-md:py-6 md:px-[45px]" +
+                (i > 0 ? " md:border-l md:border-white/10" : "") +
+                (i % 2 === 1 ? " max-md:border-l max-md:border-white/10" : "")
               }
             >
               <dt className="text-[26px] leading-none text-white">
