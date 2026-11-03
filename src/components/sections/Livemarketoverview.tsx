@@ -260,7 +260,7 @@ export function LiveMarketOverview({ longShort }: Props) {
       <div className="relative z-10 mt-[40px] w-full border border-white/10 bg-white/[0.04] backdrop-blur-[20px]">
         {/* toolbar */}
         <div className="flex flex-col gap-3 border-b border-white/[0.06] bg-white/[0.03] px-[17px] py-[16px] md:flex-row md:items-center md:justify-between">
-          <div className="flex flex-wrap gap-[15px]">
+          <div className="flex flex-wrap gap-[15px] max-md:justify-center">
             {TABS.map((t) => {
               const active = t === tab;
               return (
@@ -409,7 +409,7 @@ export function LiveMarketOverview({ longShort }: Props) {
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-[7px]">
+          <div className="flex flex-wrap items-center gap-[7px] max-md:justify-center">
             {/* prev */}
             <button
               type="button"

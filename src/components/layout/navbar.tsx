@@ -189,7 +189,7 @@ export function Navbar() {
           {/* Get Funded (desktop only: on mobile it lives inside the menu) */}
           <Link
             href={siteConfig.links.getFunded}
-            className="flex h-[41px] w-[126px] items-center justify-center font-[50px] rounded-[2px] bg-white text-[14px] font-normal leading-none text-black outline-none max-lg:hidden"
+            className="flex h-[41px] w-[126px] items-center justify-center font-[50px] bg-white text-[14px] font-normal leading-none text-black outline-none max-lg:hidden"
           >
             Get Funded
           </Link>
@@ -219,8 +219,8 @@ export function Navbar() {
       <div
         aria-hidden={!menuOpen}
         className={`fixed inset-x-0 bottom-0 top-20 z-40 flex flex-col bg-nav/60 px-[14px] pb-[22px] pt-[18px] backdrop-blur-[18px] [-webkit-backdrop-filter:blur(18px)] lg:hidden ${menuOpen
-            ? "visible translate-y-0 opacity-100"
-            : "pointer-events-none invisible -translate-y-[10px] opacity-0"
+          ? "visible translate-y-0 opacity-100"
+          : "pointer-events-none invisible -translate-y-[10px] opacity-0"
           }`}
         style={{
           transition:
@@ -246,9 +246,9 @@ export function Navbar() {
                 href={item.href}
                 tabIndex={menuOpen ? 0 : -1}
                 onClick={(e) => handleMobileClick(e, item)}
-                className={`group flex items-center justify-between rounded-[12px] border px-[18px] py-[18px] text-[18px] leading-none outline-none transition-all duration-300 hover:border-[#99804A]/70 hover:bg-white/[0.09] hover:text-white active:scale-[0.99] ${isActive
-                    ? "border-[#99804A]/60 bg-white/[0.08] text-white"
-                    : "border-white/10 bg-white/[0.04] text-white/70"
+                className={`group flex items-center justify-between border px-[18px] py-[18px] text-[18px] leading-none outline-none transition-all duration-300 active:scale-[0.99] ${isActive
+                  ? "border-[#99804A]/60 bg-white/[0.08] text-white"
+                  : "border-white/10 bg-white/[0.04] text-white/70"
                   }`}
               >
                 {item.label}
@@ -257,7 +257,7 @@ export function Navbar() {
                   height="18"
                   viewBox="0 0 24 24"
                   fill="none"
-                  stroke="url(#nav-arrow-g)"
+                  stroke={isActive ? "#FFFFFF" : "url(#nav-arrow-g)"}
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"

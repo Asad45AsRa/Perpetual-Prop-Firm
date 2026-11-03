@@ -46,7 +46,7 @@ export function Hero() {
         width={1080}
         height={1080}
         unoptimized
-        className="pointer-events-none relative mx-auto mb-6 block w-full max-w-[420px] select-none leading-[20px] max-md:-translate-x-[6%] md:absolute md:right-32 md:top-[39px] md:m-0 md:w-[636px] md:px-2 md:max-w-none"
+        className="pointer-events-none relative mx-auto mb-16 block w-full max-w-[420px] select-none leading-[20px] max-md:-translate-x-[6%] md:absolute md:right-32 md:top-[39px] md:m-0 md:w-[636px] md:px-2 md:max-w-none"
       />
 
 

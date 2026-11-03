@@ -195,7 +195,7 @@ export function ExplorePage() {
   return (
     <main className="min-h-screen font-sans text-foreground mt-5">
       {/* Figma frame: 1440px centered, 80px side padding (px-6 mobile / lg:px-20) */}
-      <section className="relative isolate mx-auto flex w-full max-w-none flex-col items-center px-10 py-20 text-center lg:px-20">
+      <section className="relative isolate mx-auto flex w-full max-w-none flex-col items-center px-10 py-20 max-md:pb-0 text-center lg:px-20">
         <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-x-clip">
           <RightGlow
             width={760}
@@ -207,7 +207,7 @@ export function ExplorePage() {
           />
         </div>
         {/* ===== Funding diagram ===== */}
-        <div className="flex w-full flex-col items-center">
+        <div className="flex w-full flex-col items-center max-md:pt-16">
           <h2 className="max-w-[650px] text-[40px] font-normal leading-[0.94] tracking-[-0.05em] text-white md:text-[56px]">
             Built For The Next Generation Of Perp Traders
           </h2>
@@ -293,7 +293,7 @@ export function ExplorePage() {
             className="mt-8 flex w-full flex-col items-center md:hidden"
             style={{ "--u": "1px" } as React.CSSProperties}
           >
-            <div className="w-full max-w-[440px] pb-3">
+            <div className="w-full max-w-[440px]">
               <Image
                 src="/images/explore/wireswith.png"
                 alt="Logo"
@@ -315,7 +315,7 @@ export function ExplorePage() {
         </div>
 
         {/* ===== Trade On Perpetual Markets ===== */}
-        <div className="mt-48 flex w-full flex-col gap-12 text-left lg:flex-row lg:items-center lg:justify-between lg:gap-8">
+        <div className="mt-48 max-md:mt-44 flex w-full flex-col gap-12 text-left lg:flex-row lg:items-center lg:justify-between lg:gap-8">
           {/* Left: content */}
           <div className="w-full max-w-[470px]">
             <h2 className="text-[40px] font-normal leading-[1.05] tracking-[-0.03em] text-white md:text-[56px]">
@@ -355,22 +355,23 @@ export function ExplorePage() {
           </div>
 
           {/* Right: rotating boxes */}
-          <div className="w-full max-w-[620px] lg:-mr-[20px]">
+          <div className="w-full max-w-[620px] ">
             <div className="border border-white/10 bg-white/[0.02] p-4 sm:p-6 md:p-8">
               {/* Header */}
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <div className="text-[13px] leading-none text-white sm:text-[14px]">Choose Your Market</div>
-                  <div className="mt-2 text-[10px] leading-none text-muted/60">Pick any asset or pair to trade.</div>
+                  <div className="text-[15px] leading-none text-white sm:text-[14px]">Choose Your Market</div>
+                  <div className="mt-2 text-[12px] leading-none text-muted/60">Pick any asset or pair to trade.</div>
                 </div>
-                <a
-                  href="#"
-                  className="group inline-flex shrink-0 items-center gap-1.5 text-[11px] text-white/50 underline underline-offset-4 transition-colors hover:text-white sm:text-[12px]"
-                >
-                  Browse All Markets
-                  
-                </a>
-                <span aria-hidden className="no-underline">↗</span>
+                <div className="flex shrink-0 items-center gap-1.5">
+                  <a
+                    href="#"
+                    className="text-[11px] text-white/50 underline underline-offset-4 transition-colors hover:text-white sm:text-[12px]"
+                  >
+                    Browse All Markets
+                  </a>
+                  <span aria-hidden className="text-[11px] text-white/50 sm:text-[12px]">↗</span>
+                </div>
               </div>
 
               {/* 6 x 3 grid */}
@@ -378,7 +379,7 @@ export function ExplorePage() {
                 {MARKETS.map((m) => (
                   <div
                     key={m.file}
-                    className="group flex aspect-square items-center justify-center border border-transparent bg-white/[0.06] transition-colors duration-300 hover:border-[#99804A]/70 hover:bg-white/[0.1]"
+                    className="group flex aspect-square items-center justify-center border border-transparent bg-white/[0.06] transition-colors "
                   >
                     <Image
                       src={`/images/explore/box2/${encodeURIComponent(m.file)}.svg`}
@@ -396,7 +397,7 @@ export function ExplorePage() {
         </div>
 
         {/* ===== Payouts section ===== */}
-        <div className="relative mt-24 flex w-full flex-col-reverse gap-12 text-left lg:mt-[200px] lg:flex-row lg:items-center lg:justify-between lg:gap-8">
+        <div className="relative mt-24 max-md:mt-44 flex w-full flex-col-reverse gap-12 text-left lg:mt-[200px] lg:flex-row lg:items-center lg:justify-between lg:gap-8">
           {/* Left glow: section ke padding se bahar nikal kar screen ke left edge par */}
           <div aria-hidden className="pointer-events-none absolute -left-10 top-1/2 -z-10 lg:-left-20">
             <LeftGlow
