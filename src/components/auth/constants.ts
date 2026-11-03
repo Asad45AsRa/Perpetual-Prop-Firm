@@ -4,6 +4,9 @@ export const ASSET_DIR = "/images/affiliate-join";
 export const AUTH_ASSET_DIR = "/images/auth";
 export const COIN_SRC = `${AUTH_ASSET_DIR}/auth.png`;
 
+/** Where a user lands after finishing signup (avatar step). */
+export const AUTH_REDIRECT_ROUTE = "/dashboard";
+
 export const PLATFORMS = ["Instagram", "Meta", "TikTok"] as const;
 export type Platform = (typeof PLATFORMS)[number];
 

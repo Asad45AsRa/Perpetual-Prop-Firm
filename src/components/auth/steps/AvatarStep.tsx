@@ -36,7 +36,7 @@ export function AvatarStep({ onSubmit }: Props) {
               role="radiogroup"
               aria-label="Avatar"
               aria-describedby={errors.avatar ? "avatar-error" : undefined}
-              className="mx-auto grid max-w-[376px] grid-cols-7 gap-[9px]"
+              className="mx-auto grid max-w-[376px] grid-cols-7 gap-[6px] sm:gap-[9px]"
             >
               {AVATARS.map((src, i) => {
                 const selected = field.value === src;

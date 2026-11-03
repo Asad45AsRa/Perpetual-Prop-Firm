@@ -6,8 +6,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import {  ASSET_DIR } from "./constants";
-import type { WelcomeValues } from "./schemas";
+import { ASSET_DIR, AUTH_REDIRECT_ROUTE } from "./constants";
+import type { AvatarValues, WelcomeValues } from "./schemas";
 import { Stepper } from "./Stepper";
 import { PromoPanel } from "./PromoPanel";
 import { WelcomeStep } from "./steps/WelcomeStep";
@@ -17,7 +17,7 @@ import { AvatarStep } from "./steps/AvatarStep";
 
 const TOTAL_STEPS = 4;
 
-type Draft = Partial<WelcomeValues> & { username?: string };
+type Draft = Partial<WelcomeValues> & { username?: string; avatar?: string };
 
 /** Full-screen backdrop: #0F0F0F with the two big gold glow sweeps from Figma. */
 function Backdrop() {
@@ -72,13 +72,32 @@ export function AuthFlow() {
   const onResend = () => console.info("[auth] resend code to", draft.email);
   const onCode = useCallback(() => next(), [next]);
 
+  // Final step: same flow as affiliate join (avatar -> redirect), but lands on the trader dashboard.
+  const onAvatar = useCallback(
+    ({ avatar }: AvatarValues) => {
+      // TODO(backend): submit { ...draft, avatar } to the auth API before redirecting.
+      setDraft((d) => ({ ...d, avatar }));
+      router.push(AUTH_REDIRECT_ROUTE);
+    },
+    [router],
+  );
+
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-ink px-4 py-10">
       <Backdrop />
 
-      <div className="relative flex w-full items-start justify-center">
-        {/* Left column: stepper (459) + card (457, 425 tall) + disclaimer */}
-        <div className="w-full max-w-[459px] shrink-0">
+      {/*
+        Responsive layout
+        - mobile (< md):  promo on top, stepper + form card below (single column, full width)
+        - tablet (md):    same stacked order, centered at a wider max width (560px)
+        - desktop (lg+):  form on the left, promo flush on the right (original Figma layout)
+      */}
+      <div className="relative flex w-full flex-col items-center gap-[20px] lg:flex-row lg:items-start lg:justify-center lg:gap-0">
+        {/* Promo: first on mobile/tablet, second (right) on desktop */}
+        <PromoPanel className="order-1 max-w-[459px] md:max-w-[560px] lg:order-2 lg:-ml-px lg:mt-[38px] lg:max-w-none" />
+
+        {/* Form column: stepper + card (min 425 tall) + disclaimer */}
+        <div className="order-2 w-full max-w-[459px] shrink-0 md:max-w-[560px] lg:order-1 lg:max-w-[459px]">
           <Stepper total={TOTAL_STEPS} current={step} />
 
           <div className="mt-[16px] px-px">
@@ -89,7 +108,7 @@ export function AuthFlow() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={reduceMotion ? undefined : { opacity: 0, y: -8 }}
                 transition={{ duration: 0.2, ease: "easeOut" }}
-                className="[&>section]:h-[425px]"
+                className="[&>section]:min-h-[425px] lg:[&>section]:h-[425px]"
               >
                 {step === 0 && (
                   <WelcomeStep defaultValues={draft} onSubmit={(v) => next(v)} onGoogle={onGoogle} />
@@ -100,17 +119,14 @@ export function AuthFlow() {
                 {step === 2 && (
                   <UsernameStep defaultValue={draft.username} onSubmit={(v) => next(v)} />
                 )}
+                {step === 3 && <AvatarStep onSubmit={onAvatar} />}
               </motion.div>
             </AnimatePresence>
           </div>
 
           <Disclaimer className="mt-[25px]" />
         </div>
-
-        {/* Right promo card, flush against the form card, always visible */}
-        <PromoPanel className="-ml-px mt-[38px]" />
       </div>
     </main>
   );
 }
-//coments

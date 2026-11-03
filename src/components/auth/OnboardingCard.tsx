@@ -45,7 +45,7 @@ export function OnboardingCard({
           className="mx-auto h-[49px] w-[49.225px]"
         />
         <header className="mt-[18px] text-center">
-          <h1 className="text-[30px] font-normal leading-[1.3] text-white">{title}</h1>
+          <h1 className="text-[26px] font-normal leading-[1.3] text-white sm:text-[30px]">{title}</h1>
           <p className="mt-[12px] text-[14px] leading-[1.3] text-white/50">{subtitle}</p>
         </header>
         {children}
