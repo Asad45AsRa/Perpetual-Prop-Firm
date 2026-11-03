@@ -7,7 +7,6 @@ import {
   LuArrowUpRight,
   LuChevronDown,
   LuChevronsUpDown,
-  LuInfo,
 } from "react-icons/lu";
 import { LeftGlow } from "../../components/sections/LeftGlow";
 
@@ -106,13 +105,13 @@ const floorOf = (balance: number, s: string) =>
 
 function SectionChip({ children }: { children: React.ReactNode }) {
   return (
-    <span className="inline-flex h-[29px] items-center gap-1.5 border border-white/10 bg-white/[0.06] px-3 text-[11px] leading-none text-white/60">
+    <span className="inline-flex h-[24px] items-center gap-2 text-[12px] leading-none text-white/50">
       <Image
         src="/images/explore/ringlogo.png"
         alt=""
         width={12}
         height={12}
-        className="h-3 w-3 rounded-full"
+        className="h-2.5 w-2.5 rounded-full"
       />
       {children}
     </span>
@@ -127,7 +126,7 @@ function Panel({
   children: React.ReactNode;
 }) {
   return (
-    <div className={cn("border border-white/10 ", className)}>
+    <div className={cn("bg-white/[0.04]", className)}>
       {children}
     </div>
   );
@@ -146,12 +145,12 @@ function SelectField({
 }) {
   return (
     <label className="block">
-      <span className="mb-2 block text-[12px] leading-4 text-white/70">{label}</span>
+      <span className="mb-3 block text-[12px] leading-4 text-white/70">{label}</span>
       <span className="relative block">
         <select
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="h-10 w-full appearance-none border border-white/10 bg-white/[0.04] px-3 text-[12px] font-medium text-white outline-none focus:border-[#99804A]/60"
+          className="h-10 w-full appearance-none border-0 bg-white/[0.06] px-3 text-[13px] font-medium text-white outline-none focus:ring-1 focus:ring-[#99804A]/60"
         >
           {options.map((o) => (
             <option key={o} value={o} className="bg-[#111111]">
@@ -178,20 +177,43 @@ function TextField({
 }) {
   return (
     <label className="block">
-      <span className="mb-2 block text-[12px] leading-4 text-white/70">{label}</span>
+      <span className="mb-3 block text-[12px] leading-4 text-white/70">{label}</span>
       <input
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="h-10 w-full border border-white/10 bg-white/[0.05] px-3 text-[12px] text-white outline-none placeholder:text-white/30 focus:border-[#99804A]/60"
+        className="h-10 w-full border-0 bg-white/[0.06] px-3 text-[13px] text-white outline-none placeholder:text-white/30 focus:ring-1 focus:ring-[#99804A]/60"
       />
     </label>
   );
 }
 
+/* Gold panel ka ek stat (label upar, value neeche, center aligned) */
+function Stat({
+  label,
+  value,
+  className,
+}: {
+  label: string;
+  value: string;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn(
+        "flex flex-col items-center justify-center gap-2.5 border-white/10 px-3 py-5 text-center",
+        className,
+      )}
+    >
+      <span className="text-[12px] leading-4 text-white/60">{label}</span>
+      <span className="text-[18px] leading-6 text-[#B79F68] lg:text-[20px]">{value}</span>
+    </div>
+  );
+}
+
 function SummaryRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex h-4 items-center justify-between text-[12px] leading-4">
+    <div className="flex items-center justify-between gap-4 text-[12px] leading-4">
       <span className="text-white/40">{label}</span>
       <span className="text-white/70">{value}</span>
     </div>
@@ -245,8 +267,8 @@ function PlanIcon({
   return (
     <span
       className={cn(
-        "flex h-16 w-16 shrink-0 items-center justify-center border transition-colors",
-        selected ? "border-white/10 bg-[99804A]/70" : "border-white/30 bg-white/[0.06]"
+        "flex h-14 w-14 shrink-0 items-center justify-center transition-colors",
+        selected ? "bg-[#99804A]/25" : "bg-white/[0.06]"
       )}
     >
       <Image
@@ -254,7 +276,7 @@ function PlanIcon({
         alt=""
         width={40}
         height={40}
-        className={cn("h-7 w-7 object-contain", icon.includes("Breeze") && "scale-[1.7]")}
+        className={cn("h-6 w-6 object-contain", icon.includes("Breeze") && "scale-[1.7]")}
       />
     </span>
   );
@@ -306,252 +328,37 @@ export function CheckoutPage() {
   const sliderFill = ((amount - MIN_AMOUNT) / (MAX_AMOUNT - MIN_AMOUNT)) * 100;
 
   return (
-    <main className="min-h-screen pt-[120px] text-foreground">
+    <main className="min-h-screen pt-[120px] text-foreground max-md:mt-2 ">
       {/* Figma: 1440 frame, 80px side padding */}
-      <section className="relative isolate w-full px-6 pb-24 pt-11 lg:px-20">
+      <section className="relative isolate w-full px-4 pb-24 pt-11 sm:px-6 lg:px-20">
         <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-x-clip">
           <LeftGlow
-           width={790}
+            width={690}
             trim={0}
             height={800}
             opacity={0.24}
             className="left-[-320px] bottom-[-220px]"
           />
         </div>
-        <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_466px] lg:items-stretch lg:gap-6">
-          {/* ============================ LEFT ============================ */}
+
+        {/* ============================ TOP: heading + fee summary ============================ */}
+        <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_440px] lg:gap-10">
           <div className="min-w-0">
-            <h1 className="text-[40px] font-normal leading-[1.1] tracking-[-0.03em] text-white md:text-[48px]">
+            <h1 className="text-[36px] font-normal leading-[1.1] tracking-[-0.03em] text-white md:text-[48px]">
               Crypto Payments.
               <br />
               Greater Trading Potential.
             </h1>
-            <p className="mt-5 max-w-[560px] text-[16px] leading-[20px] text-muted/90">
+            <p className="mt-5 max-w-[560px] text-[14px] leading-[20px] text-muted/90 md:text-[16px]">
               Pick your account size, customize your payment amount, and check
               out with crypto in just a few steps. Your pricing stays protected
               throughout the checkout process.
             </p>
-
-            {/* ---------- Choose Your Path ---------- */}
-            <div className="mt-9 text-/muted">
-              <SectionChip>Choose Your Path To Funding</SectionChip>
-
-              <div className="mt-6 grid gap-[14px] sm:grid-cols-2">
-                {PLANS.map((p) => {
-                  const selected = p.id === planId;
-                  const price = amount * p.multiplier;
-                  return (
-                    <button
-                      key={p.id}
-                      type="button"
-                      onClick={() => setPlanId(p.id)}
-                      aria-pressed={selected}
-                      ref={(el) => {
-                        if (!el) return;
-                        el.style.setProperty(
-                          "background",
-                          selected
-
-                            ? "radial-gradient(45% 80% at 0% 0%, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0) 100%), radial-gradient(55% 110% at 100% 110%, rgba(238, 235, 226, 0.55) 0%, rgba(168, 149, 96, 0.25) 45%, rgba(175, 151, 100, 0) 80%), linear-gradient(180deg, rgba(168,150,108,0.22) 0%, rgba(153,128,74,0) 45%), linear-gradient(rgba(230, 224, 211, 0.19), rgba(153,128,74,0.19)), #141414"
-                           : "radial-gradient(45% 80% at 0% 0%, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0) 100%), radial-gradient(45% 80% at 100% 100%, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 100%), linear-gradient(135deg, #1A1A1A 0%, #121212 100%)",
-
-                        );
-                        el.style.setProperty("border-width", "0.7px", "important");
-                      }}
-                      className={cn(
-                        "relative isolate flex h-[148px] w-full flex-col justify-between overflow-hidden border-solid p-4 text-left transition-colors",
-                        "outline-none focus:outline-none focus-visible:outline-none focus:ring-0 active:shadow-none",
-                        "[box-shadow:none!important] [filter:none!important] [-webkit-tap-highlight-color:transparent]",
-                        "before:!hidden after:!hidden",
-                        selected
-                          ? "border-[#99804A]/20"
-                          : "border-white/[0.15] hover:border-white/30",
-                      )}
-                    >
-                      <span className="flex items-center gap-3.5">
-                        <PlanIcon icon={p.icon} iconGolden={p.iconGolden} selected={selected} />
-                        <span>
-                          <span
-                            className={cn(
-                              "block text-[15px] leading-4",
-                              selected ? "text-white/70" : "text-white/70",
-                            )}
-                          >
-                            {p.name}
-                          </span>
-                          <span
-                            className={cn(
-                              "mt-1 block text-[28px] leading-[32px]",
-                              selected ? "text-[#99804A]" : "text-white",
-                            )}
-                          >
-                            {p.label}
-                          </span>
-                        </span>
-                      </span>
-
-                      {/* radio */}
-                      <span
-                        className={cn(
-                          "absolute right-4 top-4 flex h-5 w-5 items-center justify-center rounded-full border-[1.5px]",
-                          selected ? "border-[#C9B27C]" : "border-white/60",
-                        )}
-                      >
-                        {selected && <span className="h-2.5 w-2.5 rounded-full bg-[#C9B27C]" />}
-                      </span>
-
-                      {/* bottom row + divider */}
-                      <span className="flex items-center justify-between border-t border-white/10 pt-3.5">
-                        <span className="flex items-center gap-1.5 text-[12px] uppercase leading-none tracking-wide text-muted/80">
-                          {p.tag}
-                          <LuInfo className="h-3 w-3" />
-                        </span>
-                        <span className="text-[12px]  leading-none text-white">
-                          {moneyWhole(price)}
-                        </span>
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* ---------- Build Your Rules: sirf "Capital Your Way" par ---------- */}
-            <div className="mt-6">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                {isCustom ? (
-                  <SectionChip>
-                    Capital You Way
-                  </SectionChip>
-                ) : (
-                  ''
-                )}
-                <a
-                  href={`/rules${RULE_HASH[planId]}`}
-                  className="group ml-auto inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap text-[11px] text-white/80 hover:text-white"
-                >
-                  <span className="underline underline-offset-2">
-                    Compare Account Rules
-                  </span>
-                  <LuArrowUpRight className="h-3 w-3" />
-                </a>
-              </div>
-
-              {/* Dropdowns: sirf "Capital Your Way" par */}
-              {isCustom && (
-                <Panel className="mt-6 grid gap-x-4 gap-y-5 px-4 py-5 sm:grid-cols-2 text-[10px] font-muted/80">
-                  <SelectField
-                    label="Profit Target"
-                    value={profitTarget}
-                    options={PROFIT_TARGETS}
-                    onChange={setProfitTarget}
-                  />
-                  <SelectField
-                    label="Daily Loss"
-                    value={dailyLoss}
-                    options={DAILY_LOSS}
-                    onChange={setDailyLoss}
-                  />
-                  <SelectField
-                    label="Static Max Drawdown"
-                    value={drawdown}
-                    options={DRAWDOWN}
-                    onChange={setDrawdown}
-                  />
-                  <SelectField
-                    label="Starting Profit Split"
-                    value={profitSplit}
-                    options={PROFIT_SPLITS}
-                    onChange={setProfitSplit}
-                  />
-                </Panel>
-              )}
-            </div>
-            {/* ---------- Choose Payment Amount: hamesha dikhega ---------- */}
-            <div className="mt-6">
-              <SectionChip>Choose Payment Amount</SectionChip>
-
-              <Panel className="mt-6 px-4 py-5">
-                <div className="flex flex-wrap items-center gap-3">
-                  <label className="flex h-[34px] items-center gap-2 border border-white/10 bg-white/[0.05] px-3">
-                    <span className="text-[10px] text-white/50">USD:</span>
-                    <span className="text-[13px] font-medium text-white">$</span>
-                    <input
-                      type="number"
-                      inputMode="numeric"
-                      min={MIN_AMOUNT}
-                      max={MAX_AMOUNT}
-                      step={STEP}
-                      value={amount}
-                      onChange={(e) => setClamped(Number(e.target.value))}
-                      className="-ml-1.5 w-12 bg-transparent text-[13px] font-medium text-white outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                    />
-                    <LuChevronsUpDown className="pointer-events-none h-3.5 w-3.5 text-white/60" />
-                  </label>
-
-                  {PRESETS.map((v) => (
-                    <button
-                      key={v}
-                      type="button"
-                      onClick={() => addAmount(v)}
-                      className={cn(
-                        "h-[34px] border px-3 text-[12px] font-medium outline-none transition-colors",
-                        amount === v
-                          ? "border-[#99804A] bg-[#99804A]/15 text-white"
-                          : "border-white/10 bg-white/[0.05] text-white/80 hover:border-white/20",
-                      )}
-                    >
-                      ${v.toLocaleString("en-US")}
-                    </button>
-                  ))}
-                </div>
-
-                <input
-                  type="range"
-                  min={MIN_AMOUNT}
-                  max={MAX_AMOUNT}
-                  step={STEP}
-                  value={amount}
-                  onChange={(e) => setClamped(Number(e.target.value))}
-                  aria-label="Payment amount"
-                  style={{
-                    background: `linear-gradient(90deg, #99804A ${sliderFill}%, rgba(255,255,255,0.12) ${sliderFill}%)`,
-                  }}
-                  className="mt-6 h-[3px] w-full cursor-pointer appearance-none rounded-full outline-none
-                    [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white
-                    [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-white"
-                />
-                <div className="mt-3 flex justify-between text-[10px] leading-3 text-white/40">
-                  <span>${MIN_AMOUNT}</span>
-                  <span>${MAX_AMOUNT.toLocaleString("en-US")}</span>
-                </div>
-              </Panel>
-            </div>
-
-            {/* ---------- Discounts (hamesha dikhta hai) ---------- */}
-            <div className="mt-6">
-              <SectionChip>Discounts &amp; Referral Bonus</SectionChip>
-
-              <Panel className="mt-6 grid gap-x-4 gap-y-5 px-4 py-5 sm:grid-cols-2">
-                <TextField
-                  label="Coupon Code"
-                  placeholder="Enter coupon"
-                  value={coupon}
-                  onChange={setCoupon}
-                />
-                <TextField
-                  label="Affiliate Referral Code"
-                  placeholder="Enter referral code"
-                  value={referral}
-                  onChange={setReferral}
-                />
-              </Panel>
-            </div>
           </div>
 
-          {/* ============================ RIGHT ============================ */}
-          <aside className="flex min-w-0 flex-col lg:pt-3">            {/* Fee -> Balance */}
-            <div className="flex items-start justify-end gap-6">
+          <aside className="flex min-w-0 flex-col lg:pt-1">
+            {/* Fee -> Balance */}
+            <div className="flex items-start gap-6 lg:justify-end">
               <div>
                 <p className="text-[11px] leading-4 text-white/30">Challenge Fee</p>
                 <p className="mt-1.5 text-[26px] leading-[28px] text-white">
@@ -566,7 +373,7 @@ export function CheckoutPage() {
                 </p>
               </div>
             </div>
-            <div className="mt-5 flex items-center justify-end gap-4 text-[12px] leading-4 text-white/30">
+            <div className="mt-4 flex flex-wrap items-center gap-4 text-[11px] leading-4 text-white/30 lg:justify-end">
               <span className="flex items-center gap-1.5">
                 <CheckBadge /> No KYC required
               </span>
@@ -582,7 +389,7 @@ export function CheckoutPage() {
               className="mt-4 flex h-[64px] w-full items-center justify-between border border-white/10 bg-white/[0.03] px-3.5 text-left outline-none hover:border-white/20"
             >
               <span className="flex items-center gap-3">
-                <span className="flex h-9 w-9 items-center justify-center border border-white/10 bg-white/[0.06]">
+                <span className="flex h-9 w-9 items-center justify-center bg-white/[0.06]">
                   <Image
                     src="/images/checked/btc.svg"
                     alt="Bitcoin"
@@ -602,124 +409,313 @@ export function CheckoutPage() {
               </span>
               <CoinStack />
             </button>
+          </aside>
+        </div>
 
-            {/* Your Challenge */}
-            <div className="mt-6 text-[13px] text-muted/30">
+        {/* ============================ MAIN PANEL (full width) ============================ */}
+        <div className="mt-8 border border-white/10 bg-white/[0.02] p-4 sm:p-6">
+          {/* ---------- Choose Your Path ---------- */}
+          <div>
+            <SectionChip>Choose Your Path To Funding</SectionChip>
+
+            <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {PLANS.map((p) => {
+                const selected = p.id === planId;
+                const price = amount * p.multiplier;
+                return (
+                  <button
+                    key={p.id}
+                    type="button"
+                    onClick={() => setPlanId(p.id)}
+                    aria-pressed={selected}
+                    ref={(el) => {
+                      if (!el) return;
+                      el.style.setProperty(
+                        "background",
+                        selected
+                          ? "linear-gradient(rgba(153,128,74,0.22), rgba(153,128,74,0.22)), #1E1B15"
+                          : "#232323",
+                      );
+                      el.style.setProperty("border-width", "1px", "important");
+                    }}
+                    className={cn(
+                      "relative isolate flex h-[84px] w-full items-center overflow-hidden border-solid px-3 text-left transition-colors",
+                      "outline-none focus:outline-none focus-visible:outline-none focus:ring-0 active:shadow-none",
+                      "[box-shadow:none!important] [filter:none!important] [-webkit-tap-highlight-color:transparent]",
+                      "before:!hidden after:!hidden",
+                      selected
+                        ? "border-[#99804A]/60"
+                        : "border-white/[0.06] hover:border-white/20",
+                    )}
+                  >
+                    <span className="flex items-center gap-3">
+                      <PlanIcon icon={p.icon} iconGolden={p.iconGolden} selected={selected} />
+                      <span>
+                        <span className="block text-[13px] leading-4 text-white/80">
+                          {p.name}
+                        </span>
+                        <span
+                          className={cn(
+                            "mt-1 block text-[24px] leading-[28px]",
+                            selected ? "text-[#B79F68]" : "text-white",
+                          )}
+                        >
+                          {p.label}
+                        </span>
+                      </span>
+                    </span>
+
+                    {/* radio */}
+                    <span
+                      className={cn(
+                        "absolute right-3 top-3 flex h-5 w-5 items-center justify-center rounded-full border-[1.5px]",
+                        selected ? "border-[#C9B27C]" : "border-white/60",
+                      )}
+                    >
+                      {selected && <span className="h-2.5 w-2.5 rounded-full bg-[#C9B27C]" />}
+                    </span>
+
+                    {/* price */}
+                    <span className="absolute bottom-3 right-3 text-[11px] leading-none text-white">
+                      {moneyWhole(price)}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* ---------- Build Your Rules: sirf "Capital Your Way" par ---------- */}
+          {isCustom && (
+            <div className="mt-7">
+              <SectionChip>Capital Your Way</SectionChip>
+
+              {/* Dropdowns: sirf "Capital Your Way" par */}
+              <Panel className="mt-4 grid gap-x-4 gap-y-5 px-4 py-5 sm:grid-cols-2 lg:grid-cols-4">
+                <SelectField
+                  label="Profit Target"
+                  value={profitTarget}
+                  options={PROFIT_TARGETS}
+                  onChange={setProfitTarget}
+                />
+                <SelectField
+                  label="Daily Loss"
+                  value={dailyLoss}
+                  options={DAILY_LOSS}
+                  onChange={setDailyLoss}
+                />
+                <SelectField
+                  label="Static Max Drawdown"
+                  value={drawdown}
+                  options={DRAWDOWN}
+                  onChange={setDrawdown}
+                />
+                <SelectField
+                  label="Starting Profit Split"
+                  value={profitSplit}
+                  options={PROFIT_SPLITS}
+                  onChange={setProfitSplit}
+                />
+              </Panel>
+            </div>
+          )}
+
+          {/* ---------- Choose Payment Amount: hamesha dikhega ---------- */}
+          <div className="mt-7">
+            <SectionChip>Choose Payment Amount</SectionChip>
+
+            <Panel className="mt-4 flex flex-col gap-6 px-4 py-5 lg:flex-row lg:items-center lg:gap-10">
+              <div className="flex flex-wrap items-center gap-2.5">
+                <label className="flex h-[34px] items-center gap-2 bg-white/[0.06] px-3">
+                  <span className="text-[10px] text-white/50">USD:</span>
+                  <span className="text-[14px] font-semibold text-white">$</span>
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    min={MIN_AMOUNT}
+                    max={MAX_AMOUNT}
+                    step={STEP}
+                    value={amount}
+                    onChange={(e) => setClamped(Number(e.target.value))}
+                    className="-ml-1.5 w-12 bg-transparent text-[14px] font-semibold text-white outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                  />
+                  <LuChevronsUpDown className="pointer-events-none h-3.5 w-3.5 text-white/60" />
+                </label>
+
+                {PRESETS.map((v) => (
+                  <button
+                    key={v}
+                    type="button"
+                    onClick={() => addAmount(v)}
+                    className={cn(
+                      "h-[34px] border px-3 text-[12px] font-medium outline-none transition-colors",
+                      amount === v
+                        ? "border-[#99804A] bg-[#99804A]/15 text-white"
+                        : "border-white/10 bg-white/[0.05] text-white/80 hover:border-white/20",
+                    )}
+                  >
+                    ${v.toLocaleString("en-US")}
+                  </button>
+                ))}
+              </div>
+
+              <div className="min-w-0 flex-1">
+                <input
+                  type="range"
+                  min={MIN_AMOUNT}
+                  max={MAX_AMOUNT}
+                  step={STEP}
+                  value={amount}
+                  onChange={(e) => setClamped(Number(e.target.value))}
+                  aria-label="Payment amount"
+                  style={{
+                    background: `linear-gradient(90deg, #99804A ${sliderFill}%, rgba(255,255,255,0.12) ${sliderFill}%)`,
+                  }}
+                  className="h-[3px] w-full cursor-pointer appearance-none rounded-full outline-none
+                    [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white
+                    [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-white"
+                />
+                <div className="mt-3 flex justify-between text-[10px] leading-3 text-white/40">
+                  <span>${MIN_AMOUNT}</span>
+                  <span>${MAX_AMOUNT.toLocaleString("en-US")}</span>
+                </div>
+              </div>
+            </Panel>
+          </div>
+
+          {/* ---------- Discounts (hamesha dikhta hai) ---------- */}
+          <div className="mt-7">
+            <SectionChip>Discounts &amp; Referral Bonus</SectionChip>
+
+            <Panel className="mt-4 grid gap-x-4 gap-y-5 px-4 py-5 sm:grid-cols-2">
+              <TextField
+                label="Coupon Code"
+                placeholder="Enter coupon"
+                value={coupon}
+                onChange={setCoupon}
+              />
+              <TextField
+                label="Affiliate Referral Code"
+                placeholder="Enter referral code"
+                value={referral}
+                onChange={setReferral}
+              />
+            </Panel>
+          </div>
+
+          {/* ---------- Your Challenge ---------- */}
+          <div className="mt-7">
+            <div className="flex flex-wrap items-center justify-between gap-3">
               <SectionChip>Your Challenge</SectionChip>
+              <a
+                href={`/rules${RULE_HASH[planId]}`}
+                className="group ml-auto inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap text-[11px] text-white/80 hover:text-white"
+              >
+                <span className="underline underline-offset-2">
+                  Compare Account Rules
+                </span>
+                <LuArrowUpRight className="h-3 w-3" />
+              </a>
             </div>
 
-            <Panel className="mt-6 flex flex-1 flex-col">
-              {/* You'll trade with */}
-              <div className="bg-white/[0.02] px-6 pb-3 pt-3">
-                <p className="text-[12px] leading-4 text-white/60">You&apos;ll Trade With</p>
-                <p className="mt-2 text-[36px] leading-[36px] text-white">
-                  {moneyWhole(balance)}
-                </p>
-                <p className="mt-2 text-[10px] leading-[14px] text-white/50">
-                  {plan.multiplier}× on your {money(amount)} payment · {plan.name}
-                </p>
-              </div>
+            {/* Gold gradient panel: 10px left/right gold border, horizontal gradient fill */}
+            <div
+              className="mt-4 border-x-[10px] border-solid border-[#99804A] py-2"
+              style={{
+                background:
+                  "linear-gradient(90deg, rgba(153,128,74,0) 0%, rgba(153,128,74,0.32) 55%, rgba(153,128,74,0.1) 100%)",
+              }}
+            >
+              <div className="mx-auto w-full max-w-[1000px]">
+                {/* row 1 */}
+                <div className="grid grid-cols-2 lg:grid-cols-5">
+                  <Stat
+                    label="Challenge phase"
+                    value={plan.challenge ? "Yes" : "No"}
+                    className="max-lg:border-b"
+                  />
+                  <Stat
+                    label="Profit target"
+                    value={r.profitTarget}
+                    className="max-lg:border-b lg:border-l"
+                  />
+                  <Stat
+                    label="Max loss"
+                    value={r.maxLoss}
+                    className="max-lg:border-b lg:border-l"
+                  />
+                  <Stat
+                    label="Daily loss limit"
+                    value={r.dailyLoss}
+                    className="max-lg:border-b lg:border-l"
+                  />
+                  <Stat
+                    label="Initial daily equity floor"
+                    value={moneyWhole(floorOf(balance, r.dailyLoss))}
+                    className="max-lg:col-span-2 max-lg:border-b lg:border-l"
+                  />
+                </div>
 
-              {/* Rules */}
-              <div className="space-y-4 px-6 py-7 text-muted/80 text-[19px]">
-                <SummaryRow label="Challenge phase" value={plan.challenge ? "Yes" : "No"} />
-                <SummaryRow label="Profit target" value={r.profitTarget} />
-                <SummaryRow label="Max loss" value={r.maxLoss} />
-                <SummaryRow label="Daily loss limit" value={r.dailyLoss} />
-                <SummaryRow label="Account access" value="Personal" />
-                <SummaryRow
-                  label="Initial daily equity floor"
-                  value={moneyWhole(floorOf(balance, r.dailyLoss))}
-                />
-                <SummaryRow
-                  label="Static equity floor"
-                  value={moneyWhole(floorOf(balance, r.maxLoss))}
-                />
-                <SummaryRow label="Minimum days" value="0" />
-                <SummaryRow label="Payout split" value={r.profitSplit} />
-                <SummaryRow
-                  label="Payout frequency"
-                  value="One per account every 24 hours"
-                />
-              </div>
-
-              <div className="border-t border-white/10 px-6 py-7">
-                <div className="space-y-4">
-                  <SummaryRow label="Payment amount" value={money(amount)} />
-                  <SummaryRow
-                    label="Coupon discount"
-                    value={`-${money(discount)}`}
+                {/* row 2 */}
+                <div className="grid grid-cols-2 border-white/10 lg:grid-cols-[1fr_1fr_1fr_1.6fr] lg:border-t">
+                  <Stat
+                    label="Static equity floor"
+                    value={moneyWhole(floorOf(balance, r.maxLoss))}
+                    className="max-lg:border-b"
+                  />
+                  <Stat
+                    label="Minimum days"
+                    value="0"
+                    className="max-lg:border-b lg:border-l"
+                  />
+                  <Stat
+                    label="Payout split"
+                    value={r.profitSplit}
+                    className="max-lg:border-b lg:border-l"
+                  />
+                  <Stat
+                    label="Payout frequency"
+                    value="One per account every 24 hours"
+                    className="max-lg:col-span-2 lg:border-l"
                   />
                 </div>
               </div>
+            </div>
 
-              <div className="flex-1 border-t border-white/10 px-6 py-7">
-                <div className="flex items-center justify-between">
+            {/* Payment summary strip */}
+            <Panel className="mt-3 space-y-3 px-4 py-4">
+              <p className="text-[11px] leading-4 text-white/50">
+                You&apos;ll trade with{" "}
+                <span className="text-white">{moneyWhole(balance)}</span> ·{" "}
+                {plan.multiplier}× on your {money(amount)} payment · {plan.name}
+              </p>
+              <div className="grid gap-x-8 gap-y-3 sm:grid-cols-2">
+                <SummaryRow label="Payment amount" value={money(amount)} />
+                <SummaryRow label="Coupon discount" value={`-${money(discount)}`} />
+                <SummaryRow label="Funding account linked to:" value="yourname@gmail.com" />
+                <div className="flex items-center justify-between gap-4">
                   <span className="text-[12px] leading-4 text-white/50">You pay today</span>
-                  <span className="text-[26px] leading-[28px] text-white">
-                    {money(total)}
-                  </span>
+                  <span className="text-[18px] leading-5 text-white">{money(total)}</span>
                 </div>
-                <div className="mt-4 flex items-center justify-between text-[11px] leading-4">
-                  <span className="text-white/40">Funding account linked to:</span>
-                  <span className="text-white">yourname@gmail.com</span>
-                </div>
-
-                <label className="group mt-6 flex cursor-pointer items-start gap-3">
-                  <span className="relative mt-px h-[18px] w-[18px] shrink-0">
-                    <input
-                      type="checkbox"
-                      checked={agreed}
-                      onChange={(e) => setAgreed(e.target.checked)}
-                      className="peer h-[18px] w-[18px] cursor-pointer appearance-none rounded-[4px] border border-white/25 bg-white/[0.04] outline-none transition-all duration-200 group-hover:border-[#B79F68]/70 checked:border-[#C9B27C] checked:bg-[linear-gradient(135deg,#D9C58F_0%,#A38A52_100%)] checked:shadow-[0_0_10px_rgba(183,159,104,0.45)] focus-visible:ring-2 focus-visible:ring-[#B79F68]/50"
-                    />
-                    <svg
-                      viewBox="0 0 18 18"
-                      fill="none"
-                      aria-hidden
-                      className="pointer-events-none absolute inset-0 h-[18px] w-[18px] scale-50 opacity-0 transition-all duration-200 peer-checked:scale-100 peer-checked:opacity-100"
-                    >
-                      <path
-                        d="M4.5 9.3l3 3 6-6.4"
-                        stroke="#1A150B"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </span>
-                  <span className="text-[12px] leading-[18px] text-white/60 transition-colors group-hover:text-white/80">
-                    I have read, understood, and agree to all rules and
-                    conditions outlined above.
-                  </span>
-                </label>
-
-                <button
-                  type="button"
-                  disabled={!agreed}
-                  className="mt-7 flex h-10 w-full items-center justify-center rounded-[2px] bg-white text-[12px] text-black outline-none disabled:cursor-not-allowed"
-                >
-                  Get Funded
-                </button>
-
-                <div className="mt-6 flex items-center gap-2 text-[10px] text-white/40">
-                  <CoinStack small />
-                  Crypto Accepted
-                </div>
-
-                <p className="mt-4 text-[11px] text-white/30">
-                  Your plan determines your trading power and account size.
-                  Discounts apply only to the activation fee and do not change
-                  your selected account size. The activation fee covers access
-                  to your chosen plan; it is not a trading deposit or an amount
-                  added to your trading balance. Review your account size,
-                  applicable fee, trading rules, and additional conditions
-                  before completing your purchase. All account settings,
-                  pricing, and plan conditions are finalized at checkout.
-                </p>
               </div>
             </Panel>
-          </aside>
+
+            {/* Agreement */}
+
+            {/* Get Funded: full width, white -> gold gradient */}
+            <button
+              type="button"
+              disabled={!agreed}
+              style={{
+                background: "linear-gradient(90deg, #FFFFFF 0%, #99804A 100%)",
+              }}
+              className="mt-5 flex h-[52px] w-full items-center justify-center gap-2 text-black outline-none disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              <span className="text-[13px]">Get Funded</span>
+              <span className="text-[22px] font-semibold leading-none">{money(total)}</span>
+            </button>
+
+          </div>
         </div>
       </section>
     </main>

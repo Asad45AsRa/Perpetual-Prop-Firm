@@ -1,5 +1,5 @@
-import { PagePlaceholder } from "@/components/ui/page-placeholder";
+import { AuthFlow } from "@/components/auth/AuthFlow";
 
-export default function SignupPage() {
-  return <PagePlaceholder title="Sign up" />;
+export default function SignupPage() {  
+  return <AuthFlow />;
 }

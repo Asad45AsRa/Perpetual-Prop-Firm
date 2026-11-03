@@ -315,7 +315,7 @@ export function ExplorePage() {
         </div>
 
         {/* ===== Trade On Perpetual Markets ===== */}
-        <div className="mt-48 max-md:mt-44 flex w-full flex-col gap-12 text-left lg:flex-row lg:items-center lg:justify-between lg:gap-8">
+        <div className="mt-48 max-md:mt-36 flex w-full flex-col gap-12 text-left lg:flex-row lg:items-center lg:justify-between lg:gap-8">
           {/* Left: content */}
           <div className="w-full max-w-[470px]">
             <h2 className="text-[40px] font-normal leading-[1.05] tracking-[-0.03em] text-white md:text-[56px]">
@@ -387,7 +387,7 @@ export function ExplorePage() {
                       width={44}
                       height={44}
                       unoptimized
-                      className="h-[54%] w-[54%] select-none object-contain transition-transform duration-300 group-hover:scale-110"
+                      className="h-[54%] w-[54%] select-none object-contain "
                     />
                   </div>
                 ))}
@@ -397,7 +397,7 @@ export function ExplorePage() {
         </div>
 
         {/* ===== Payouts section ===== */}
-        <div className="relative mt-24 max-md:mt-44 flex w-full flex-col-reverse gap-12 text-left lg:mt-[200px] lg:flex-row lg:items-center lg:justify-between lg:gap-8">
+        <div className="relative mt-24 max-md:mt-36 flex w-full flex-col-reverse gap-12 text-left lg:mt-[200px] lg:flex-row lg:items-center lg:justify-between lg:gap-8">
           {/* Left glow: section ke padding se bahar nikal kar screen ke left edge par */}
           <div aria-hidden className="pointer-events-none absolute -left-10 top-1/2 -z-10 lg:-left-20">
             <LeftGlow
