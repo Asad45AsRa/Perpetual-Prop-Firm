@@ -338,20 +338,7 @@ export function ExplorePage() {
               ))}
             </div>
 
-            <div className="group mt-8 inline-flex items-center gap-2">
-              <a
-                href="#"
-                className="text-sm text-white/30 underline underline-offset-4 transition-colors group-hover:text-white"
-              >
-                Browse All Markets
-              </a>
-              <span
-                aria-hidden
-                className="text-sm text-muted/80 transition-colors group-hover:text-white"
-              >
-                ↗
-              </span>
-            </div>
+
           </div>
 
           {/* Right: rotating boxes */}
@@ -363,7 +350,7 @@ export function ExplorePage() {
                   <div className="text-[15px] leading-none text-white sm:text-[14px]">Choose Your Market</div>
                   <div className="mt-2 text-[12px] leading-none text-muted/60">Pick any asset or pair to trade.</div>
                 </div>
-                <div className="flex shrink-0 items-center gap-1.5">
+                <div className="flex shrink-0 items-center gap-1.5 max-md:hidden">
                   <a
                     href="#"
                     className="text-[11px] text-white/50 underline underline-offset-4 transition-colors hover:text-white sm:text-[12px]"
@@ -392,6 +379,17 @@ export function ExplorePage() {
                   </div>
                 ))}
               </div>
+            </div>
+
+            {/* Mobile only: box ke bahar, bottom mein */}
+            <div className="mt-4 flex items-center justify-center gap-1.5 md:hidden">
+              <a
+                href="#"
+                className="text-[12px] text-white/50 underline underline-offset-4 transition-colors hover:text-white"
+              >
+                Browse All Markets
+              </a>
+              <span aria-hidden className="text-[12px] text-white/50">↗</span>
             </div>
           </div>
         </div>

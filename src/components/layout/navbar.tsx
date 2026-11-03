@@ -275,7 +275,7 @@ export function Navbar() {
           href={siteConfig.links.getFunded}
           tabIndex={menuOpen ? 0 : -1}
           onClick={() => setMenuOpen(false)}
-          className={`mt-8 flex h-[45px] w-full items-center justify-center rounded-[2px] bg-white text-[14px] font-normal leading-none text-black outline-none transition-all duration-500 ease-out ${menuOpen ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
+          className={`mt-8 flex h-[45px] w-full items-center justify-center bg-white text-[14px] font-normal leading-none text-black outline-none transition-all duration-500 ease-out ${menuOpen ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
             }`}
           style={{ transitionDelay: menuOpen ? `${80 + links.length * 50}ms` : "0ms" }}
         >

@@ -92,15 +92,17 @@ export function AuthFlow() {
         - tablet (md):    same stacked order, centered at a wider max width (560px)
         - desktop (lg+):  form on the left, promo flush on the right (original Figma layout)
       */}
-      <div className="relative flex w-full flex-col items-center gap-[20px] lg:flex-row lg:items-start lg:justify-center lg:gap-0">
-        {/* Promo: first on mobile/tablet, second (right) on desktop */}
-        <PromoPanel className="order-1 max-w-[459px] md:max-w-[560px] lg:order-2 lg:-ml-px lg:mt-[38px] lg:max-w-none" />
+      <div className="relative flex w-full flex-col items-center gap-[20px] lg:grid lg:w-auto lg:grid-cols-[459px_457px] lg:grid-rows-[auto_auto_auto] lg:justify-center lg:gap-0">
+        {/* Promo: first on mobile/tablet; desktop: right column, same row as the form card */}
+        <PromoPanel className="order-1 max-w-[459px] md:max-w-[560px] lg:order-none lg:col-start-2 lg:row-start-2 lg:-ml-px lg:mt-[16px] lg:max-w-none lg:self-start" />
 
-        {/* Form column: stepper + card (min 425 tall) + disclaimer */}
-        <div className="order-2 w-full max-w-[459px] shrink-0 md:max-w-[560px] lg:order-1 lg:max-w-[459px]">
-          <Stepper total={TOTAL_STEPS} current={step} />
+        {/* Form column: on desktop its children are placed straight into the grid (lg:contents) */}
+        <div className="order-2 w-full max-w-[459px] shrink-0 md:max-w-[560px] lg:contents">
+          <div className="lg:col-start-1 lg:row-start-1">
+            <Stepper total={TOTAL_STEPS} current={step} />
+          </div>
 
-          <div className="mt-[16px] px-px">
+          <div className="mt-[16px] px-px lg:col-start-1 lg:row-start-2">
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 key={step}
@@ -124,7 +126,7 @@ export function AuthFlow() {
             </AnimatePresence>
           </div>
 
-          <Disclaimer className="mt-[25px]" />
+          <Disclaimer className="mt-[25px] lg:col-start-1 lg:row-start-3" />
         </div>
       </div>
     </main>

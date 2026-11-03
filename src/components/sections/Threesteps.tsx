@@ -278,7 +278,7 @@ export function ThreeSteps() {
     return (
         /* lg:px-20 = same side padding as navbar -> cards start at logo, end at Get Funded button */
         <section className="relative isolate w-full px-6 pb-28 max-md:pb-[50px] pt-[72px] lg:px-20">
-            <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-x-clip">
+            <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-x-clip max-md:hidden">
                 <RightGlow
                     width={680}
                     height={760}
