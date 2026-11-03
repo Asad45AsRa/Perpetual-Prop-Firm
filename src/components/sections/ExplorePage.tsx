@@ -161,6 +161,15 @@ export function ExplorePage() {
   const [settled, setSettled] = useState(true);
   const pn = PAYOUTS.length;
 
+  const MARKETS = [
+    { file: "DOGE1", name: "DOGE" }, { file: "LINK1", name: "LINK" }, { file: "BNB1", name: "BNB" },
+    { file: "STRK1", name: "STRK" }, { file: "BTC", name: "BTC" }, { file: "ETH", name: "ETH" },
+    { file: "HYPE1", name: "HYPE" }, { file: "Layer3", name: "Layer3" }, { file: "S&P", name: "S&P 500" },
+    { file: "EUR", name: "EUR" }, { file: "Oil", name: "Oil" }, { file: "avalanche", name: "AVAX" },
+    { file: "Solana", name: "SOL" }, { file: "tsla1", name: "TSLA" }, { file: "copper1", name: "Copper" },
+    { file: "MU", name: "MU" }, { file: "Nividia", name: "NVDA" }, { file: "100", name: "100" },
+  ];
+
   useEffect(() => {
     return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -292,7 +301,7 @@ export function ExplorePage() {
                 height={580}
                 unoptimized
                 priority
-                className="pointer-events-none mx-auto h-auto w-[88%] select-none"
+                className="pointer-events-none mx-auto h-[195px] w-[195px] select-none"
               />
             </div>
             <div className="-mt-px grid w-full max-w-[440px] grid-cols-1 gap-2 sm:grid-cols-2">
@@ -346,44 +355,42 @@ export function ExplorePage() {
           </div>
 
           {/* Right: rotating boxes */}
-          <div className="flex w-full max-w-[680px] flex-col items-center lg:-mr-[20px]">
-            <div
-              className="relative w-full"
-              style={{ aspectRatio: `${CW} / ${CH}` }}
-            >
-              {SLIDES.map((s, i) => {
-                const offset = (i - active + n) % n;
-                return (
+          <div className="w-full max-w-[620px] lg:-mr-[20px]">
+            <div className="border border-white/10 bg-white/[0.02] p-4 sm:p-6 md:p-8">
+              {/* Header */}
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <div className="text-[13px] leading-none text-white sm:text-[14px]">Choose Your Market</div>
+                  <div className="mt-2 text-[10px] leading-none text-muted/60">Pick any asset or pair to trade.</div>
+                </div>
+                <a
+                  href="#"
+                  className="group inline-flex shrink-0 items-center gap-1.5 text-[11px] text-white/50 underline underline-offset-4 transition-colors hover:text-white sm:text-[12px]"
+                >
+                  Browse All Markets
+                  
+                </a>
+                <span aria-hidden className="no-underline">↗</span>
+              </div>
+
+              {/* 6 x 3 grid */}
+              <div className="mt-5 grid grid-cols-6 gap-1.5 sm:mt-8 sm:gap-3">
+                {MARKETS.map((m) => (
                   <div
-                    key={s.src}
-                    className="absolute aspect-square transition-all duration-700 ease-in-out"
-                    style={slideStyle(offset, n)}
+                    key={m.file}
+                    className="group flex aspect-square items-center justify-center border border-transparent bg-white/[0.06] transition-colors duration-300 hover:border-[#99804A]/70 hover:bg-white/[0.1]"
                   >
                     <Image
-                      src={s.src}
-                      alt={s.alt}
-                      fill
-                      sizes="(min-width: 1024px) 305px, 45vw"
-                      className="object-contain"
-                      priority={i === 1}
+                      src={`/images/explore/box2/${encodeURIComponent(m.file)}.svg`}
+                      alt={m.name}
+                      width={44}
+                      height={44}
+                      unoptimized
+                      className="h-[54%] w-[54%] select-none object-contain transition-transform duration-300 group-hover:scale-110"
                     />
                   </div>
-                );
-              })}
-            </div>
-
-            {/* Dots */}
-            <div className="mt-6 flex items-center gap-2">
-              {SLIDES.map((s, i) => (
-                <button
-                  key={s.src}
-                  type="button"
-                  aria-label={`Show ${s.alt}`}
-                  onClick={() => setActive(i)}
-                  className={`h-[3px] transition-all duration-500 ${i === active ? "w-8 bg-gold-accent" : "w-5 bg-white/15"
-                    }`}
-                />
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </div>

@@ -218,17 +218,26 @@ export function Navbar() {
       {/* Mobile menu panel: sits below the header (top-20), so logo and close button stay visible. */}
       <div
         aria-hidden={!menuOpen}
-        className={`fixed inset-x-0 bottom-0 top-20 z-40 flex flex-col bg-nav/60 px-[14px] pb-[22px] pt-[18px] backdrop-blur-[18px] [-webkit-backdrop-filter:blur(18px)] lg:hidden ${
-          menuOpen
+        className={`fixed inset-x-0 bottom-0 top-20 z-40 flex flex-col bg-nav/60 px-[14px] pb-[22px] pt-[18px] backdrop-blur-[18px] [-webkit-backdrop-filter:blur(18px)] lg:hidden ${menuOpen
             ? "visible translate-y-0 opacity-100"
             : "pointer-events-none invisible -translate-y-[10px] opacity-0"
-        }`}
+          }`}
         style={{
           transition:
             "opacity .30s ease, transform .36s cubic-bezier(.22,.61,.36,1), visibility .30s ease",
         }}
       >
-        <nav className="flex flex-col">
+        <nav className="flex flex-col gap-3">
+          {/* Arrow gradient ek hi baar define hai (wahi white → gold jo pehle minus mein tha) */}
+          <svg width="0" height="0" className="absolute" aria-hidden focusable="false">
+            <defs>
+              <linearGradient id="nav-arrow-g" gradientUnits="userSpaceOnUse" x1="5" y1="0" x2="19" y2="0">
+                <stop offset="0" stopColor="#FFFFFF" />
+                <stop offset="1" stopColor="#99804A" />
+              </linearGradient>
+            </defs>
+          </svg>
+
           {links.map((item) => {
             const isActive = getActive(item);
             return (
@@ -237,21 +246,26 @@ export function Navbar() {
                 href={item.href}
                 tabIndex={menuOpen ? 0 : -1}
                 onClick={(e) => handleMobileClick(e, item)}
-                className={`flex items-center justify-between border-b border-white/10 py-5 text-[22px] leading-none outline-none ${
-                  isActive ? "text-white" : "text-white/60"
-                }`}
+                className={`group flex items-center justify-between rounded-[12px] border px-[18px] py-[18px] text-[18px] leading-none outline-none transition-all duration-300 hover:border-[#99804A]/70 hover:bg-white/[0.09] hover:text-white active:scale-[0.99] ${isActive
+                    ? "border-[#99804A]/60 bg-white/[0.08] text-white"
+                    : "border-white/10 bg-white/[0.04] text-white/70"
+                  }`}
               >
                 {item.label}
-                {isActive && (
-                  <span
-                    aria-hidden
-                    className="h-[2px] w-8"
-                    style={{
-                      backgroundImage:
-                        "linear-gradient(90deg, #FFFFFF 0%, #99804A 100%)",
-                    }}
-                  />
-                )}
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="url(#nav-arrow-g)"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden
+                  className="transition-transform duration-300 group-hover:translate-x-1"
+                >
+                  <path d="M5 12h14M13 6l6 6-6 6" />
+                </svg>
               </Link>
             );
           })}
@@ -261,9 +275,8 @@ export function Navbar() {
           href={siteConfig.links.getFunded}
           tabIndex={menuOpen ? 0 : -1}
           onClick={() => setMenuOpen(false)}
-          className={`mt-8 flex h-[45px] w-full items-center justify-center rounded-[2px] bg-white text-[14px] font-normal leading-none text-black outline-none transition-all duration-500 ease-out ${
-            menuOpen ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
-          }`}
+          className={`mt-8 flex h-[45px] w-full items-center justify-center rounded-[2px] bg-white text-[14px] font-normal leading-none text-black outline-none transition-all duration-500 ease-out ${menuOpen ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
+            }`}
           style={{ transitionDelay: menuOpen ? `${80 + links.length * 50}ms` : "0ms" }}
         >
           Get Funded
