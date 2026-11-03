@@ -40,7 +40,16 @@ function StatCard({ label, value, icon, iconSize, delta, caption, sparkline, hig
           highlight ? "bg-ink/20" : "bg-white/[0.06]",
         )}
       >
-        <Image src={icon} alt="" width={iconSize} height={iconSize} unoptimized style={{ width: iconSize, height: iconSize }} />
+        <Image
+          src={icon}
+          alt=""
+          width={iconSize}
+          height={iconSize}
+          // SVG icons are served as-is; raster icons (level gems) go through the optimizer.
+          unoptimized={icon.endsWith(".svg")}
+          className="object-contain"
+          style={{ width: iconSize, height: iconSize }}
+        />
       </span>
 
       {sparkline && (
@@ -57,10 +66,10 @@ function StatCard({ label, value, icon, iconSize, delta, caption, sparkline, hig
   );
 }
 
-export function StatCards() {
+export function StatCards({ items = stats }: { items?: StatCardData[] }) {
   return (
     <div className="grid grid-cols-1 gap-[16px] min-[520px]:grid-cols-2 xl:grid-cols-4">
-      {stats.map((s) => (
+      {items.map((s) => (
         <StatCard key={s.label} {...s} />
       ))}
     </div>

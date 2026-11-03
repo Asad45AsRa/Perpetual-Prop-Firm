@@ -19,25 +19,34 @@ export function PanelTitle({ children, className }: { children: ReactNode; class
   return <h2 className={cn("text-[14px] font-normal leading-normal text-white", className)}>{children}</h2>;
 }
 
-/** Green "● Active" / "● Live" chip. */
+const CHIP_TONES = {
+  green: { chip: "bg-[#47a847]/[0.12] text-[#47a847]", border: "border-[#47a847]", dot: "bg-[#47a847]" },
+  amber: { chip: "bg-[#E8A23B]/[0.12] text-[#E8A23B]", border: "border-[#E8A23B]", dot: "bg-[#E8A23B]" },
+} as const;
+
+/** "● Active" / "● Live" (green) or "● Pending" (amber) chip. */
 export function StatusChip({
   children,
   bordered,
+  tone = "green",
   className,
 }: {
   children: ReactNode;
   bordered?: boolean;
+  tone?: keyof typeof CHIP_TONES;
   className?: string;
 }) {
+  const t = CHIP_TONES[tone];
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-[5px] bg-[#47a847]/[0.12] px-[10px] text-[#47a847]",
-        bordered && "border-l border-[#47a847]",
+        "inline-flex items-center gap-[5px] px-[10px]",
+        t.chip,
+        bordered && cn("border-l", t.border),
         className,
       )}
     >
-      <span aria-hidden className="h-[5px] w-[5px] rounded-full bg-[#47a847]" />
+      <span aria-hidden className={cn("h-[5px] w-[5px] rounded-full", t.dot)} />
       {children}
     </span>
   );

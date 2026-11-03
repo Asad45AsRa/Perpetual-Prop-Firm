@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AFFILIATE_BASE, currentLevel, DASH_ASSETS } from "./data";
+import { SidebarIcon } from "./SidebarIcon";
 
 const NAV = [
   { label: "Overview", href: AFFILIATE_BASE, icon: "overview" },
@@ -16,15 +17,6 @@ const NAV = [
   { label: "Certificates", href: `${AFFILIATE_BASE}/certificates`, icon: "certificates" },
 ] as const;
 
-/** Natural sizes of the exported Figma icons. */
-const ICON_SIZE: Record<(typeof NAV)[number]["icon"], [number, number]> = {
-  overview: [18.22, 18.22],
-  referrals: [24, 24],
-  commissions: [24, 24],
-  payouts: [20.67, 14.92],
-  giveaways: [20, 20],
-  certificates: [21, 21],
-};
 
 function LevelCard() {
   return (
@@ -100,7 +92,6 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         <nav aria-label="Affiliate" className="mt-[42px] flex flex-col gap-[6px] pl-[23px] pr-[20px]">
           {NAV.map(({ label, href, icon }) => {
             const active = pathname === href;
-            const [w, h] = ICON_SIZE[icon];
             return (
               <Link
                 key={href}
@@ -115,7 +106,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                 )}
               >
                 <span className="flex h-[24px] w-[24px] shrink-0 items-center justify-center">
-                  <Image src={`${DASH_ASSETS}/icons/${icon}.svg`} alt="" width={w} height={h} unoptimized style={{ width: w, height: h }} />
+                  <SidebarIcon name={icon} active={active} />
                 </span>
                 {label}
               </Link>

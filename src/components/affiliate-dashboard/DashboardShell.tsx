@@ -1,6 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import { useState, type ReactNode } from "react";
+import { DASH_ASSETS } from "./data";
 import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
 
@@ -10,14 +12,21 @@ export function DashboardShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="relative flex min-h-screen bg-ink">
-      {/* Soft gold light behind the header (approximation of the Figma ray group). */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-[420px] bg-[radial-gradient(ellipse_640px_300px_at_32%_-60px,rgba(255,255,255,0.10),rgba(153,128,74,0.06)_45%,transparent_75%)]"
-      />
       <Sidebar open={menuOpen} onClose={() => setMenuOpen(false)} />
       <div className="relative min-w-0 flex-1 px-4 pb-[46px] pt-6 sm:px-6 lg:pl-[36px] lg:pr-[38px] lg:pt-[37px]">
-        <div className="mx-auto max-w-[1110px]">
+        {/* Figma background: light ray in the top-left corner of the content area, behind the
+            welcome header. Same base colour as the page, so it blends with no visible edge. */}
+        <Image
+          src={`${DASH_ASSETS}/bg-glow.png`}
+          alt=""
+          aria-hidden
+          width={2880}
+          height={1566}
+          priority
+          sizes="(min-width: 1024px) calc(100vw - 256px), 100vw"
+          className="pointer-events-none absolute inset-x-0 top-0 h-auto w-full select-none"
+        />
+        <div className="relative mx-auto max-w-[1110px]">
           <Topbar onMenu={() => setMenuOpen(true)} />
           {children}
         </div>

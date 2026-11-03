@@ -40,7 +40,9 @@ function smoothPath(pts: [number, number][]) {
 export function EarningsCard() {
   const [range, setRange] = useState<EarningRange>("30d");
   const [visible, setVisible] = useState<Record<SeriesKey, boolean>>({ earnings: true, recurring: true, signups: true });
-  const [active, setActive] = useState(11); // Figma shows the Oct 11 tooltip
+  // Tooltip, crosshair and markers only show while the pointer is over the plot.
+  const [active, setActive] = useState(0);
+  const [hovering, setHovering] = useState(false);
   const plotRef = useRef<HTMLDivElement>(null);
 
   // TODO(backend): fetch the series for `range`; mock data is the same for every range.
@@ -64,6 +66,12 @@ export function EarningsCard() {
     if (!box) return;
     const ratio = Math.min(Math.max((e.clientX - box.left) / box.width, 0), 1);
     setActive(Math.round(ratio * (data.length - 1)));
+    setHovering(true);
+  };
+  const hide = () => setHovering(false);
+  // Touch: show while the finger is down; mouse: hide only when it leaves the plot.
+  const onUp = (e: PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "mouse") hide();
   };
 
   const point = data[active];
@@ -136,6 +144,10 @@ export function EarningsCard() {
         <div
           ref={plotRef}
           onPointerMove={onMove}
+          onPointerDown={onMove}
+          onPointerUp={onUp}
+          onPointerCancel={hide}
+          onPointerLeave={hide}
           className="absolute left-[33px] right-0 top-[9px] h-[184px] touch-none"
           aria-label="Earnings chart"
           role="img"
@@ -167,12 +179,18 @@ export function EarningsCard() {
               })}
           </svg>
 
-          {/* Crosshair + markers */}
+          {/* Hover layer: crosshair + markers + tooltip, faded in only while hovering */}
+          <div
+            aria-hidden={!hovering}
+            className={cn(
+              "pointer-events-none absolute inset-0 transition-opacity duration-150 motion-reduce:transition-none",
+              hovering ? "opacity-100" : "opacity-0",
+            )}
+          >
           <div className="pointer-events-none absolute bottom-[1px] top-[-35px] w-px -translate-x-1/2 bg-white/30" style={{ left: `${pct}%` }} />
           {visible.earnings && <Marker color={SERIES.earnings.color} left={pct} top={y(point.earnings)} />}
           {visible.recurring && <Marker color={SERIES.recurring.color} left={pct} top={y(point.recurring)} />}
 
-          {/* Tooltip */}
           <div
             className="pointer-events-none absolute top-[-49px] w-[141px] -translate-x-1/2 border-[0.7px] border-white/[0.13] bg-ink px-[12.3px] pb-[8px] pt-[8.3px] backdrop-blur-[5px]"
             style={{ left: `clamp(70px, ${pct}%, calc(100% - 70px))` }}
@@ -187,6 +205,7 @@ export function EarningsCard() {
                 </li>
               ))}
             </ul>
+          </div>
           </div>
         </div>
 

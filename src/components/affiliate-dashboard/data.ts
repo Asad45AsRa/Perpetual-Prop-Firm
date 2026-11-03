@@ -6,11 +6,53 @@
 export const DASH_ASSETS = "/images/affiliate-dashboard";
 export const AFFILIATE_BASE = "/affiliates/dashboard";
 
+export const AFFILIATE_PROFILE = `${AFFILIATE_BASE}/profile`;
+export const AFFILIATE_REFERRALS = `${AFFILIATE_BASE}/referrals`;
+
+export const REFERRAL_BASE = "https://perpeye.xyz/ref/";
+/** Referral code rules: 3–20 letters, numbers, "-" or "_". */
+export const REFERRAL_CODE_PATTERN = /^[A-Za-z0-9_-]{3,20}$/;
+
 export const currentUser = {
   name: "Hafiz",
+  email: "hafiz123@gmail.com",
+  levelLabel: "Level 1 partner",
+  // TODO(backend): real referral code/link from the affiliate API.
+  referralCode: "hafiz",
+  referralLink: `${REFERRAL_BASE}hafiz`,
   avatar: `${DASH_ASSETS}/avatars/hafiz.png`,
   unreadNotifications: 4,
 };
+
+/** Topbar heading per route; Overview greets the user. */
+export const PAGE_HEADERS: Record<string, { title: string; subtitle: string }> = {
+  [AFFILIATE_BASE]: {
+    title: `Welcome back, ${currentUser.name}`,
+    subtitle: "Track referrals, commissions and perks in one place.",
+  },
+  [AFFILIATE_PROFILE]: {
+    title: "My Profile",
+    subtitle: "Manage your profile and personal information.",
+  },
+  [AFFILIATE_REFERRALS]: {
+    title: "Referrals",
+    subtitle: "Everyone who signed up with your link.",
+  },
+  [`${AFFILIATE_BASE}/commissions`]: {
+    title: "Commissions",
+    subtitle: "Your earnings by month and level.",
+  },
+  [`${AFFILIATE_BASE}/payouts`]: {
+    title: "Payouts",
+    subtitle: "Balance and payout history.",
+  },
+};
+
+export type ActiveDevice = { id: string; label: string; current: boolean; lastActive: string };
+
+export const activeDevices: ActiveDevice[] = [
+  { id: "this-device", label: "Windows · Chrome · Current Device", current: true, lastActive: "Active now" },
+];
 
 export type StatCardData = {
   label: string;
@@ -71,6 +113,31 @@ export const levelProgress = {
     { label: "251+", image: `${DASH_ASSETS}/level-apex.png`, w: 22, h: 30 },
   ],
 };
+
+/** Commissions page: summary cards (Figma "Commissions"). */
+export const commissionStats: StatCardData[] = [
+  { label: "Commission rate", value: "15%", caption: "Level AXIS", icon: `${DASH_ASSETS}/icons/stat-commission-rate.svg`, iconSize: 21 },
+  { label: "Recurring", value: "10%", caption: "On renewals", icon: `${DASH_ASSETS}/icons/stat-recurring.svg`, iconSize: 21 },
+  { label: "This month", value: "$612", caption: "Earned so far", icon: `${DASH_ASSETS}/icons/stat-this-month.svg`, iconSize: 20 },
+  { label: "All time", value: "$4,820", caption: "Since you joined", icon: `${DASH_ASSETS}/icons/stat-all-time.svg`, iconSize: 21 },
+];
+
+export type CommissionLevel = {
+  name: string;
+  image: string;
+  /** Icon box (natural aspect) inside a 24px slot. */
+  w: number;
+  h: number;
+  referrals: string;
+  commission: string;
+  recurring: string;
+};
+
+export const commissionLevels: CommissionLevel[] = [
+  { name: "AXIS", image: `${DASH_ASSETS}/level-axis.png`, w: 20, h: 18, referrals: "0–50", commission: "15%", recurring: "10%" },
+  { name: "ONYX", image: `${DASH_ASSETS}/level-onyx.png`, w: 12, h: 21, referrals: "51–250", commission: "17%", recurring: "10%" },
+  { name: "APEX", image: `${DASH_ASSETS}/level-apex.png`, w: 16, h: 21, referrals: "251+", commission: "20%", recurring: "10%" },
+];
 
 export const currentLevel = {
   name: "Level 1",
@@ -135,3 +202,46 @@ export const recentReferrals: Referral[] = Array.from({ length: 4 }, () => ({
   status: "Active",
   commission: "$48",
 }));
+
+export const REFERRAL_FILTERS = ["All", "Active", "Pending"] as const;
+export type ReferralFilter = (typeof REFERRAL_FILTERS)[number];
+export const REFERRALS_PAGE_SIZE = 6;
+
+/**
+ * Full referral list for the Referrals page: 135 rows (Figma "of 135 referrals").
+ * Deterministic so server and client render the same; every 5th row is Pending (Figma row 5).
+ * TODO(backend): paginate server-side via the affiliate API.
+ */
+export const allReferrals: Referral[] = Array.from({ length: 135 }, (_, i) => {
+  const day = new Date(Date.UTC(2026, 9, 28 - Math.floor(i / 3)));
+  return {
+    user: `trader_${String(142 + i * 7).padStart(4, "0")}`,
+    date: day.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" }),
+    status: i % 5 === 4 ? "Pending" : "Active",
+    commission: `$${[48, 36, 52, 24, 60, 42][i % 6]}`,
+  };
+});
+
+/* ---------- Payouts ---------- */
+
+export type PayoutStatus = "Paid" | "Pending";
+export type Payout = { id: string; date: string; method: string; status: PayoutStatus; amount: number };
+
+/** USDC on BNB Smart Chain (BEP-20) address: 0x + 40 hex chars. */
+export const BSC_ADDRESS_PATTERN = /^0x[a-fA-F0-9]{40}$/;
+
+/** TODO(backend): balances, history and wallet from the affiliate payouts API. */
+export const payoutSummary = {
+  available: 930,
+  minimum: 50,
+  pendingApproval: 0,
+  paidToDate: 3890,
+};
+
+export const payoutHistory: Payout[] = [
+  { id: "p-2026-10", date: "Oct 1", method: "USDC · BSC", status: "Paid", amount: 1200 },
+  { id: "p-2026-09", date: "Sep 1", method: "USDC · BSC", status: "Paid", amount: 795 },
+];
+
+export const formatUsd = (n: number) =>
+  n.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2 });
