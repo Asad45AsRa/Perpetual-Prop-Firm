@@ -1431,6 +1431,20 @@ export function RulesBook() {
     return () => window.clearTimeout(t);
   }, []);
 
+  useEffect(() => {
+    if (!searchOpen) return;
+    const onOutside = (e: MouseEvent | TouchEvent) => {
+      if (asideRef.current && !asideRef.current.contains(e.target as globalThis.Node)) {
+        setSearchOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", onOutside);
+    document.addEventListener("touchstart", onOutside, { passive: true });
+    return () => {
+      document.removeEventListener("mousedown", onOutside);
+      document.removeEventListener("touchstart", onOutside);
+    };
+  }, [searchOpen]);
   /* active item sidebar ke andar visible rakho */
   useEffect(() => {
     const nav = (navRef.current?.closest(".lg\\:overflow-y-auto") as HTMLElement | null) ?? navRef.current;
@@ -1490,7 +1504,9 @@ export function RulesBook() {
       {/* ───── BODY ───── */}
       <div className="relative z-10 mt-[58px] flex flex-col gap-10 lg:flex-row lg:gap-[54px]">
         {/* SIDEBAR */}
-        <aside className="w-full shrink-0 max-lg:sticky max-lg:top-[80px] max-lg:z-40 lg:sticky lg:top-[110px] lg:w-[412px] lg:self-start">
+        <aside
+        ref={asideRef}
+        className="w-full shrink-0 max-lg:sticky max-lg:top-[80px] max-lg:z-40 lg:sticky lg:top-[110px] lg:w-[412px] lg:self-start">
           <div className="relative flex flex-col border border-line bg-black/20 p-[22px] max-lg:bg-[#0d0c0a] lg:max-h-[calc(100vh-130px)] lg:overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {/* search */}
             <label className="flex h-[41px] shrink-0 items-center gap-3 border border-line bg-white/[0.03] px-4">
