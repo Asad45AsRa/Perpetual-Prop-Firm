@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
-import { AFFILIATE_BASE, currentUser, DASH_ASSETS, PAGE_HEADERS } from "./data";
+import { AFFILIATE_BASE, PAGE_HEADERS } from "./data";
+import { Notifications } from "./Notifications";
 import { UserMenu } from "./UserMenu";
 
 export function Topbar({ onMenu }: { onMenu: () => void }) {
@@ -30,14 +30,7 @@ export function Topbar({ onMenu }: { onMenu: () => void }) {
       </div>
 
       <div className="flex shrink-0 items-center gap-[9px]">
-        <button type="button" aria-label={`Notifications (${currentUser.unreadNotifications} unread)`} className="relative h-[41px] w-[41px]">
-          <Image src={`${DASH_ASSETS}/icons/bell.svg`} alt="" width={41} height={41} unoptimized className="h-[41px] w-[41px]" />
-          {currentUser.unreadNotifications > 0 && (
-            <span className="absolute -top-[7px] right-[-5px] flex h-[17px] min-w-[17px] items-center justify-center rounded-full bg-[#C71919] px-1 text-[12.5px] leading-none text-white">
-              {currentUser.unreadNotifications}
-            </span>
-          )}
-        </button>
+        <Notifications />
         <UserMenu />
       </div>
     </header>

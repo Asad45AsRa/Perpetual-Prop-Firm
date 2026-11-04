@@ -21,7 +21,6 @@ export const currentUser = {
   referralCode: "hafiz",
   referralLink: `${REFERRAL_BASE}hafiz`,
   avatar: `${DASH_ASSETS}/avatars/hafiz.png`,
-  unreadNotifications: 4,
 };
 
 /** Topbar heading per route; Overview greets the user. */
@@ -55,6 +54,27 @@ export const PAGE_HEADERS: Record<string, { title: string; subtitle: string }> =
     subtitle: "Download or share a certificate for every level you complete.",
   },
 };
+
+export type Notification = {
+  id: string;
+  /** Sidebar icon name (e.g. "referrals") or "leaderboard". */
+  icon: "certificates" | "referrals" | "commissions" | "leaderboard" | "giveaways" | "payouts";
+  title: string;
+  body: string;
+  time: string;
+  href: string;
+  unread: boolean;
+};
+
+/** Topbar bell dropdown (Figma "Notifications"), newest first. */
+export const notifications: Notification[] = [
+  { id: "n1", icon: "certificates", title: "Certificate unlocked", body: "Your Level 1 certificate is ready to download.", time: "2h ago", href: `${AFFILIATE_BASE}/certificates`, unread: true },
+  { id: "n2", icon: "referrals", title: "New referral", body: "trader_0142 signed up with your link", time: "Today", href: AFFILIATE_REFERRALS, unread: true },
+  { id: "n3", icon: "commissions", title: "Commission earned", body: "You earned $48.00 from trader_0142.", time: "Today", href: `${AFFILIATE_BASE}/commissions`, unread: true },
+  { id: "n4", icon: "leaderboard", title: "You moved up the leaderboard", body: "You are now #151 on the Demo leaderboard.", time: "Yesterday", href: AFFILIATE_BASE, unread: false },
+  { id: "n5", icon: "giveaways", title: "Giveaway unlocked", body: "3x 5K is available at your level.", time: "Yesterday", href: `${AFFILIATE_BASE}/giveaways`, unread: false },
+  { id: "n6", icon: "payouts", title: "Payout sent", body: "Your $1,200 payout was sent in USDC.", time: "Yesterday", href: `${AFFILIATE_BASE}/payouts`, unread: false },
+];
 
 export type ActiveDevice = { id: string; label: string; current: boolean; lastActive: string };
 
