@@ -22,9 +22,10 @@ export function PanelTitle({ children, className }: { children: ReactNode; class
 const CHIP_TONES = {
   green: { chip: "bg-[#47a847]/[0.12] text-[#47a847]", border: "border-[#47a847]", dot: "bg-[#47a847]" },
   amber: { chip: "bg-[#E8A23B]/[0.12] text-[#E8A23B]", border: "border-[#E8A23B]", dot: "bg-[#E8A23B]" },
+  muted: { chip: "bg-white/[0.06] text-white/50", border: "border-white/30", dot: "bg-white/50" },
 } as const;
 
-/** "● Active" / "● Live" (green) or "● Pending" (amber) chip. */
+/** "● Active" / "● Live" (green), "● Pending" (amber) or "● Locked" (muted) chip. */
 export function StatusChip({
   children,
   bordered,

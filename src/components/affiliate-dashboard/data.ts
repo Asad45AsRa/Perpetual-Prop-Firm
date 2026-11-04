@@ -46,6 +46,14 @@ export const PAGE_HEADERS: Record<string, { title: string; subtitle: string }> =
     title: "Payouts",
     subtitle: "Balance and payout history.",
   },
+  [`${AFFILIATE_BASE}/giveaways`]: {
+    title: "Giveaways",
+    subtitle: "Perks unlocked by your level.",
+  },
+  [`${AFFILIATE_BASE}/certificates`]: {
+    title: "Certificates",
+    subtitle: "Download or share a certificate for every level you complete.",
+  },
 };
 
 export type ActiveDevice = { id: string; label: string; current: boolean; lastActive: string };
@@ -245,3 +253,49 @@ export const payoutHistory: Payout[] = [
 
 export const formatUsd = (n: number) =>
   n.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2 });
+
+/** Giveaways page: one perk card per level (Figma "Giveaways"). */
+export type GiveawayTier = {
+  tier: string;
+  level: number;
+  range: string;
+  perks: string[];
+};
+
+export const giveawayTiers: GiveawayTier[] = [
+  {
+    tier: "AXIS",
+    level: 1,
+    range: "0–50 Referrals",
+    perks: ["3× 5K Giveaway", "1× 10K Challenge Account"],
+  },
+  {
+    tier: "ONYX",
+    level: 2,
+    range: "51–250 Referrals",
+    perks: ["5× 5K Giveaway", "1× 25K Challenge Account"],
+  },
+  {
+    tier: "APEX",
+    level: 3,
+    range: "251+ Referrals",
+    perks: ["5× 10K Giveaway", "1× 100K Challenge Account"],
+  },
+];
+
+export type CertificateLevel = {
+  level: number;
+  tier: string;
+  range: string;
+  /** Referrals needed before the certificate can be downloaded (Figma: "Reach N referrals to unlock it"). */
+  unlockAt: number;
+  /** Optional rendered certificate artwork shown in the preview and used for Download. */
+  preview?: string;
+};
+
+/** Certificates page (Figma "Certificates"): one card per level. */
+export const certificateLevels: CertificateLevel[] = [
+  { level: 1, tier: "AXIS", range: "0–50 referrals", unlockAt: 0 },
+  { level: 2, tier: "ONYX", range: "51–250 referrals", unlockAt: 251 },
+  { level: 3, tier: "APEX", range: "251+ referrals", unlockAt: 500 },
+];
