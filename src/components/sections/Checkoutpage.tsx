@@ -190,13 +190,11 @@ function TextField({
 
 /* Gold panel ka ek stat (label upar, value neeche, center aligned) */
 const V =
-  "after:absolute after:right-0 after:top-5 after:bottom-5 after:w-px after:bg-white/10";
-// sirf desktop (lg) par vertical divider
+  "after:absolute after:right-0 after:top-5 after:bottom-5 after:w-px after:bg-white/[0.07]";
 const LV =
-  "lg:after:absolute lg:after:right-0 lg:after:top-5 lg:after:bottom-5 lg:after:w-px lg:after:bg-white/10";
-// mobile par neeche wali horizontal line, left/right se gap ke saath (sides se na milay)
+  "lg:after:absolute lg:after:right-0 lg:after:top-5 lg:after:bottom-5 lg:after:w-px lg:after:bg-white/[0.07]";
 const H =
-  "before:absolute before:bottom-0 before:left-5 before:right-5 before:h-px before:bg-white/10 lg:before:hidden";
+  "before:absolute before:bottom-0 before:left-5 before:right-5 before:h-px before:bg-white/[0.07] lg:before:hidden";
 
 function Stat({
   label,
@@ -473,7 +471,7 @@ export function CheckoutPage() {
                     </span>
 
                     {/* price */}
-                    <span className="absolute bottom-3 right-3 text-[11px] leading-none text-white">
+                    <span className="absolute bottom-3 right-3 text-[15px] leading-none text-white">
                       {moneyWhole(price)}
                     </span>
                   </button>
@@ -525,7 +523,7 @@ export function CheckoutPage() {
               <div className="flex flex-wrap items-center gap-2.5">
                 <label className="flex h-[34px] items-center gap-2 bg-white/[0.06] px-3">
                   <span className="text-[10px] text-white/50">USD:</span>
-                  <span className="text-[14px] font-semibold text-white">$</span>
+                  <span className="text-[14px] text-white">$</span>
                   <input
                     type="number"
                     inputMode="numeric"
@@ -534,7 +532,7 @@ export function CheckoutPage() {
                     step={STEP}
                     value={amount}
                     onChange={(e) => setClamped(Number(e.target.value))}
-                    className="-ml-1.5 w-12 bg-transparent text-[14px] font-semibold text-white outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                    className="-ml-1.5 w-12 bg-transparent text-[14px] text-white outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                   />
                   <LuChevronsUpDown className="pointer-events-none h-3.5 w-3.5 text-white/60" />
                 </label>
@@ -545,10 +543,10 @@ export function CheckoutPage() {
                     type="button"
                     onClick={() => addAmount(v)}
                     className={cn(
-                      "h-[34px] border px-3 text-[12px] font-medium outline-none transition-colors",
+                      "h-[34px] border bg-transparent px-3 text-[12px] font-normal outline-none transition-colors",
                       amount === v
-                        ? "border-[#99804A] bg-[#99804A]/15 text-white"
-                        : "border-white/10 bg-white/[0.05] text-white/80 hover:border-white/20",
+                        ? "border-[#99804A]/70 text-white/70"
+                        : "border-white/[0.06] text-white/50 hover:border-white/15",
                     )}
                   >
                     ${v.toLocaleString("en-US")}
@@ -566,11 +564,11 @@ export function CheckoutPage() {
                   onChange={(e) => setClamped(Number(e.target.value))}
                   aria-label="Payment amount"
                   style={{
-                    background: "linear-gradient(90deg, #FFFFFF 0%, #99804A 90%)",
+                    background: `linear-gradient(90deg, #FFFFFF 0%, #99804A ${sliderFill}%, rgba(255,255,255,0.08) ${sliderFill}%, rgba(255,255,255,0.08) 100%)`,
                   }}
-                  className="h-[3px] w-full cursor-pointer appearance-none rounded-full outline-none
-                    [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white
-                    [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-white"
+                  className="h-[6px] w-full cursor-pointer appearance-none rounded-full outline-none
+    [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white
+    [&::-moz-range-thumb]:h-3.5 [&::-moz-range-thumb]:w-3.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-white"
                 />
                 <div className="mt-3 flex justify-between text-[10px] leading-3 text-white/40">
                   <span>${MIN_AMOUNT}</span>
@@ -581,11 +579,6 @@ export function CheckoutPage() {
           </div>
 
           {/* ---------- Discounts (hamesha dikhta hai) ---------- */}
-          <div className="mt-7">
-            <SectionChip>Discounts &amp; Referral Bonus</SectionChip>
-
-
-          </div>
 
           {/* ---------- Your Challenge ---------- */}
           <div className="mt-7">
@@ -625,7 +618,7 @@ export function CheckoutPage() {
                 </div>
 
                 {/* desktop par dono rows ke darmiyan line (sides se gap ke saath) */}
-                <div className="mx-8 max-lg:hidden bg-white/10 " style={{ height: 1, background: "rgba(255,255,255,0.3)" }} />
+                <div className="mx-8 max-lg:hidden" style={{ height: 1, background: "rgba(255,255,255,0.07)" }} />
 
                 {/* row 2 */}
                 <div className="grid grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_1.6fr]">
@@ -638,7 +631,7 @@ export function CheckoutPage() {
                   <Stat
                     label="Payout split"
                     value={r.profitSplit}
-                    className={cn(H, LV)}
+                    className={cn(H, LV, "max-lg:col-span-2 max-lg:before:left-16 max-lg:before:right-16")}
                   />
                   <Stat
                     label="Payout frequency"

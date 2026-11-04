@@ -283,7 +283,7 @@ export function ThreeSteps() {
                     width={680}
                     height={760}
                     right={-200}
-                    opacity={0.24}
+                    opacity={0.12}
                     className="bottom-[-160px]"
                 />
             </div>
