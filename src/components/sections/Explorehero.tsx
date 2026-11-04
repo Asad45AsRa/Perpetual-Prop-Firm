@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const stats = [
   { value: "106", label: "Available Markets" },
   { value: "44%", label: "Net Long Traders" },
@@ -36,14 +38,15 @@ export function ExploreHero() {
           </p>
 
           <div className="flex items-center gap-[8px] text-[14px] leading-none tracking-normal text-[#76736D]">
-            <span
-              aria-hidden
-              className="h-[6px] w-[6px] rounded-full bg-[#22c55e] shadow-[0_0_6px_#22c55e]"
+           
+            
+            <Image
+            width={20}
+            height={20}
+              src="/images/explore/hypernova.svg"
+              alt="Market data on Hyperliquid"
+              className="h-[20px] w-auto shrink-0 md:h-[22px]"
             />
-            <span>Market Data on</span>
-            <span className="text-[15px] tracking-[-0.02em] text-white">
-              Hyper<span className="italic">liquid</span>
-            </span>
           </div>
         </div>
 

@@ -3,7 +3,14 @@
 import { useState, type ReactNode } from "react";
 import { LogOut, Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useAdminSession, type AdminRole } from "./Adminauth";
+import {
+  useAdminSession,
+  useThemeClass,
+  AdminThemeStyles,
+  ThemeToggle,
+  AdminLogo,
+  type AdminRole,
+} from "./Adminauth";
 
 /* ───────────────────────── Roles + rights ───────────────────────── */
 
@@ -69,10 +76,10 @@ const box = "border-[0.7px] border-white/[0.08] bg-surface";
 
 function Card({ title, action, children, className }: { title?: string; action?: ReactNode; children: ReactNode; className?: string }) {
   return (
-    <section className={cn(box, "p-5", className)}>
+    <section className={cn(box, "p-6", className)}>
       {(title || action) && (
-        <div className="mb-3 flex items-center justify-between gap-3">
-          {title && <h2 className="text-[15px] text-white">{title}</h2>}
+        <div className="mb-4 flex items-center justify-between gap-3">
+          {title && <h2 className="text-[18px] text-white">{title}</h2>}
           {action}
         </div>
       )}
@@ -89,12 +96,12 @@ const tones = {
 } as const;
 
 function Pill({ tone, children }: { tone: keyof typeof tones; children: ReactNode }) {
-  return <span className={cn("px-2.5 py-0.5 text-[11px]", tones[tone])}>{children}</span>;
+  return <span className={cn("px-3 py-1 text-[13px]", tones[tone])}>{children}</span>;
 }
 
 function Btn({ children, onClick }: { children: ReactNode; onClick?: () => void }) {
   return (
-    <button onClick={onClick} className="border-[0.7px] border-white/[0.13] px-3 py-1.5 text-[12px] text-white/80 transition-colors hover:border-gold-accent hover:text-white">
+    <button onClick={onClick} className="border-[0.7px] border-white/[0.13] px-4 py-2 text-[14px] text-white/80 transition-colors hover:border-gold-accent hover:text-white">
       {children}
     </button>
   );
@@ -103,16 +110,16 @@ function Btn({ children, onClick }: { children: ReactNode; onClick?: () => void 
 function Table({ heads, rows }: { heads: string[]; rows: ReactNode[][] }) {
   return (
     <div className="overflow-x-auto">
-      <table className="w-full min-w-[360px] text-left text-[13px]">
+      <table className="w-full min-w-[400px] text-left text-[15px]">
         <thead>
           <tr className="border-b border-white/[0.08] text-white/40">
-            {heads.map((h) => <th key={h} className="px-2 py-2.5 font-normal">{h}</th>)}
+            {heads.map((h) => <th key={h} className="px-2 py-3 font-normal">{h}</th>)}
           </tr>
         </thead>
         <tbody>
           {rows.map((r, i) => (
             <tr key={i} className="border-b border-white/[0.06] last:border-0 text-white/80">
-              {r.map((c, j) => <td key={j} className="px-2 py-3">{c}</td>)}
+              {r.map((c, j) => <td key={j} className="px-2 py-3.5">{c}</td>)}
             </tr>
           ))}
         </tbody>
@@ -145,16 +152,16 @@ function Overview({ role }: { role: AdminRole }) {
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {stats.map((s) => (
           <Card key={s.label}>
-            <p className="text-[12px] text-white/40">{s.label}</p>
-            <p className="my-1.5 text-[30px] leading-none text-white">{s.value}</p>
-            <p className="text-[12px] text-white/40">{s.note}</p>
+            <p className="text-[14px] text-white/40">{s.label}</p>
+            <p className="my-2 text-[38px] leading-none text-white">{s.value}</p>
+            <p className="text-[14px] text-white/40">{s.note}</p>
           </Card>
         ))}
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
         <Card title="Live trader" action={<div className="flex gap-2"><Btn>Accounts</Btn>{finance && <Btn>Payouts</Btn>}</div>}>
-          <div className="flex flex-col items-center gap-3 border border-dashed border-white/[0.1] px-6 py-8 text-center text-[13px] text-white/40">
+          <div className="flex flex-col items-center gap-4 border border-dashed border-white/[0.1] px-6 py-10 text-center text-[15px] text-white/40">
             No live trader yet. Log in and buy a challenge in the Trader app, then come back here.
             <Btn>Open Trader app</Btn>
           </div>
@@ -162,7 +169,7 @@ function Overview({ role }: { role: AdminRole }) {
         <Card title="Needs attention">
           <ul>
             {attention.filter(([, , show]) => show).map(([label, n]) => (
-              <li key={label} className="flex justify-between border-b border-white/[0.06] py-3 text-[13px] text-white/50 last:border-0">
+              <li key={label} className="flex justify-between border-b border-white/[0.06] py-3.5 text-[15px] text-white/50 last:border-0">
                 {label}<b className="font-normal text-white">{n}</b>
               </li>
             ))}
@@ -222,7 +229,7 @@ function StaffPermissions() {
             ["Sara", "mod@perpeye.com", <Pill key="r" tone="gray">Moderator</Pill>],
           ]}
         />
-        <p className="mt-3 text-[12px] text-white/30">Role assign/change backend API se hoga (/admin/staff).</p>
+        <p className="mt-4 text-[14px] text-white/30">Role assign/change backend API se hoga (/admin/staff).</p>
       </Card>
       <Card title="Role rights">
         <Table
@@ -242,6 +249,7 @@ function StaffPermissions() {
 export function AdminDashboard() {
   const user = useAdminSession((s) => s.user);
   const logout = useAdminSession((s) => s.logout);
+  const themeClass = useThemeClass();
   const [active, setActive] = useState("Overview");
   const [open, setOpen] = useState(false);
 
@@ -251,24 +259,28 @@ export function AdminDashboard() {
   const page = allowed ? active : "Overview";
 
   return (
-    <div className="flex min-h-screen bg-ink text-white">
+    <div className={cn(themeClass, "flex min-h-screen bg-ink text-white")}>
+      <AdminThemeStyles />
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-30 w-[250px] overflow-y-auto border-r border-white/[0.08] bg-surface px-3 py-5 transition-transform md:sticky md:top-0 md:h-screen md:translate-x-0",
+          "fixed inset-y-0 left-0 z-30 w-[280px] overflow-y-auto border-r border-white/[0.08] bg-surface px-3 py-6 transition-transform md:sticky md:top-0 md:h-screen md:translate-x-0",
           open ? "translate-x-0" : "-translate-x-full",
         )}
       >
-        <div className="px-3 text-[17px] font-medium">Perpeye Admin</div>
-        <nav className="mt-4">
+        <div className="flex items-center gap-3 px-3">
+          <AdminLogo className="h-9" />
+          <span className="border-l border-white/[0.13] pl-3 text-[14px] text-white/60">Admin</span>
+        </div>
+        <nav className="mt-5">
           {groups.map((g) => (
-            <div key={g.group} className="mt-5">
-              <p className="px-3 pb-1.5 text-[11px] text-white/30">{g.group}</p>
+            <div key={g.group} className="mt-6">
+              <p className="px-3 pb-2 text-[13px] text-white/30">{g.group}</p>
               {g.items.map((i) => (
                 <button
                   key={i.label}
                   onClick={() => { setActive(i.label); setOpen(false); }}
                   className={cn(
-                    "block w-full px-3 py-2 text-left text-[13px] transition-colors",
+                    "block w-full px-3 py-2.5 text-left text-[15px] transition-colors",
                     page === i.label ? "bg-gold/15 text-gold-light" : "text-white/55 hover:bg-white/[0.04] hover:text-white",
                   )}
                 >
@@ -282,25 +294,26 @@ export function AdminDashboard() {
       {open && <div className="fixed inset-0 z-20 bg-black/60 md:hidden" onClick={() => setOpen(false)} />}
 
       <div className="min-w-0 flex-1">
-        <div className="bg-gold/10 px-4 py-2 text-center text-[12px] text-gold-light">
+        <div className="bg-gold/10 px-4 py-2.5 text-center text-[14px] text-gold-light">
           Admin console: shows the same data as the Trader app. Actions here change what the trader sees.
         </div>
         <div className="mx-auto flex max-w-[1500px] flex-col gap-4 p-4 sm:p-6">
           <header className="mb-2 flex flex-wrap items-start justify-between gap-3">
             <div className="flex items-start gap-3">
-              <button className="mt-1 md:hidden" aria-label="Open menu" onClick={() => setOpen(true)}><Menu size={20} /></button>
+              <button className="mt-2 md:hidden" aria-label="Open menu" onClick={() => setOpen(true)}><Menu size={24} /></button>
               <div>
-                <h1 className="text-[24px]">{page}</h1>
-                <p className="mt-1 text-[13px] text-white/40">Live data from the Trader app together with sample platform data.</p>
+                <h1 className="text-[30px]">{page}</h1>
+                <p className="mt-1 text-[15px] text-white/40">Live data from the Trader app together with sample platform data.</p>
               </div>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="text-right text-[12px]">
-                <p className="text-white/80">{user.name}</p>
+            <div className="flex flex-wrap items-center gap-3">
+              <ThemeToggle />
+              <div className="text-right text-[14px]">
+                <p className="mb-1 text-white/80">{user.name}</p>
                 <Pill tone={user.role === "admin" ? "gold" : "gray"}>{user.role === "admin" ? "Admin" : "Moderator"}</Pill>
               </div>
-              <button onClick={logout} className="flex items-center gap-1.5 border-[0.7px] border-white/[0.13] px-3 py-2 text-[12px] hover:border-gold-accent">
-                <LogOut size={14} /> Sign out
+              <button onClick={logout} className="flex items-center gap-2 border-[0.7px] border-white/[0.13] px-4 py-2 text-[14px] hover:border-gold-accent">
+                <LogOut size={16} /> Sign out
               </button>
             </div>
           </header>
@@ -308,7 +321,7 @@ export function AdminDashboard() {
           {page === "Overview" && <Overview role={user.role} />}
           {page === "Staff & Permissions" && can(user.role, "staff.manage") && <StaffPermissions />}
           {page !== "Overview" && page !== "Staff & Permissions" && (
-            <Card title={page}><p className="text-[13px] text-white/40">Yeh page abhi banna hai.</p></Card>
+            <Card title={page}><p className="text-[15px] text-white/40">Yeh page abhi banna hai.</p></Card>
           )}
         </div>
       </div>
