@@ -94,7 +94,7 @@ export function AuthFlow() {
       */}
       <div className="relative flex w-full flex-col items-center gap-[20px] lg:grid lg:w-auto lg:grid-cols-[459px_457px] lg:grid-rows-[auto_auto_auto] lg:justify-center lg:gap-0">
         {/* Promo: first on mobile/tablet; desktop: right column, same row as the form card */}
-        <PromoPanel className="order-1 max-w-[459px] md:max-w-[560px] lg:order-none lg:col-start-2 lg:row-start-2 lg:-ml-px lg:mt-[16px] lg:max-w-none lg:self-start" />
+        <PromoPanel className="max-lg:hidden order-1 max-w-[459px] md:max-w-[560px] lg:order-none lg:col-start-2 lg:row-start-2 lg:-ml-px lg:mt-[16px] lg:max-w-none lg:self-start" />
 
         {/* Form column: on desktop its children are placed straight into the grid (lg:contents) */}
         <div className="order-2 w-full max-w-[459px] shrink-0 md:max-w-[560px] lg:contents">

@@ -189,6 +189,15 @@ function TextField({
 }
 
 /* Gold panel ka ek stat (label upar, value neeche, center aligned) */
+const V =
+  "after:absolute after:right-0 after:top-5 after:bottom-5 after:w-px after:bg-white/10";
+// sirf desktop (lg) par vertical divider
+const LV =
+  "lg:after:absolute lg:after:right-0 lg:after:top-5 lg:after:bottom-5 lg:after:w-px lg:after:bg-white/10";
+// mobile par neeche wali horizontal line, left/right se gap ke saath (sides se na milay)
+const H =
+  "before:absolute before:bottom-0 before:left-5 before:right-5 before:h-px before:bg-white/10 lg:before:hidden";
+
 function Stat({
   label,
   value,
@@ -201,7 +210,7 @@ function Stat({
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center gap-2.5 border-white/10 px-3 py-5 text-center",
+        "relative flex flex-col items-center justify-center gap-2.5 px-3 py-5 text-center",
         className,
       )}
     >
@@ -211,14 +220,6 @@ function Stat({
   );
 }
 
-function SummaryRow({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-center justify-between gap-4 text-[12px] leading-4">
-      <span className="text-white/40">{label}</span>
-      <span className="text-white/70">{value}</span>
-    </div>
-  );
-}
 
 /* Figma wala green circle-check (No KYC / trading capital) */
 function CheckBadge() {
@@ -296,10 +297,6 @@ export function CheckoutPage() {
   const [drawdown, setDrawdown] = useState("4%");
   const [profitSplit, setProfitSplit] = useState("90%");
 
-  const [coupon, setCoupon] = useState("");
-  const [referral, setReferral] = useState("");
-  const [agreed, setAgreed] = useState(false);
-
   const plan = PLANS.find((p) => p.id === planId)!;
   const isCustom = planId === "custom";
   // Custom par dropdowns ki values, baqi plans par un ki apni fixed rules
@@ -330,7 +327,7 @@ export function CheckoutPage() {
   return (
     <main className="min-h-screen pt-[120px] text-foreground max-md:mt-2 ">
       {/* Figma: 1440 frame, 80px side padding */}
-      <section className="relative isolate w-full px-4 pb-24 pt-11 sm:px-6 lg:px-20">
+      <section className="relative isolate w-full px-6 pb-24 pt-11 sm:px-6 lg:px-20">
         <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-x-clip">
           <LeftGlow
             width={690}
@@ -569,7 +566,7 @@ export function CheckoutPage() {
                   onChange={(e) => setClamped(Number(e.target.value))}
                   aria-label="Payment amount"
                   style={{
-                    background: `linear-gradient(90deg, #99804A ${sliderFill}%, rgba(255,255,255,0.12) ${sliderFill}%)`,
+                    background: "linear-gradient(90deg, #FFFFFF 0%, #99804A 90%)",
                   }}
                   className="h-[3px] w-full cursor-pointer appearance-none rounded-full outline-none
                     [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white
@@ -587,20 +584,7 @@ export function CheckoutPage() {
           <div className="mt-7">
             <SectionChip>Discounts &amp; Referral Bonus</SectionChip>
 
-            <Panel className="mt-4 grid gap-x-4 gap-y-5 px-4 py-5 sm:grid-cols-2">
-              <TextField
-                label="Coupon Code"
-                placeholder="Enter coupon"
-                value={coupon}
-                onChange={setCoupon}
-              />
-              <TextField
-                label="Affiliate Referral Code"
-                placeholder="Enter referral code"
-                value={referral}
-                onChange={setReferral}
-              />
-            </Panel>
+
           </div>
 
           {/* ---------- Your Challenge ---------- */}
@@ -629,90 +613,56 @@ export function CheckoutPage() {
               <div className="mx-auto w-full max-w-[1000px]">
                 {/* row 1 */}
                 <div className="grid grid-cols-2 lg:grid-cols-5">
-                  <Stat
-                    label="Challenge phase"
-                    value={plan.challenge ? "Yes" : "No"}
-                    className="max-lg:border-b"
-                  />
-                  <Stat
-                    label="Profit target"
-                    value={r.profitTarget}
-                    className="max-lg:border-b lg:border-l"
-                  />
-                  <Stat
-                    label="Max loss"
-                    value={r.maxLoss}
-                    className="max-lg:border-b lg:border-l"
-                  />
-                  <Stat
-                    label="Daily loss limit"
-                    value={r.dailyLoss}
-                    className="max-lg:border-b lg:border-l"
-                  />
+                  <Stat label="Challenge phase" value={plan.challenge ? "Yes" : "No"} className={cn(V, H)} />
+                  <Stat label="Profit target" value={r.profitTarget} className={cn(H, LV)} />
+                  <Stat label="Max loss" value={r.maxLoss} className={cn(V, H)} />
+                  <Stat label="Daily loss limit" value={r.dailyLoss} className={cn(H, LV)} />
                   <Stat
                     label="Initial daily equity floor"
                     value={moneyWhole(floorOf(balance, r.dailyLoss))}
-                    className="max-lg:col-span-2 max-lg:border-b lg:border-l"
+                    className="max-lg:hidden"
                   />
                 </div>
 
+                {/* desktop par dono rows ke darmiyan line (sides se gap ke saath) */}
+                <div className="mx-8 max-lg:hidden bg-white/10 " style={{ height: 1, background: "rgba(255,255,255,0.3)" }} />
+
                 {/* row 2 */}
-                <div className="grid grid-cols-2 border-white/10 lg:grid-cols-[1fr_1fr_1fr_1.6fr] lg:border-t">
+                <div className="grid grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_1.6fr]">
                   <Stat
                     label="Static equity floor"
                     value={moneyWhole(floorOf(balance, r.maxLoss))}
-                    className="max-lg:border-b"
+                    className={cn(V, H)}
                   />
-                  <Stat
-                    label="Minimum days"
-                    value="0"
-                    className="max-lg:border-b lg:border-l"
-                  />
+                  <Stat label="Minimum days" value="0" className={cn(H, LV)} />
                   <Stat
                     label="Payout split"
                     value={r.profitSplit}
-                    className="max-lg:border-b lg:border-l"
+                    className={cn(H, LV)}
                   />
                   <Stat
                     label="Payout frequency"
                     value="One per account every 24 hours"
-                    className="max-lg:col-span-2 lg:border-l"
+                    className="max-lg:col-span-2 max-lg:[&>span:last-child]:text-[15px]"
                   />
                 </div>
               </div>
             </div>
 
             {/* Payment summary strip */}
-            <Panel className="mt-3 space-y-3 px-4 py-4">
-              <p className="text-[11px] leading-4 text-white/50">
-                You&apos;ll trade with{" "}
-                <span className="text-white">{moneyWhole(balance)}</span> ·{" "}
-                {plan.multiplier}× on your {money(amount)} payment · {plan.name}
-              </p>
-              <div className="grid gap-x-8 gap-y-3 sm:grid-cols-2">
-                <SummaryRow label="Payment amount" value={money(amount)} />
-                <SummaryRow label="Coupon discount" value={`-${money(discount)}`} />
-                <SummaryRow label="Funding account linked to:" value="yourname@gmail.com" />
-                <div className="flex items-center justify-between gap-4">
-                  <span className="text-[12px] leading-4 text-white/50">You pay today</span>
-                  <span className="text-[18px] leading-5 text-white">{money(total)}</span>
-                </div>
-              </div>
-            </Panel>
 
             {/* Agreement */}
 
             {/* Get Funded: full width, white -> gold gradient */}
             <button
               type="button"
-              disabled={!agreed}
               style={{
                 background: "linear-gradient(90deg, #FFFFFF 0%, #99804A 100%)",
               }}
               className="mt-5 flex h-[52px] w-full items-center justify-center gap-2 text-black outline-none disabled:cursor-not-allowed disabled:opacity-60"
             >
-              <span className="text-[13px]">Get Funded</span>
-              <span className="text-[22px] font-semibold leading-none">{money(total)}</span>
+              <span className="text-[14px]">Get Funded</span>
+              <span className="text-[22px] leading-none">{money(total)}</span>
             </button>
 
           </div>

@@ -79,7 +79,7 @@ export function Faq() {
                 <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-0">
                     {/* LEFT */}
                     <div className="flex flex-col items-start gap-[2.857em]">
-                        <h1 className="w-full max-w-[7.29em] text-[3.714em] font-normal leading-[100%] tracking-[-0.02em] text-white">
+                        <h1 className="w-full max-w-[7.29em] text-[3.714em] font-normal leading-[100%] tracking-[-0.02em] text-white max-md:max-w-full max-md:text-[2.857em]">
                             Frequently Asked Questions About Perpeye
                         </h1>
 
@@ -144,7 +144,7 @@ export function Faq() {
                                                 }`}
                                         >
                                             <div className="overflow-hidden">
-                                                <p className="pb-[2em] pr-[4.375em] text-[15px] font-normal leading-[20px] text-muted/90">
+                                                <p className="pb-[2em] pr-[4.375em] max-md:pr-2 text-[15px] font-normal leading-[20px] text-muted/90">
                                                     {item.a}
                                                 </p>
                                             </div>

@@ -18,7 +18,7 @@ const rows = [stats.slice(0, 3), stats.slice(3)];
 
 export function Hero() {
   return (
-    <section className="relative w-full overflow-hidden px-6 pb-0 pt-[96px] md:min-h-[720px] md:px-20 md:pt-[184px]">
+    <section className="relative w-full overflow-hidden px-5 pb-0 pt-[96px] md:min-h-[720px] md:px-20 md:pt-[184px]">
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
 
       </div>
@@ -51,10 +51,10 @@ export function Hero() {
 
 
       <div className="relative z-10">
-        <h1 className="text-[40px] font-normal leading-[1] tracking-[-0.02em] text-white md:text-[60px]">
+        <h1 className="text-[34px] font-normal leading-[1.05] tracking-[-0.02em] text-white md:text-[60px] md:leading-[1]">
           Smarter Way To Trade
-          <br />
-          Perps With Funding.
+          <br className="max-md:hidden" />
+          {" "}Perps With Funding.
         </h1>
 
         <p className="mt-6 max-w-[480px] text-[15px] leading-[20px] text-muted/90">

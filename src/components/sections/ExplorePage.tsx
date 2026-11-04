@@ -195,7 +195,7 @@ export function ExplorePage() {
   return (
     <main className="min-h-screen font-sans text-foreground mt-5">
       {/* Figma frame: 1440px centered, 80px side padding (px-6 mobile / lg:px-20) */}
-      <section className="relative isolate mx-auto flex w-full max-w-none flex-col items-center px-10 py-20 max-md:pb-0 text-center lg:px-20">
+      <section className="relative isolate mx-auto flex w-full max-w-none flex-col items-center px-6 md:px-10 py-20 max-md:pb-0 text-center lg:px-20">
         <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-x-clip">
           <RightGlow
             width={760}
@@ -382,7 +382,7 @@ export function ExplorePage() {
             </div>
 
             {/* Mobile only: box ke bahar, bottom mein */}
-            <div className="mt-4 flex items-center justify-center gap-1.5 md:hidden">
+            <div className="mt-4 flex items-center justify-start gap-1.5 md:hidden">
               <a
                 href="#"
                 className="text-[12px] text-white/50 underline underline-offset-4 transition-colors hover:text-white"
@@ -397,7 +397,7 @@ export function ExplorePage() {
         {/* ===== Payouts section ===== */}
         <div className="relative mt-24 max-md:mt-36 flex w-full flex-col-reverse gap-12 text-left lg:mt-[200px] lg:flex-row lg:items-center lg:justify-between lg:gap-8">
           {/* Left glow: section ke padding se bahar nikal kar screen ke left edge par */}
-          <div aria-hidden className="pointer-events-none absolute -left-10 top-1/2 -z-10 lg:-left-20">
+          <div aria-hidden className="pointer-events-none absolute -left-6 top-1/2 -z-10 md:-left-10 lg:-left-20">
             <LeftGlow
               width={830}
               height={760}
