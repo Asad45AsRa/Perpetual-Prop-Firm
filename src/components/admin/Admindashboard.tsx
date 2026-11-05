@@ -12,7 +12,7 @@ import {
 } from "./Adminauth";
 import { AdminNavContext, AdminRealtime, LiveDot } from "./adminData";
 import { PAGES, navForRole } from "./pages";
-import { Card, Pill, StateMessage } from "./ui";
+import { Card, Pill, StateMessage, ToastProvider } from "./ui";
 
 // Re-exported so existing imports of these from this file keep working
 export { PERMISSIONS, can } from "./permissions";
@@ -35,6 +35,7 @@ export function AdminDashboard() {
 
   return (
     <AdminRealtime>
+    <ToastProvider>
     <AdminNavContext.Provider value={setActive}>
     <div className={cn(themeClass, "flex min-h-screen bg-ink text-white")}>
       <AdminThemeStyles />
@@ -71,9 +72,6 @@ export function AdminDashboard() {
       {open && <div className="fixed inset-0 z-20 bg-black/60 md:hidden" onClick={() => setOpen(false)} />}
 
       <div className="min-w-0 flex-1">
-        <div className="bg-gold/10 px-4 py-2.5 text-center text-[14px] text-gold-light">
-          Admin console: shows the same data as the Trader app. Actions here change what the trader sees.
-        </div>
         <div className="mx-auto flex max-w-[1500px] flex-col gap-4 p-4 sm:p-6">
           <header className="mb-2 flex flex-wrap items-start justify-between gap-3">
             <div className="flex items-start gap-3">
@@ -101,6 +99,7 @@ export function AdminDashboard() {
       </div>
     </div>
     </AdminNavContext.Provider>
+    </ToastProvider>
     </AdminRealtime>
   );
 }

@@ -1,36 +1,37 @@
 "use client";
 
-import { Card, Pill, StateMessage, Table } from "../ui";
-import { useAdminQuery } from "../adminData";
+import { Card, Table } from "../ui";
+import { ResourcePage, type PageConfig } from "../ResourcePage";
 import type { AdminRole } from "../Adminauth";
 import { ADMIN, PERMISSIONS } from "../permissions";
-import type { AdminPage, ListResponse, StaffMember } from "../types";
+import type { AdminPage } from "../types";
 
-// Staff list comes from GET /admin/staff. The rights table uses the same config that hides actions in the UI.
+// Staff list from GET /admin/staff with invite / edit / delete.
+// The rights table uses the same config that hides actions in the UI.
+const config: PageConfig = {
+  resource: "staff",
+  columns: [
+    { key: "id", label: "ID" },
+    { key: "name", label: "Name" },
+    { key: "email", label: "Email" },
+    { key: "role", label: "Role" },
+    { key: "status", label: "Status", format: "status" },
+  ],
+  primary: { kind: "create", label: "Invite Staff" },
+  fields: [
+    { key: "name", label: "Name", required: true },
+    { key: "email", label: "Email", type: "email", required: true },
+    { key: "role", label: "Role", type: "select", options: ["admin", "moderator"] },
+    { key: "status", label: "Status", type: "select", options: ["active", "suspended"] },
+  ],
+};
+
 function StaffPermissions() {
   const roles: AdminRole[] = ["admin", "moderator"];
-  const { data, isPending, error, refetch } = useAdminQuery<ListResponse<StaffMember>>("staff", "/admin/staff");
 
   return (
-    <div className="grid gap-4 lg:grid-cols-2">
-      <Card title="Staff">
-        {isPending ? (
-          <StateMessage>Loading…</StateMessage>
-        ) : error ? (
-          <StateMessage error onRetry={() => refetch()}>{error.message}</StateMessage>
-        ) : data.items.length === 0 ? (
-          <StateMessage>No staff accounts yet.</StateMessage>
-        ) : (
-          <Table
-            heads={["Name", "Email", "Role"]}
-            rows={data.items.map((m) => [
-              m.name,
-              m.email,
-              <Pill key="r" tone={m.role === "admin" ? "gold" : "gray"}>{m.role === "admin" ? "Admin" : "Moderator"}</Pill>,
-            ])}
-          />
-        )}
-      </Card>
+    <>
+      <ResourcePage config={config} />
       <Card title="Role rights">
         <Table
           heads={["Right", ...roles.map((r) => r[0].toUpperCase() + r.slice(1))]}
@@ -40,7 +41,7 @@ function StaffPermissions() {
           ])}
         />
       </Card>
-    </div>
+    </>
   );
 }
 

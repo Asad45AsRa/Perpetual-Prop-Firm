@@ -38,13 +38,43 @@ export type OverviewData = {
     riskBreaches: number;
     pendingAffiliatePayouts: number;
   };
-  liveTrader: { name: string; accountId: string; equity: number; pnl: number } | null;
+  liveTrader: {
+    name: string;
+    accountId: string;
+    equity: number;
+    pnl: number;
+    email?: string;
+    plan?: string;
+    stage?: string;
+    openPositions?: number;
+    payoutEligible?: number;
+    lifetimePaid?: number;
+    trading?: string;
+  } | null;
   recentPayouts: Payout[];
   recentActivity: TradeActivity[];
   recentTickets: SupportTicket[];
 };
 
-export type StaffMember = { id: string; name: string; email: string; role: AdminRole };
+export type StaffMember = { id: string; name: string; email: string; role: AdminRole; status?: string };
 
 // Every list endpoint answers with { items: [...] }
 export type ListResponse<T> = { items: T[] };
+
+// GET /admin/operations
+export type OperationsData = {
+  kpis: { challengeAccounts: number; fundedAccounts: number; openRiskEvents: number; openTickets: number };
+  plans: { id: string; name: string; capital: number; profitTarget: number; dailyLoss: number; maxLoss: number }[];
+};
+
+// GET /admin/reserves
+export type ReservesData = { pending: number; approvedUnpaid: number; paid: number; rejected: number };
+
+// GET /admin/settings
+export type SettingsData = {
+  riskRules: { dailyLoss: number; maxLoss: number; profitTarget: number; profitSplit: number };
+  platform: { name: string; markets: string; payoutNetwork: string; mode: string };
+};
+
+// GET /admin/health  (items) and POST /admin/health/check
+export type HealthItem = { id: string; service: string; status: string; latencyMs: number; checkedAt: string };

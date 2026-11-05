@@ -50,13 +50,13 @@ export const PAGES: AdminPage[] = [
   PayoutReserves,
   SupportTickets,
   Announcements,
-  EmailManagement,
+  /*EmailManagement,
   WebsiteCms,
   Competitions,
   SystemHealth,
   AuditLogs,
   StaffPermissions,
-  PlatformSettings,
+  PlatformSettings,*/
 ];
 
 // Sidebar data for one role: hides pages (and empty sections) the role cannot open

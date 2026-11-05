@@ -13,6 +13,7 @@ export const PERMISSIONS: Record<string, { label: string; roles: AdminRole[] }> 
   "finance.view":    { label: "View revenue & payments",    roles: ADMIN },
   "payout.approve":  { label: "Approve / reject payouts",   roles: ADMIN },
   "staff.manage":    { label: "Manage staff & roles",       roles: ADMIN },
+  "records.manage":  { label: "Create, edit & delete records", roles: ADMIN },
   "settings.edit":   { label: "Edit platform settings",     roles: ADMIN },
 };
 

@@ -138,6 +138,17 @@ export function useAdminAction(resources: string[]) {
   });
 }
 
+// Runs any write request (POST / PATCH / DELETE) and refreshes every admin query,
+// because one change (e.g. approving a payout) can affect the overview and the audit log too.
+export function useAdminMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ path, method = "POST", body }: { path: string; method?: "POST" | "PATCH" | "DELETE"; body?: unknown }) =>
+      adminApi<unknown>(path, { method, body }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin"] }),
+  });
+}
+
 // Approve or reject one trader payout: POST /admin/payouts/:id/approve | reject
 export function usePayoutAction() {
   const action = useAdminAction(["payouts"]);

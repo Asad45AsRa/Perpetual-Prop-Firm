@@ -59,6 +59,7 @@ export function useThemeClass() {
 // Light mode overrides. Dark is the default design and is left untouched.
 // Only colors inside `.adm-light` change, the layout stays the same.
 const LIGHT_CSS = String.raw`
+.adm-dark{color-scheme:dark}
 .adm-light{color-scheme:light}
 .adm-light.bg-ink,.adm-light .bg-ink{background-color:#f3f4f8}
 .adm-light.text-white,.adm-light .text-white{color:#15151b}

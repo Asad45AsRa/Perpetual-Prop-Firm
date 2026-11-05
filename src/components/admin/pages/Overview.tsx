@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { Btn, Card, formatMoney, formatPnl, Pill, pnlClass, StateMessage, statusTone, Table } from "../ui";
 import { useAdminNavigate, useAdminQuery, usePayoutAction } from "../adminData";
 import { useAdminSession } from "../Adminauth";
@@ -62,21 +63,29 @@ function Overview() {
           }
         >
           {data.liveTrader ? (
-            <div className="grid gap-4 sm:grid-cols-3">
-              <div>
-                <p className="text-[14px] text-white/40">Trader</p>
-                <p className="mt-1 text-[18px]">{data.liveTrader.name}</p>
-                <p className="text-[14px] text-white/40">{data.liveTrader.accountId}</p>
-              </div>
-              <div>
-                <p className="text-[14px] text-white/40">Equity</p>
-                <p className="mt-1 text-[18px]">{formatMoney(data.liveTrader.equity)}</p>
-              </div>
-              <div>
-                <p className="text-[14px] text-white/40">Open P&amp;L</p>
-                <p className={`mt-1 text-[18px] ${pnlClass(data.liveTrader.pnl)}`}>{formatPnl(data.liveTrader.pnl)}</p>
-              </div>
-            </div>
+            <ul>
+              {(
+                [
+                  ["Trader", data.liveTrader.name],
+                  ["Email", data.liveTrader.email],
+                  ["Account", data.liveTrader.accountId],
+                  ["Plan", data.liveTrader.plan],
+                  ["Stage", data.liveTrader.stage],
+                  ["Equity", formatMoney(data.liveTrader.equity)],
+                  ["Open P&L", <span key="pnl" className={pnlClass(data.liveTrader.pnl)}>{formatPnl(data.liveTrader.pnl)}</span>],
+                  ["Open positions", data.liveTrader.openPositions],
+                  ["Payout eligible", data.liveTrader.payoutEligible === undefined ? undefined : formatMoney(data.liveTrader.payoutEligible)],
+                  ["Lifetime paid", data.liveTrader.lifetimePaid === undefined ? undefined : formatMoney(data.liveTrader.lifetimePaid)],
+                  ["Trading", data.liveTrader.trading],
+                ] as [string, ReactNode][]
+              )
+                .filter(([, v]) => v !== undefined && v !== "")
+                .map(([label, value]) => (
+                  <li key={label} className="flex justify-between border-b border-white/[0.06] py-3 text-[15px] text-white/50 last:border-0">
+                    {label}<b className="font-normal text-white">{value}</b>
+                  </li>
+                ))}
+            </ul>
           ) : (
             <StateMessage>No live trader right now. This card updates the moment a trader starts trading.</StateMessage>
           )}

@@ -1,47 +1,33 @@
 "use client";
 
-import { Btn, Card, formatDate, formatMoney, Pill, StateMessage, statusTone, Table } from "../ui";
-import { useAdminQuery, usePayoutAction } from "../adminData";
-import { useAdminSession } from "../Adminauth";
-import { ADMIN, can } from "../permissions";
-import type { AdminPage, ListResponse, Payout } from "../types";
+import { ResourcePage, type PageConfig } from "../ResourcePage";
+import { ADMIN } from "../permissions";
+import type { AdminPage } from "../types";
 
-// Full payout queue with approve / reject. Decisions made by another admin appear live.
+// Full payout queue from GET /admin/payouts. Decisions made by another admin appear live.
+// Approve / Reject / Mark paid are POST /admin/payouts/:id/approve | reject | paid.
+const config: PageConfig = {
+  resource: "payouts",
+  columns: [
+    { key: "id", label: "ID" },
+    { key: "traderName", label: "Trader" },
+    { key: "accountId", label: "Account" },
+    { key: "profit", label: "Profit", format: "money" },
+    { key: "split", label: "Split", format: "percent" },
+    { key: "amount", label: "Amount", format: "money" },
+    { key: "network", label: "Network" },
+    { key: "status", label: "Status", format: "status" },
+  ],
+  primary: { kind: "info", label: "Payout Policy", text: "In a real setup, large payouts would need a second approver. This demo applies no limit." },
+  actions: [
+    { label: "Approve", action: "approve", tone: "gold", permission: "payout.approve", show: (r) => r.status === "pending", success: "Payout approved." },
+    { label: "Reject", action: "reject", tone: "danger", permission: "payout.approve", show: (r) => r.status === "pending", success: "Payout rejected.", confirm: "Reject this payout?" },
+    { label: "Mark paid", action: "paid", tone: "success", permission: "payout.approve", show: (r) => r.status === "approved", success: "Payout marked paid." },
+  ],
+};
+
 function TraderPayouts() {
-  const role = useAdminSession((s) => s.user?.role);
-  const action = usePayoutAction();
-  const { data, isPending, error, refetch } = useAdminQuery<ListResponse<Payout>>("payouts", "/admin/payouts");
-  const canDecide = can(role, "payout.approve");
-
-  return (
-    <Card>
-      {action.error && <p role="alert" className="mb-4 text-[14px] text-red-400">{action.error.message}</p>}
-      {isPending ? (
-        <StateMessage>Loading…</StateMessage>
-      ) : error ? (
-        <StateMessage error onRetry={() => refetch()}>{error.message}</StateMessage>
-      ) : data.items.length === 0 ? (
-        <StateMessage>No payout requests yet.</StateMessage>
-      ) : (
-        <Table
-          heads={["ID", "Trader", "Amount", "Requested", "Status", ""]}
-          rows={data.items.map((p) => [
-            p.id,
-            p.traderName,
-            formatMoney(p.amount),
-            formatDate(p.requestedAt),
-            <Pill key="s" tone={statusTone(p.status)}>{p.status}</Pill>,
-            canDecide && p.status === "pending" ? (
-              <div key="a" className="flex gap-2">
-                <Btn disabled={action.isPending} onClick={() => action.run(p.id, "approve")}>Approve</Btn>
-                <Btn disabled={action.isPending} onClick={() => action.run(p.id, "reject")}>Reject</Btn>
-              </div>
-            ) : null,
-          ])}
-        />
-      )}
-    </Card>
-  );
+  return <ResourcePage config={config} />;
 }
 
 export const page: AdminPage = { label: "Trader Payouts", group: "Finance & sales", roles: ADMIN, component: TraderPayouts };

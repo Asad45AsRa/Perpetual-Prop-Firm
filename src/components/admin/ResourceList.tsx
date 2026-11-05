@@ -1,22 +1,28 @@
 "use client";
 
-import { Card, formatDate, formatMoney, Pill, StateMessage, statusTone, Table } from "./ui";
+import { Card, formatDate, formatMoney, formatPnl, Pill, pnlClass, StateMessage, statusTone, Table } from "./ui";
 import { useAdminQuery } from "./adminData";
 import type { ListResponse } from "./types";
 
 export type ColumnSpec = {
   key: string; // field name in the JSON row
   label: string;
-  format?: "text" | "number" | "money" | "date" | "status";
+  format?: "text" | "number" | "money" | "date" | "status" | "pnl" | "percent" | "multiplier";
 };
 
 type Row = Record<string, unknown>;
 
-function renderCell(value: unknown, format: ColumnSpec["format"] = "text") {
+export function renderCell(value: unknown, format: ColumnSpec["format"] = "text") {
   if (value === null || value === undefined || value === "") return <span className="text-white/25">-</span>;
   switch (format) {
     case "money":
       return formatMoney(Number(value));
+    case "pnl":
+      return <span className={pnlClass(Number(value))}>{formatPnl(Number(value))}</span>;
+    case "percent":
+      return `${Number(value)}%`;
+    case "multiplier":
+      return `${Number(value)}x`;
     case "number":
       return Number(value).toLocaleString("en-US");
     case "date":
