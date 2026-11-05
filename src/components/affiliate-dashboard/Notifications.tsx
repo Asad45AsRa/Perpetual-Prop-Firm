@@ -76,7 +76,7 @@ export function Notifications() {
         role="dialog"
         aria-label="Notifications"
         hidden={!open}
-        className="z-30 overflow-hidden border-[0.7px] border-white/[0.14] bg-[rgba(22,22,24,0.72)] shadow-[0_12px_40px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-[20px] max-sm:fixed max-sm:inset-x-[16px] max-sm:top-[80px] sm:absolute sm:right-0 sm:top-[calc(100%+8px)] sm:w-[340px]"
+        className="z-30 overflow-hidden bg-[rgba(22,22,24,0.72)] shadow-[0_12px_40px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-[20px] max-sm:fixed max-sm:inset-x-[16px] max-sm:top-[80px] sm:absolute sm:right-0 sm:top-[calc(100%+8px)] sm:w-[340px]"
       >
         <div className="relative flex items-center justify-between border-b-[0.7px] border-white/[0.10] bg-white/[0.02] px-[16px] py-[14px]">
           <h2 className="text-[14px] leading-normal text-white">Notifications</h2>
