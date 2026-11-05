@@ -119,7 +119,8 @@ function Img({ layer }: { layer: ImgLayer }) {
  * Decorative illustration layer for a GiveawayCard; must sit inside a `relative overflow-hidden` parent.
  * The layers live in a right-anchored 547×274 box (the Figma card size) so they render identically at every
  * card width. When the card is wide enough (1-column ≥ sm, or 2-column ≥ 1340px; the grid goes 2-col at xl) the box is the card's full
- * height; on narrower cards it is scaled to 82% and tucked bottom-right, clear of the copy.
+ * height; in the 2-col 1280–1339 range it is scaled to 82% and tucked bottom-right, clear of the copy; on phones (< sm) it fills a
+ * 170px band that the card reserves below the copy, so nothing overlaps the text.
  */
 export function GiveawayArt({ tier }: { tier: string }) {
   const layers = LAYERS[tier] ?? [];
@@ -128,8 +129,8 @@ export function GiveawayArt({ tier }: { tier: string }) {
       <div
         className={cn(
           "absolute bottom-0 aspect-[547/274]",
-          // compact (mobile)            full (1-col ≥ sm)            compact (2-col 1280–1339)        full (2-col ≥1340)
-          "top-auto h-[82%] right-[-14%] sm:top-0 sm:h-auto sm:right-0 xl:top-auto xl:h-[82%] xl:right-[-14%] min-[1340px]:top-0 min-[1340px]:h-auto min-[1340px]:right-0",
+          // band (mobile: 170px strip below the copy, see GiveawayCard)   full (1-col ≥ sm)            compact (2-col 1280–1339)        full (2-col ≥1340)
+          "top-auto h-[170px] right-0 sm:top-0 sm:h-auto sm:right-0 xl:top-auto xl:h-[82%] xl:right-[-14%] min-[1340px]:top-0 min-[1340px]:h-auto min-[1340px]:right-0",
         )}
       >
         {layers.map((layer, i) => (isGlow(layer) ? <Glow key={i} layer={layer} /> : <Img key={i} layer={layer} />))}

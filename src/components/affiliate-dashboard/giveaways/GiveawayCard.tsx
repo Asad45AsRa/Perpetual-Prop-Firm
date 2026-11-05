@@ -24,7 +24,7 @@ export function GiveawayCard({ tier, unlocked }: Props) {
   return (
     <section
       aria-labelledby={headingId}
-      className="relative isolate flex min-h-[230px] overflow-hidden sm:min-h-[274px] border-[0.7px] border-white/[0.13] bg-[#0F0F0F]"
+      className="relative isolate flex flex-col overflow-hidden border-[0.7px] border-white/[0.13] bg-[#0F0F0F] sm:min-h-[274px]"
     >
       <GiveawayArt tier={tier.tier} />
 
@@ -79,6 +79,9 @@ export function GiveawayCard({ tier, unlocked }: Props) {
           </div>
         ) : null}
       </div>
+
+      {/* Phones: reserve a band under the copy for the 3D render (GiveawayArt sits in it bottom-right). */}
+      <div aria-hidden className="h-[170px] shrink-0 sm:hidden" />
     </section>
   );
 }

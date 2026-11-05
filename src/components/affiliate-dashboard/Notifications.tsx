@@ -69,7 +69,7 @@ export function Notifications() {
   };
 
   return (
-    <div ref={rootRef} className="relative">
+    <div ref={rootRef} className="relative flex">
       <button
         ref={buttonRef}
         type="button"

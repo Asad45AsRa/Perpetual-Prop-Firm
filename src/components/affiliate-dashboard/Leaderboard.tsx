@@ -33,8 +33,9 @@ function Row({ t }: { t: Trader }) {
 /** Podium label offsets (Figma, relative to the 486px card). */
 const PODIUM_POS: Record<number, string> = {
   1: "left-[calc(50%-39px)] top-[73px]",
-  2: "left-[calc(50%-160px)] top-[117px]",
-  3: "left-[calc(50%+86px)] top-[117px]",
+  // 2nd/3rd sit 160px either side of centre; on narrow phones they clamp to a 12px inset so they never clip.
+  2: "left-[max(12px,calc(50%-160px))] top-[117px]",
+  3: "right-[max(12px,calc(50%-160px))] top-[117px]",
 };
 
 export function Leaderboard() {
@@ -70,12 +71,13 @@ export function Leaderboard() {
           width={390}
           height={139}
           sizes="390px"
-          className="absolute left-1/2 top-[144px] h-[139px] w-[390px] max-w-[calc(100%-16px)] -translate-x-1/2 object-cover"
+          // object-contain + bottom anchor: on cards narrower than 390px the whole podium scales down instead of cropping the side steps.
+          className="absolute left-1/2 top-[144px] h-[139px] w-[390px] max-w-[calc(100%-16px)] -translate-x-1/2 object-contain object-bottom"
         />
 
         {leaderboard.podium.map((p) => (
           <div key={p.place} className={cn("absolute", PODIUM_POS[p.place])}>
-            <p className="flex items-center gap-[7px] text-[14px] leading-normal text-white">
+            <p className="flex items-center gap-[7px] whitespace-nowrap text-[14px] leading-normal text-white">
               <Avatar src={p.avatar} />
               <span>
                 <span className="sr-only">#{p.place} </span>
