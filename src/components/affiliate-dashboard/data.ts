@@ -21,6 +21,8 @@ export const currentUser = {
   referralCode: "hafiz",
   referralLink: `${REFERRAL_BASE}hafiz`,
   avatar: `${DASH_ASSETS}/avatars/hafiz.png`,
+  /** Whether username/avatar show on the public leaderboard (Profile → Visibility). */
+  leaderboardPublic: true,
 };
 
 /** Topbar heading per route; Overview greets the user. */

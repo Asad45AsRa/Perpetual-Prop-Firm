@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Panel, PanelTitle } from "@/components/affiliate-dashboard/Panel";
 import { ProfileForm } from "@/components/affiliate-dashboard/profile/ProfileForm";
+import { ProfileVisibility } from "@/components/affiliate-dashboard/profile/ProfileVisibility";
 import { ActiveDevices } from "@/components/affiliate-dashboard/profile/ActiveDevices";
 
 export const metadata: Metadata = { title: "My Profile" };
@@ -13,6 +14,7 @@ export default function AffiliateProfilePage() {
         <PanelTitle>Account</PanelTitle>
       </div>
       <ProfileForm />
+      <ProfileVisibility />
       <ActiveDevices />
     </Panel>
   );

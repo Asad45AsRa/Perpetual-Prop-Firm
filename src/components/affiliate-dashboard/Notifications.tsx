@@ -76,9 +76,9 @@ export function Notifications() {
         role="dialog"
         aria-label="Notifications"
         hidden={!open}
-        className="z-30 border-[0.7px] border-white/[0.13] bg-[#161616] shadow-[0_12px_32px_rgba(0,0,0,0.5)] max-sm:fixed max-sm:inset-x-[16px] max-sm:top-[80px] sm:absolute sm:right-0 sm:top-[calc(100%+8px)] sm:w-[340px]"
+        className="z-30 overflow-hidden border-[0.7px] border-white/[0.14] bg-[rgba(44,44,46,0.78)] shadow-[0_12px_40px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.10)] backdrop-blur-[16px] max-sm:fixed max-sm:inset-x-[16px] max-sm:top-[80px] sm:absolute sm:right-0 sm:top-[calc(100%+8px)] sm:w-[340px]"
       >
-        <div className="flex items-center justify-between bg-white/[0.03] px-[16px] py-[14px]">
+        <div className="relative flex items-center justify-between border-b-[0.7px] border-white/[0.10] bg-white/[0.04] px-[16px] py-[14px]">
           <h2 className="text-[14px] leading-normal text-white">Notifications</h2>
           <button
             type="button"
@@ -90,15 +90,15 @@ export function Notifications() {
           </button>
         </div>
 
-        <ul className="max-h-[min(70vh,480px)] overflow-y-auto">
+        <ul className="relative max-h-[min(70vh,480px)] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {items.map((n) => (
-            <li key={n.id} className="border-t-[0.7px] border-white/[0.06]">
+            <li key={n.id} className="border-t-[0.7px] border-white/[0.08] first:border-t-0">
               <Link
                 href={n.href}
                 onClick={() => markRead(n.id)}
-                className="flex items-start gap-[12px] px-[16px] py-[12px] outline-none transition-colors hover:bg-white/[0.04] focus-visible:bg-white/[0.06]"
+                className="flex items-start gap-[12px] px-[16px] py-[12px] outline-none transition-colors hover:bg-white/[0.05] focus-visible:bg-white/[0.07]"
               >
-                <span className="mt-[2px] flex h-[34px] w-[34px] shrink-0 items-center justify-center border-[0.7px] border-white/[0.13] bg-white/[0.03]">
+                <span className="mt-[2px] flex h-[34px] w-[34px] shrink-0 items-center justify-center border-[0.7px] border-white/[0.18] bg-[linear-gradient(180deg,rgba(255,255,255,0.10),rgba(255,255,255,0.03))] shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
                   <NotificationIcon icon={n.icon} />
                 </span>
                 <span className="min-w-0 flex-1">
@@ -108,7 +108,7 @@ export function Notifications() {
                 </span>
                 {n.unread && (
                   <span className="mt-[6px] shrink-0">
-                    <span aria-hidden className="block h-[6px] w-[6px] rounded-full bg-gold-accent" />
+                    <span aria-hidden className="block h-[6px] w-[6px] rounded-full bg-gold-accent shadow-[0_0_8px_rgba(153,128,74,0.9)]" />
                     <span className="sr-only">Unread</span>
                   </span>
                 )}
