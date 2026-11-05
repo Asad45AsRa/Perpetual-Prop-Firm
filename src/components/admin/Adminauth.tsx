@@ -221,7 +221,7 @@ export function AdminAuth() {
                     <form onSubmit={submitCredentials} noValidate className="flex flex-col gap-6">
                         <div>
                             <h1 className="text-[30px] text-white">Sign in</h1>
-                            <p className="mt-2 text-[15px] text-white/40">Sirf admin aur moderator accounts ke liye.</p>
+                            <p className="mt-2 text-[15px] text-white/40"></p>
                         </div>
                         <TextField
                             id="admin-email"
