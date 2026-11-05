@@ -20,8 +20,8 @@ export function AvatarPicker({ value, onChange, className, size = 46, describedB
     <div role="radiogroup" aria-label="Avatar" aria-describedby={describedBy} className={cn("grid", className)}>
       {AVATARS.map((src, i) => {
         const selected = value === src;
-        // Once a pick exists, every other avatar is blurred + faded so the pick stands out;
-        // hover/keyboard focus partly clears it so faces stay identifiable.
+        // Once a pick exists, every other avatar is faded (no blur, so faces stay sharp) so the
+        // pick stands out; hover/keyboard focus restores full opacity.
         const dimmed = !!value && !selected;
         return (
           <button
@@ -42,9 +42,8 @@ export function AvatarPicker({ value, onChange, className, size = 46, describedB
               fill
               sizes={`${size}px`}
               className={cn(
-                "rounded-full object-cover transition-[filter,opacity] duration-300 ease-out motion-reduce:transition-none",
-                dimmed &&
-                  "opacity-60 blur-[2px] group-hover:opacity-90 group-hover:blur-[0.5px] group-focus-visible:opacity-90 group-focus-visible:blur-[0.5px]",
+                "rounded-full object-cover transition-opacity duration-300 ease-out motion-reduce:transition-none",
+                dimmed && "opacity-40 group-hover:opacity-100 group-focus-visible:opacity-100",
               )}
             />
             {/* Figma: 1.5px white border on the selected avatar */}

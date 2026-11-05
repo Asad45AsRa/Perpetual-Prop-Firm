@@ -34,7 +34,7 @@ function LevelCard() {
         {currentLevel.range}
       </p>
       <Image
-        src={`${DASH_ASSETS}/level-orb.png`}
+        src={`${DASH_ASSETS}/level-${currentLevel.tier.toLowerCase()}.png`}
         alt=""
         width={68}
         height={62}

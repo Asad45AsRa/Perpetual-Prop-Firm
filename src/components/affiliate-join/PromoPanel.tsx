@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element -- decorative glow SVGs, no optimization needed */
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { ASSET_DIR, PROMO_STEPS } from "./constants";
+import { ASSET_DIR, PROMO_TIERS } from "./constants";
 
 /** Right-hand 457×425 promo card (Figma "Step 3" at x=720). */
 export function PromoPanel({ className }: { className?: string }) {
@@ -34,13 +34,13 @@ export function PromoPanel({ className }: { className?: string }) {
       </div>
 
       <p className="absolute left-[calc(50%+4.5px)] top-[245px] w-max -translate-x-1/2 text-center text-[25px] leading-[1.3] text-white">
-        Trade our capital. Keep up to
+        Become Our Partner &amp;
         <br />
-        80% of the profit.
+        Earn Up to 20% Commission
       </p>
 
       <ul className="absolute inset-x-[23px] top-[328px] flex flex-wrap justify-center gap-[10px]">
-        {PROMO_STEPS.map((step) => (
+        {PROMO_TIERS.map((step) => (
           <li
             key={step}
             className="flex h-[34px] items-center gap-[7px] border-b-2 border-gold-accent/50 bg-ink/20 pl-[15px] pr-[16px] text-[14px] leading-none text-white/50"

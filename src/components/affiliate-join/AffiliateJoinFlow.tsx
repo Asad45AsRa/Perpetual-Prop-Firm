@@ -1,7 +1,7 @@
 "use client";
-/* eslint-disable @next/next/no-img-element -- decorative glow SVGs, no optimization needed */
 
 import { useCallback, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
@@ -19,22 +19,11 @@ const TOTAL_STEPS = 4;
 
 type Draft = Partial<WelcomeValues> & { username?: string };
 
-/** Full-screen backdrop: #0F0F0F with the two big gold glow sweeps from Figma. */
+/** Full-screen backdrop: the Figma page background (dark with soft gold glows in the corners), cover-fitted. */
 function Backdrop() {
-  const glow = "absolute left-[calc(50%-1012px)] h-[897.88px] w-[2081.76px]";
-  const inset = "absolute inset-[-12.41%_-5.71%_-11.67%_-5.71%]";
   return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-      <div className={cn(glow, "top-[-588px]")}>
-        <div className={inset}>
-          <img src={`${ASSET_DIR}/bg-glow-top.svg`} alt="" className="block h-full w-full max-w-none" />
-        </div>
-      </div>
-      <div className={cn(glow, "bottom-[-588px] rotate-180")}>
-        <div className={inset}>
-          <img src={`${ASSET_DIR}/bg-glow-bottom.svg`} alt="" className="block h-full w-full max-w-none" />
-        </div>
-      </div>
+    <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden bg-ink">
+      <Image src={`${ASSET_DIR}/bg.webp`} alt="" fill priority sizes="100vw" className="object-cover object-center select-none" />
     </div>
   );
 }
