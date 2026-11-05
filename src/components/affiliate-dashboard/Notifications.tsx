@@ -93,9 +93,9 @@ export function Notifications() {
         role="dialog"
         aria-label="Notifications"
         hidden={!open}
-        className="z-30 overflow-hidden bg-[rgba(22,22,24,0.72)] shadow-[0_12px_40px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-[20px] max-sm:fixed max-sm:inset-x-[16px] max-sm:top-[80px] sm:absolute sm:right-0 sm:top-[calc(100%+8px)] sm:w-[340px]"
+        className="z-30 overflow-hidden bg-[rgba(22,22,24,0.72)] shadow-[0_12px_40px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-[20px] max-sm:fixed max-sm:right-[16px] max-sm:top-[80px] max-sm:w-[calc(100vw-32px)] max-sm:max-w-[300px] sm:absolute sm:right-0 sm:top-[calc(100%+8px)] sm:w-[340px]"
       >
-        <div className="relative flex items-center justify-between border-b-[0.7px] border-white/[0.10] bg-white/[0.02] px-[16px] py-[14px]">
+        <div className="relative flex items-center justify-between border-b-[0.7px] border-white/[0.10] bg-white/[0.02] px-[14px] py-[11px] sm:px-[16px] sm:py-[14px]">
           <h2 className="text-[14px] leading-normal text-white">Notifications</h2>
           <button
             type="button"
@@ -112,22 +112,22 @@ export function Notifications() {
         <ul
           ref={listRef}
           onScroll={updateThumb}
-          className="max-h-[min(70vh,335px)] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="max-h-[min(70vh,284px)] sm:max-h-[min(70vh,335px)] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {items.map((n) => (
             <li key={n.id} className="border-t-[0.7px] border-white/[0.08] first:border-t-0">
               <Link
                 href={n.href}
                 onClick={() => markRead(n.id)}
-                className="flex items-start gap-[12px] px-[16px] py-[12px] outline-none transition-colors hover:bg-white/[0.05] focus-visible:bg-white/[0.07]"
+                className="flex items-start gap-[10px] px-[14px] py-[10px] sm:gap-[12px] sm:px-[16px] sm:py-[12px] outline-none transition-colors hover:bg-white/[0.05] focus-visible:bg-white/[0.07]"
               >
-                <span className="mt-[2px] flex h-[34px] w-[34px] shrink-0 items-center justify-center border-[0.7px] border-white/[0.18] bg-[linear-gradient(180deg,rgba(255,255,255,0.10),rgba(255,255,255,0.03))] shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
+                <span className="mt-[2px] flex h-[30px] w-[30px] sm:h-[34px] sm:w-[34px] shrink-0 items-center justify-center border-[0.7px] border-white/[0.18] bg-[linear-gradient(180deg,rgba(255,255,255,0.10),rgba(255,255,255,0.03))] shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
                   <NotificationIcon icon={n.icon} />
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block text-[14px] leading-[1.3] text-white">{n.title}</span>
-                  <span className="mt-[3px] block text-[12px] leading-[1.35] text-white/50">{n.body}</span>
-                  <span className="mt-[5px] block text-[11px] leading-normal text-white/30">{n.time}</span>
+                  <span className="block text-[13px] leading-[1.3] sm:text-[14px] text-white">{n.title}</span>
+                  <span className="mt-[2px] block text-[11px] leading-[1.35] sm:mt-[3px] sm:text-[12px] text-white/50">{n.body}</span>
+                  <span className="mt-[4px] block text-[10px] sm:mt-[5px] sm:text-[11px] leading-normal text-white/30">{n.time}</span>
                 </span>
                 {n.unread && (
                   <span className="mt-[6px] shrink-0">
