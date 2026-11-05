@@ -6,6 +6,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import { TextField } from "@/components/auth/Field";
 import { OtpInput } from "@/components/auth/OtpInput";
 import { GoldButton } from "@/components/auth/GoldButton";
+import { adminApi, USE_MOCK } from "./adminApi";
 
 /* ───────────────────────── Types + session store ───────────────────────── */
 
@@ -18,7 +19,8 @@ type SessionState = {
     logout: () => void;
 };
 
-// Mock phase mein sessionStorage. Production mein httpOnly cookie + /admin/auth/me use karein.
+// Only the display profile is kept in sessionStorage. The real session is the httpOnly cookie
+// set by the backend, and every API call is checked by the server (a 401 signs the user out).
 export const useAdminSession = create<SessionState>()(
     persist(
         (set) => ({
@@ -46,7 +48,7 @@ export const useAdminTheme = create<ThemeState>()(
     ),
 );
 
-// Root element par yeh class lagayein. `mounted` hydration mismatch se bachata hai.
+// Put this class on the root element. `mounted` avoids a hydration mismatch.
 export function useThemeClass() {
     const theme = useAdminTheme((s) => s.theme);
     const [mounted, setMounted] = useState(false);
@@ -54,8 +56,8 @@ export function useThemeClass() {
     return mounted && theme === "light" ? "adm-light" : "adm-dark";
 }
 
-// Light mode ke overrides. Dark mode default design hai, us mein koi change nahi.
-// Sirf `.adm-light` ke andar colors badalte hain, baqi design same rehta hai.
+// Light mode overrides. Dark is the default design and is left untouched.
+// Only colors inside `.adm-light` change, the layout stays the same.
 const LIGHT_CSS = String.raw`
 .adm-light{color-scheme:light}
 .adm-light.bg-ink,.adm-light .bg-ink{background-color:#f3f4f8}
@@ -80,6 +82,18 @@ const LIGHT_CSS = String.raw`
 .adm-light .text-gold-light{color:#7a5d22}
 .adm-light .text-red-400{color:#dc2626}
 .adm-light .adm-logo{filter:brightness(0)}
+.adm-light .text-success{color:#16a34a}
+.adm-light .bg-success\/15{background-color:rgba(22,163,74,.12)}
+.adm-light .bg-red-500\/15{background-color:rgba(220,38,38,.10)}
+.adm-light .bg-gold\/15{background-color:rgba(153,128,74,.16)}
+.adm-light .bg-gold\/10{background-color:rgba(153,128,74,.12)}
+.adm-light .text-gold-light{color:#7a5d22}
+.adm-light .bg-white\/\[0\.06\]{background-color:rgba(21,21,27,.04)}
+.adm-light .placeholder\:text-white\/30::placeholder{color:rgba(21,21,27,.35)}
+.adm-light .border-white\/\[0\.13\]:focus,.adm-light .focus\:border-gold-accent:focus{border-color:#99804a}
+.adm-light aside{box-shadow:1px 0 0 rgba(21,21,27,.06)}
+.adm-light .text-ink{color:#15151b}
+.adm-light .bg-black\/60{background-color:rgba(21,21,27,.35)}
 `;
 
 export function AdminThemeStyles() {
@@ -106,40 +120,17 @@ export function AdminLogo({ className = "h-9" }: { className?: string }) {
     );
 }
 
-/* ───────────────────────── API layer (mock ↔ real) ───────────────────────── */
+/* ───────────────────────── API layer ───────────────────────── */
 
-// Backend ready ho to false kar dein. Real endpoints:
+// Endpoints (served by ./mockApi in demo mode, by the real backend otherwise):
 //   POST /admin/auth/login      { email, password }        -> { challengeId }
-//   POST /admin/auth/verify-2fa { challengeId, code }      -> { user: AdminUser }
-const USE_MOCK = true;
-const MOCK_CODE = "123456";
-const MOCK_USERS: (AdminUser & { password: string })[] = [
-    { id: "u1", name: "Hafiz", email: "admin@perpeye.com", password: "Admin@123", role: "admin" },
-    { id: "u2", name: "Sara (Moderator)", email: "mod@perpeye.com", password: "Mod@123", role: "moderator" },
-];
-const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
-async function loginRequest(email: string, password: string): Promise<{ challengeId: string }> {
-    if (USE_MOCK) {
-        await wait(500);
-        const u = MOCK_USERS.find((x) => x.email === email.toLowerCase() && x.password === password);
-        if (!u) throw new Error("Email ya password galat hai.");
-        return { challengeId: u.id };
-    }
-    const { api } = await import("@/lib/api"); // lazy: env sirf real mode mein parse hoga
-    return api("/admin/auth/login", { method: "POST", body: { email, password } });
+//   POST /admin/auth/verify-2fa { challengeId, code }      -> { user: AdminUser }  (sets the httpOnly cookie)
+function loginRequest(email: string, password: string): Promise<{ challengeId: string }> {
+    return adminApi("/admin/auth/login", { method: "POST", body: { email, password } });
 }
 
-async function verifyRequest(challengeId: string, code: string): Promise<{ user: AdminUser }> {
-    if (USE_MOCK) {
-        await wait(500);
-        const u = MOCK_USERS.find((x) => x.id === challengeId);
-        if (!u || code !== MOCK_CODE) throw new Error("Code galat hai. Authenticator app dobara check karein.");
-        const { password: _pw, ...user } = u; // eslint-disable-line @typescript-eslint/no-unused-vars
-        return { user };
-    }
-    const { api } = await import("@/lib/api");
-    return api("/admin/auth/verify-2fa", { method: "POST", body: { challengeId, code } });
+function verifyRequest(challengeId: string, code: string): Promise<{ user: AdminUser }> {
+    return adminApi("/admin/auth/verify-2fa", { method: "POST", body: { challengeId, code } });
 }
 
 /* ───────────────────────── UI ───────────────────────── */
@@ -175,7 +166,7 @@ export function AdminAuth() {
             setChallengeId(challengeId);
             setStep("otp");
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Login nahi ho saka.");
+            setError(err instanceof Error ? err.message : "Could not sign in.");
         } finally {
             setLoading(false);
         }
@@ -188,13 +179,13 @@ export function AdminAuth() {
         setLoading(true);
         try {
             const { user } = await verifyRequest(challengeId, code);
-            setUser(user); // page.tsx session dekh kar dashboard khol deta hai
+            setUser(user); // page.tsx sees the session and opens the dashboard
         } catch (err) {
             const used = attempts + 1;
             setAttempts(used);
             setCode("");
-            if (used >= MAX_ATTEMPTS) backToLogin("Bohat zyada ghalat codes. Dobara sign in karein.");
-            else setError(err instanceof Error ? err.message : "Verify nahi ho saka.");
+            if (used >= MAX_ATTEMPTS) backToLogin("Too many wrong codes. Please sign in again.");
+            else setError(err instanceof Error ? err.message : "Could not verify the code.");
         } finally {
             setLoading(false);
         }
@@ -228,7 +219,7 @@ export function AdminAuth() {
                             label="Email"
                             type="email"
                             autoComplete="username"
-                            placeholder="you@gmail.com"
+                            placeholder="you@company.com"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
@@ -256,7 +247,7 @@ export function AdminAuth() {
                         <div>
                             <h1 id="otp-title" className="text-[30px] text-white">Two-step verification</h1>
                             <p className="mt-2 text-[15px] text-white/40">
-                                Authenticator app mein <span className="text-white/70">{email}</span> ka 6-digit code enter karein.
+                                Enter the 6-digit code from your authenticator app for <span className="text-white/70">{email}</span>.
                             </p>
                         </div>
                         <OtpInput value={code} onChange={setCode} length={6} invalid={!!error} labelledBy="otp-title" />
@@ -265,9 +256,9 @@ export function AdminAuth() {
                             {loading ? "Verifying…" : "Verify and open dashboard"}
                         </GoldButton>
                         <button type="button" onClick={() => backToLogin()} className="text-[14px] text-white/40 hover:text-white">
-                            Different account se sign in karein
+                            Sign in with a different account
                         </button>
-                        {USE_MOCK && <p className="text-center text-[13px] text-white/30">Demo code: {MOCK_CODE}</p>}
+                        {USE_MOCK && <p className="text-center text-[13px] text-white/30">Demo code: 123456</p>}
                     </form>
                 )}
             </div>
