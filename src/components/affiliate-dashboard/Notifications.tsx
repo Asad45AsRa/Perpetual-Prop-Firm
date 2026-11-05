@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { BarChart3 } from "lucide-react";
@@ -21,6 +21,23 @@ export function Notifications() {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const panelId = useId();
   const unread = items.filter((n) => n.unread).length;
+
+  // Custom slim scroll indicator (native scrollbar is hidden): thumb top/height as % of the track.
+  const listRef = useRef<HTMLUListElement>(null);
+  const [thumb, setThumb] = useState<{ top: number; height: number } | null>(null);
+  const updateThumb = useCallback(() => {
+    const el = listRef.current;
+    if (!el || el.scrollHeight <= el.clientHeight + 1) {
+      setThumb(null);
+      return;
+    }
+    const height = Math.max(12, (el.clientHeight / el.scrollHeight) * 100);
+    const top = (el.scrollTop / (el.scrollHeight - el.clientHeight)) * (100 - height);
+    setThumb({ top, height });
+  }, []);
+  useEffect(() => {
+    if (open) updateThumb();
+  }, [open, items.length, updateThumb]);
 
   // Close on outside click / Esc.
   useEffect(() => {
@@ -90,7 +107,13 @@ export function Notifications() {
           </button>
         </div>
 
-        <ul className="relative max-h-[min(70vh,480px)] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="relative">
+        {/* Figma: four rows visible; the rest scroll behind a slim 3px indicator on the right. */}
+        <ul
+          ref={listRef}
+          onScroll={updateThumb}
+          className="max-h-[min(70vh,335px)] overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
           {items.map((n) => (
             <li key={n.id} className="border-t-[0.7px] border-white/[0.08] first:border-t-0">
               <Link
@@ -117,6 +140,15 @@ export function Notifications() {
           ))}
           {items.length === 0 && <li className="border-t-[0.7px] border-white/[0.06] px-[16px] py-[24px] text-center text-[12px] text-white/50">You’re all caught up.</li>}
         </ul>
+        {thumb && (
+          <div aria-hidden className="pointer-events-none absolute bottom-[6px] right-[4px] top-[6px] w-[3px] rounded-full bg-white/[0.06]">
+            <div
+              className="absolute left-0 w-full rounded-full bg-white/40"
+              style={{ top: `${thumb.top}%`, height: `${thumb.height}%` }}
+            />
+          </div>
+        )}
+        </div>
       </div>
     </div>
   );
