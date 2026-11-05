@@ -29,7 +29,7 @@ const tones = {
 } as const;
 
 export function Pill({ tone, children }: { tone: keyof typeof tones; children: ReactNode }) {
-  return <span className={cn("inline-block px-3 py-1 text-[13px]", tones[tone])}>{children}</span>;
+  return <span className={cn("inline-block shrink-0 whitespace-nowrap px-3 py-1 text-[13px]", tones[tone])}>{children}</span>;
 }
 
 const btnTones = {
@@ -182,7 +182,7 @@ export function Modal({ title, subtitle, onClose, children }: { title: string; s
 /* ───────────────────────── Toast ───────────────────────── */
 
 type ToastFn = (message: string, isError?: boolean) => void;
-const ToastContext = createContext<ToastFn>(() => {});
+const ToastContext = createContext<ToastFn>(() => { });
 export const useToast = () => useContext(ToastContext);
 
 export function ToastProvider({ children }: { children: ReactNode }) {
