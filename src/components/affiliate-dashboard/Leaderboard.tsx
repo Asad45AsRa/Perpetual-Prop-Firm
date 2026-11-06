@@ -5,7 +5,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { DASH_ASSETS, leaderboard, type Trader } from "./data";
-import { Panel, PanelTitle, StatusChip } from "./Panel";
+import { Panel, PanelTitle, StatusChip, PagerButton } from "./Panel";
 
 const PAGE_SIZE = 6;
 
@@ -120,19 +120,5 @@ export function Leaderboard() {
         <p className="mt-[10px] pl-[5px] text-[12px] leading-[1.3] text-white/30">Leaderboard of live partners</p>
       </div>
     </Panel>
-  );
-}
-
-function PagerButton({ label, disabled, onClick, flip }: { label: string; disabled: boolean; onClick: () => void; flip?: boolean }) {
-  return (
-    <button
-      type="button"
-      aria-label={label}
-      disabled={disabled}
-      onClick={onClick}
-      className="flex h-[34.1px] w-[34.1px] items-center justify-center border-[0.57px] border-white/[0.06] bg-white/[0.06] transition-opacity hover:bg-white/10 disabled:opacity-60"
-    >
-      <Image src={`${DASH_ASSETS}/icons/chevron-right.svg`} alt="" width={18} height={18} unoptimized className={cn("h-[18px] w-[18px]", flip && "rotate-180")} />
-    </button>
   );
 }

@@ -261,6 +261,9 @@ export type Payout = { id: string; date: string; method: string; status: PayoutS
 export const BSC_ADDRESS_PATTERN = /^0x[a-fA-F0-9]{40}$/;
 
 /** TODO(backend): balances, history and wallet from the affiliate payouts API. */
+export const PAYOUT_FILTERS = ["All", "Paid", "Pending"] as const;
+export type PayoutFilter = (typeof PAYOUT_FILTERS)[number];
+
 export const payoutSummary = {
   available: 930,
   minimum: 50,
@@ -268,10 +271,18 @@ export const payoutSummary = {
   paidToDate: 3890,
 };
 
-export const payoutHistory: Payout[] = [
-  { id: "p-2026-10", date: "Oct 1", method: "USDC · BSC", status: "Paid", amount: 1200 },
-  { id: "p-2026-09", date: "Sep 1", method: "USDC · BSC", status: "Paid", amount: 795 },
-];
+/** 28 monthly payouts, newest first (Figma: "Showing 07 of 28 payouts"). */
+export const payoutHistory: Payout[] = Array.from({ length: 28 }, (_, i) => {
+  const d = new Date(Date.UTC(2026, 9 - i, 1));
+  const amounts = [1200, 795, 640, 980, 1120, 560, 870];
+  return {
+    id: `p-${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`,
+    date: d.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" }),
+    method: "USDC · BSC",
+    status: "Paid",
+    amount: amounts[i % amounts.length],
+  };
+});
 
 export const formatUsd = (n: number) =>
   n.toLocaleString("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2 });

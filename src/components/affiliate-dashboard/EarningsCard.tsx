@@ -3,7 +3,7 @@
 import { useMemo, useRef, useState, type PointerEvent } from "react";
 import { cn } from "@/lib/utils";
 import { EARNING_RANGES, earningsSeries, earningsSummary, type EarningRange } from "./data";
-import { Panel, PanelTitle } from "./Panel";
+import { Panel, PanelTitle, tabChip } from "./Panel";
 
 // Plot geometry from Figma: 542×184 plot, $0–$40 at 4.6px per dollar, bars up to 32px.
 const W = 542;
@@ -89,12 +89,7 @@ export function EarningsCard() {
               type="button"
               aria-selected={range === r}
               onClick={() => setRange(r)}
-              className={cn(
-                "flex h-[30.27px] w-[63.18px] items-center justify-center text-[10px] leading-normal text-white/50 transition-colors",
-                range === r
-                  ? "border-[0.7px] border-gold-accent bg-gold-accent/15"
-                  : "border-[0.57px] border-white/[0.06] bg-white/[0.06] hover:text-white/80",
-              )}
+              className={tabChip(range === r)}
             >
               {r}
             </button>

@@ -11,6 +11,13 @@ type Props = {
   unlocked: boolean;
 };
 
+/** Intrinsic size (1x) of the Figma mobile renders in /giveaways/mobile-*.png. */
+const MOBILE_ART: Record<string, { w: number; h: number }> = {
+  AXIS: { w: 377, h: 293 },
+  ONYX: { w: 377, h: 304 },
+  APEX: { w: 300, h: 253 },
+};
+
 /** Figma "Giveaways" card: tier chip, level + range, perk pills, 3D render; locked tiers get a padlock. */
 export function GiveawayCard({ tier, unlocked }: Props) {
   const [requested, setRequested] = useState(false);
@@ -61,7 +68,8 @@ export function GiveawayCard({ tier, unlocked }: Props) {
         </ul>
 
         {unlocked ? (
-          <div className="mt-auto pt-[16px]">
+          // Phones: top-right corner, level with the tier chip (the padlock lives there only on locked cards). sm+: under the perks.
+          <div className="absolute right-[16px] top-[16px] max-w-[150px] text-right sm:static sm:mt-auto sm:max-w-none sm:pt-[16px] sm:text-left">
             <button
               type="button"
               onClick={submitRequest}
@@ -70,7 +78,7 @@ export function GiveawayCard({ tier, unlocked }: Props) {
             >
               {requested ? "Request submitted" : "Submit Request"}
               {!requested && (
-                <Image src={`${DASH_ASSETS}/icons/arrow-up-right.svg`} alt="" width={14} height={14} unoptimized className="h-[14px] w-[14px]" />
+                <Image src={`${DASH_ASSETS}/icons/arrow-up-right.svg`} alt="" width={14} height={14} unoptimized className="h-[14px] w-[14px] invert" />
               )}
             </button>
             <p role="status" className={cn("text-[11px] leading-[1.4] text-[#47a847]", requested ? "mt-[4px]" : "sr-only")}>
@@ -80,8 +88,16 @@ export function GiveawayCard({ tier, unlocked }: Props) {
         ) : null}
       </div>
 
-      {/* Phones: reserve a band under the copy for the 3D render (GiveawayArt sits in it bottom-right). */}
-      <div aria-hidden className="h-[170px] shrink-0 sm:hidden" />
+      {/* Phones: Figma mobile render (one pre-composed image per tier) flows under the copy; the layered desktop art is hidden. */}
+      <Image
+        src={`${DASH_ASSETS}/giveaways/mobile-${tier.tier.toLowerCase()}.png`}
+        alt=""
+        aria-hidden
+        width={MOBILE_ART[tier.tier].w}
+        height={MOBILE_ART[tier.tier].h}
+        sizes="(max-width: 639px) 100vw, 1px"
+        className={cn("mt-[6px] h-auto self-end sm:hidden", tier.tier === "APEX" ? "w-[82%]" : "w-full")}
+      />
     </section>
   );
 }
