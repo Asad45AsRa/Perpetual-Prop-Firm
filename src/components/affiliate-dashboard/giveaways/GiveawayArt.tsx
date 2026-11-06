@@ -74,14 +74,35 @@ const LAYERS: Record<string, Layer[]> = {
   ],
 };
 
+/**
+ * Phone glow, behind the pre-composed mobile render that GiveawayCard shows (< sm). The exports carry no glow,
+ * so these mirror the desktop ellipses, centred under each render's mass, in a full-width 377×300 box at the card's bottom.
+ */
+const WM = 377;
+const HM = 300;
+const MOBILE_GLOW: Record<string, GlowLayer[]> = {
+  AXIS: [
+    { glow: true, cx: 250, cy: 300, rx: 235, ry: 115, rot: -11.44, color: "#99804A", blur: 70 },
+    { glow: true, cx: 252, cy: 314, rx: 200, ry: 100, rot: -11.44, color: "#FFF1D3", blur: 50, blend: "plus-lighter" },
+  ],
+  ONYX: [
+    { glow: true, cx: 205, cy: 315, rx: 235, ry: 115, rot: -14.4, color: "#99804A", blur: 70 },
+    { glow: true, cx: 206, cy: 322, rx: 215, ry: 105, rot: -14.4, color: "#FFF1D3", blur: 50, blend: "plus-lighter" },
+  ],
+  APEX: [
+    { glow: true, cx: 240, cy: 325, rx: 210, ry: 105, rot: -14.4, color: "#99804A", blur: 110 },
+    { glow: true, cx: 242, cy: 330, rx: 195, ry: 98, rot: -14.4, color: "#FFF1D3", blur: 50, blend: "plus-lighter" },
+  ],
+};
+
 const pct = (v: number, base: number) => `${(v / base) * 100}%`;
 
-function Glow({ layer }: { layer: GlowLayer }) {
+function Glow({ layer, base = { w: W, h: H } }: { layer: GlowLayer; base?: { w: number; h: number } }) {
   const style: CSSProperties = {
-    left: pct(layer.cx - layer.rx, W),
-    top: pct(layer.cy - layer.ry, H),
-    width: pct(layer.rx * 2, W),
-    height: pct(layer.ry * 2, H),
+    left: pct(layer.cx - layer.rx, base.w),
+    top: pct(layer.cy - layer.ry, base.h),
+    width: pct(layer.rx * 2, base.w),
+    height: pct(layer.ry * 2, base.h),
     background: layer.color,
     filter: `blur(${layer.blur}px)`,
     transform: layer.rot ? `rotate(${layer.rot}deg)` : undefined,
@@ -119,8 +140,8 @@ function Img({ layer }: { layer: ImgLayer }) {
  * Decorative illustration layer for a GiveawayCard; must sit inside a `relative overflow-hidden` parent.
  * The layers live in a right-anchored 547×274 box (the Figma card size) so they render identically at every
  * card width. When the card is wide enough (1-column ≥ sm, or 2-column ≥ 1340px; the grid goes 2-col at xl) the box is the card's full
- * height; in the 2-col 1280–1339 range it is scaled to 82% and tucked bottom-right, clear of the copy. On phones (< sm) this is
- * hidden and GiveawayCard shows the pre-composed Figma mobile render instead.
+ * height; in the 2-col 1280–1339 range it is scaled to 82% and tucked bottom-right, clear of the copy. On phones (< sm) the layered
+ * box is hidden, GiveawayCard shows the pre-composed Figma mobile render, and only MOBILE_GLOW is drawn behind it.
  */
 export function GiveawayArt({ tier }: { tier: string }) {
   const layers = LAYERS[tier] ?? [];
@@ -134,6 +155,11 @@ export function GiveawayArt({ tier }: { tier: string }) {
         )}
       >
         {layers.map((layer, i) => (isGlow(layer) ? <Glow key={i} layer={layer} /> : <Img key={i} layer={layer} />))}
+      </div>
+      <div className="absolute bottom-0 right-0 aspect-[377/300] w-full sm:hidden">
+        {(MOBILE_GLOW[tier] ?? []).map((layer, i) => (
+          <Glow key={i} layer={layer} base={{ w: WM, h: HM }} />
+        ))}
       </div>
     </div>
   );
