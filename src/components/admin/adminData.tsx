@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { adminApi, USE_MOCK } from "./adminApi";
 import { useAdminSession } from "./Adminauth";
 
@@ -14,6 +14,9 @@ export const useRealtimeStatus = () => useContext(StatusContext);
 
 const MAX_RETRY_DELAY_MS = 30_000;
 const FALLBACK_POLL_MS = 15_000;
+
+// Resources that summarise everything, so they refresh on every event
+const ALWAYS_REFRESH = ["overview", "notifications", "me"];
 
 // One WebSocket for the whole console (in demo mode a built-in simulator plays the server). The server sends a tiny message when data changes:
 //   { "topic": "payouts" }  -> refetch queries of the "payouts" resource
@@ -35,8 +38,7 @@ export function AdminRealtime({ children }: { children: ReactNode }) {
         predicate: (q) => {
           const [scope, resource] = q.queryKey as [string, string];
           if (scope !== "admin") return false;
-          // The overview aggregates everything, so it refreshes on every event
-          return !topic || resource === topic || resource === "overview";
+          return !topic || resource === topic || ALWAYS_REFRESH.includes(resource);
         },
       });
 
@@ -105,24 +107,31 @@ export function LiveDot() {
 
 /* ───────────────────────── Data hooks ───────────────────────── */
 
+type HttpError = { status?: number; message?: string };
+
 // Loads one admin resource. `resource` must match the realtime topic name.
-export function useAdminQuery<T>(resource: string, path: string) {
+// `keepPrevious` keeps the old rows on screen while the next page or filter loads.
+export function useAdminQuery<T>(resource: string, path: string, options: { keepPrevious?: boolean; enabled?: boolean } = {}) {
   const status = useRealtimeStatus();
   const logout = useAdminSession((s) => s.logout);
 
   const query = useQuery({
     queryKey: ["admin", resource, path],
     queryFn: () => adminApi<T>(path),
+    enabled: options.enabled ?? true,
+    placeholderData: options.keepPrevious ? keepPreviousData : undefined,
     // While the socket is down, poll so the data never goes stale
     refetchInterval: status === "live" ? false : FALLBACK_POLL_MS,
-    retry: (count, err) => (err as { status?: number }).status !== 401 && count < 2,
+    // Never retry auth errors; they will not fix themselves
+    retry: (count, err) => ![401, 403, 404].includes((err as HttpError).status ?? 0) && count < 2,
   });
 
-  // An expired or invalid session signs the user out
-  const unauthorized = (query.error as { status?: number } | null)?.status === 401;
+  // An expired, removed or invalid session signs the user out and explains why
+  const unauthorized = (query.error as HttpError | null)?.status === 401;
+  const reason = (query.error as HttpError | null)?.message;
   useEffect(() => {
-    if (unauthorized) logout();
-  }, [unauthorized, logout]);
+    if (unauthorized) logout(reason || "Your session ended. Please sign in again.");
+  }, [unauthorized, reason, logout]);
 
   return query;
 }
@@ -138,14 +147,18 @@ export function useAdminAction(resources: string[]) {
   });
 }
 
-// Runs any write request (POST / PATCH / DELETE) and refreshes every admin query,
+// Runs any write request (POST / PATCH / PUT / DELETE) and refreshes every admin query,
 // because one change (e.g. approving a payout) can affect the overview and the audit log too.
 export function useAdminMutation() {
   const queryClient = useQueryClient();
+  const logout = useAdminSession((s) => s.logout);
   return useMutation({
-    mutationFn: ({ path, method = "POST", body }: { path: string; method?: "POST" | "PATCH" | "DELETE"; body?: unknown }) =>
+    mutationFn: ({ path, method = "POST", body }: { path: string; method?: "POST" | "PATCH" | "PUT" | "DELETE"; body?: unknown }) =>
       adminApi<unknown>(path, { method, body }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin"] }),
+    onError: (err) => {
+      if ((err as HttpError).status === 401) logout(err.message);
+    },
   });
 }
 
@@ -162,6 +175,13 @@ export function usePayoutAction() {
 
 /* ───────────────────────── In-console navigation ───────────────────────── */
 
-// Lets a page open another sidebar page by its label (e.g. the "Accounts" button on Overview)
-export const AdminNavContext = createContext<(label: string) => void>(() => {});
+export type NavParams = { label: string; q?: string };
+
+// Lets a page open another sidebar page by its label (e.g. the "Accounts" button on Overview).
+// `params.q` pre-fills the search box of the target list (used by the global search).
+export const AdminNavContext = createContext<(label: string, params?: { q?: string }) => void>(() => {});
 export const useAdminNavigate = () => useContext(AdminNavContext);
+
+// The page that was just opened and the search text it should start with
+export const AdminNavParamsContext = createContext<NavParams | null>(null);
+export const useAdminNavParams = () => useContext(AdminNavParamsContext);

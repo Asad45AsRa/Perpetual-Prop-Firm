@@ -1,30 +1,21 @@
 "use client";
 
-import { ResourcePage, type PageConfig } from "../ResourcePage";
-import { ADMIN } from "../permissions";
+import { useState } from "react";
+import { FaqEditor } from "../FaqEditor";
+import { RulesEditor } from "../RulesEditor";
+import { Tabs } from "../ui";
 import type { AdminPage } from "../types";
 
-// Live list for GET /admin/cms with create / edit / delete. "Updated by / at" are set by the server.
-const config: PageConfig = {
-  resource: "cms",
-  columns: [
-    { key: "id", label: "ID" },
-    { key: "page", label: "Page" },
-    { key: "type", label: "Type" },
-    { key: "updatedBy", label: "Updated by" },
-    { key: "updatedAt", label: "Updated", format: "date" },
-    { key: "status", label: "Status", format: "status" },
-  ],
-  primary: { kind: "create", label: "Add Content" },
-  fields: [
-    { key: "page", label: "Page", required: true },
-    { key: "type", label: "Type", type: "select", options: ["FAQ", "Policy", "Page", "Blog"] },
-    { key: "status", label: "Status", type: "select", options: ["published", "draft"] },
-  ],
-};
-
+// Public website text that staff can change without a developer: the FAQ and the Rulebook.
+// Nothing goes live until "Publish" is pressed, and every published version can be loaded back as a draft.
 function WebsiteCms() {
-  return <ResourcePage config={config} />;
+  const [tab, setTab] = useState("FAQ");
+  return (
+    <>
+      <Tabs tabs={["FAQ", "Rules"]} active={tab} onChange={setTab} />
+      {tab === "FAQ" ? <FaqEditor /> : <RulesEditor />}
+    </>
+  );
 }
 
-export const page: AdminPage = { label: "Website CMS", group: "Communication", roles: ADMIN, component: WebsiteCms };
+export const page: AdminPage = { key: "cms", label: "Website CMS", group: "Communication", component: WebsiteCms };

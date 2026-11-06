@@ -1,48 +1,44 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Btn, Card, formatMoney, formatPnl, Pill, pnlClass, StateMessage, statusTone, Table } from "../ui";
-import { useAdminNavigate, useAdminQuery, usePayoutAction } from "../adminData";
+import { Btn, Card, formatMoney, formatPnl, Pill, pnlClass, StateMessage, statusTone, Table, timeAgo } from "../ui";
+import { useAdminNavigate, useAdminQuery } from "../adminData";
 import { useAdminSession } from "../Adminauth";
-import { ALL, can } from "../permissions";
+import { can, canView } from "../permissions";
 import type { AdminPage, OverviewData } from "../types";
 
-// Live dashboard. Every number comes from GET /admin/overview and refreshes on realtime events.
+// The home screen. GET /admin/overview. It refreshes itself on realtime events.
+// The server only fills money fields for people who may see them, and the page also hides those cards.
 function Overview() {
-  const role = useAdminSession((s) => s.user?.role);
+  const user = useAdminSession((s) => s.user);
   const go = useAdminNavigate();
-  const payoutAction = usePayoutAction();
   const { data, isPending, error, refetch } = useAdminQuery<OverviewData>("overview", "/admin/overview");
 
   if (isPending) return <StateMessage>Loading overview…</StateMessage>;
   if (error) return <StateMessage error onRetry={() => refetch()}>{error.message}</StateMessage>;
 
-  const finance = can(role, "finance.view");
-  const { stats } = data;
+  const money = can(user, "finance.view");
+  const { stats, live, today } = data;
 
-  // Admins see money cards, moderators see support and risk cards instead
   const cards = [
     { label: "Traders", value: stats.traders.toLocaleString("en-US"), note: "Registered traders" },
     { label: "Active accounts", value: stats.activeAccounts.toLocaleString("en-US"), note: "Challenge and funded" },
-    ...(finance
-      ? [{ label: "Pending payouts", value: String(stats.pendingPayouts), note: "Need review" }]
-      : [{ label: "Open tickets", value: String(stats.openTickets), note: "Waiting for reply" }]),
-    ...(finance
-      ? [{ label: "Challenge revenue", value: formatMoney(stats.challengeRevenue), note: "From paid checkouts" }]
-      : [{ label: "Risk breaches", value: String(stats.riskBreaches), note: "Need review" }]),
+    ...(money
+      ? [
+        { label: "Challenge revenue", value: formatMoney(stats.challengeRevenue), note: "From paid checkouts" },
+        { label: "Payout liability", value: formatMoney(live.payoutLiability), note: "Owed to traders, not yet paid" },
+      ]
+      : [
+        { label: "Online traders", value: String(live.onlineTraders), note: "Active in the last 3 hours" },
+        { label: "Open positions", value: String(live.openPositions), note: "Across all accounts" },
+      ]),
   ];
 
-  // [label, count, visible for this role]
-  const attention: [string, number, boolean][] = [
-    ["Payouts to review", stats.pendingPayouts, can(role, "payout.approve")],
-    ["Open tickets", stats.openTickets, can(role, "tickets.reply")],
-    ["Risk breaches", stats.riskBreaches, can(role, "risk.review")],
-    ["Pending affiliate payouts", stats.pendingAffiliatePayouts, finance],
-  ];
+  const maxFunnel = Math.max(1, ...data.funnel.map((f) => f.value));
 
   return (
     <>
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {cards.map((s) => (
           <Card key={s.label}>
             <p className="text-[14px] text-white/40">{s.label}</p>
@@ -52,22 +48,68 @@ function Overview() {
         ))}
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[2fr_1fr]">
-        <Card
-          title="Live trader"
-          action={
-            <div className="flex gap-2">
-              <Btn onClick={() => go("Trading Accounts")}>Accounts</Btn>
-              {finance && <Btn onClick={() => go("Trader Payouts")}>Payouts</Btn>}
-            </div>
-          }
-        >
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[2fr_1fr]">
+        <Card title="Needs attention">
+          {data.attention.length === 0 ? (
+            <StateMessage>Nothing is assigned to your sections.</StateMessage>
+          ) : (
+            <ul>
+              {data.attention.map((a) => (
+                <li key={a.key} className="flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.06] py-3.5 last:border-0">
+                  <div>
+                    <p className="text-[15px] text-white">{a.label}</p>
+                    <p className="text-[13px] text-white/40">
+                      {a.count === 0 ? "All done" : `Oldest waiting ${a.oldestAt ? timeAgo(a.oldestAt) : ""}`}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    {a.breached && <Pill tone="red">Overdue</Pill>}
+                    <b className="min-w-[28px] text-right text-[20px] font-normal text-white">{a.count}</b>
+                    <Btn onClick={() => go(a.page)}>Open</Btn>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Card>
+
+        <Card title="Right now">
+          <ul>
+            {(
+              [
+                ["Online traders", live.onlineTraders],
+                ["Open positions", live.openPositions],
+                ...(money ? ([["Exposure", formatMoney(live.exposure)], ["Revenue today", formatMoney(today.revenue)], ["Refunds", formatMoney(today.refunds)]] as [string, ReactNode][]) : []),
+                ["Pending KYC cases", stats.pendingKyc],
+                ["Failed webhooks", stats.failedWebhooks],
+              ] as [string, ReactNode][]
+            ).map(([label, value]) => (
+              <li key={label} className="flex justify-between border-b border-white/[0.06] py-3 text-[15px] text-white/50 last:border-0">
+                {label}<b className="font-normal text-white">{value}</b>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <Card title="Trader journey">
+          <ul className="grid gap-3">
+            {data.funnel.map((f) => (
+              <li key={f.label}>
+                <div className="mb-1 flex justify-between text-[14px] text-white/60"><span>{f.label}</span><span className="text-white">{f.value}</span></div>
+                <div className="h-2 bg-white/10"><div className="h-full bg-gold-accent" style={{ width: `${(f.value / maxFunnel) * 100}%` }} /></div>
+              </li>
+            ))}
+          </ul>
+        </Card>
+
+        <Card title="Live trader" action={canView(user, "accounts") ? <Btn onClick={() => go("accounts")}>Accounts</Btn> : undefined}>
           {data.liveTrader ? (
             <ul>
               {(
                 [
                   ["Trader", data.liveTrader.name],
-                  ["Email", data.liveTrader.email],
                   ["Account", data.liveTrader.accountId],
                   ["Plan", data.liveTrader.plan],
                   ["Stage", data.liveTrader.stage],
@@ -75,7 +117,6 @@ function Overview() {
                   ["Open P&L", <span key="pnl" className={pnlClass(data.liveTrader.pnl)}>{formatPnl(data.liveTrader.pnl)}</span>],
                   ["Open positions", data.liveTrader.openPositions],
                   ["Payout eligible", data.liveTrader.payoutEligible === undefined ? undefined : formatMoney(data.liveTrader.payoutEligible)],
-                  ["Lifetime paid", data.liveTrader.lifetimePaid === undefined ? undefined : formatMoney(data.liveTrader.lifetimePaid)],
                   ["Trading", data.liveTrader.trading],
                 ] as [string, ReactNode][]
               )
@@ -90,69 +131,61 @@ function Overview() {
             <StateMessage>No live trader right now. This card updates the moment a trader starts trading.</StateMessage>
           )}
         </Card>
-
-        <Card title="Needs attention">
-          <ul>
-            {attention.filter(([, , show]) => show).map(([label, n]) => (
-              <li key={label} className="flex justify-between border-b border-white/[0.06] py-3.5 text-[15px] text-white/50 last:border-0">
-                {label}<b className="font-normal text-white">{n}</b>
-              </li>
-            ))}
-          </ul>
-        </Card>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        {finance ? (
-          <Card title="Recent payout requests" action={<Btn onClick={() => go("Trader Payouts")}>View all</Btn>}>
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        {canView(user, "payouts") ? (
+          <Card title="Recent payout requests" action={<Btn onClick={() => go("payouts")}>View all</Btn>}>
             {data.recentPayouts.length === 0 ? (
               <StateMessage>No payout requests yet.</StateMessage>
             ) : (
-              <Table
-                heads={["ID", "Trader", "Amount", "Status", ""]}
-                rows={data.recentPayouts.map((p) => [
-                  p.id,
-                  p.traderName,
-                  formatMoney(p.amount),
-                  <Pill key="s" tone={statusTone(p.status)}>{p.status}</Pill>,
-                  p.status === "pending" && can(role, "payout.approve") ? (
-                    <Btn key="b" disabled={payoutAction.isPending} onClick={() => payoutAction.run(p.id, "approve")}>Approve</Btn>
-                  ) : null,
-                ])}
-              />
+              <div className="overflow-x-auto">
+                <Table
+                  heads={["ID", "Trader", "Amount", "Status"]}
+                  rows={data.recentPayouts.map((p) => [p.id, p.traderName, formatMoney(p.amount), <Pill key="s" tone={statusTone(p.status)}>{p.status}</Pill>])}
+                />
+              </div>
             )}
           </Card>
         ) : (
-          <Card title="Recent support tickets" action={<Btn onClick={() => go("Support Tickets")}>View all</Btn>}>
-            {data.recentTickets.length === 0 ? (
-              <StateMessage>No tickets yet.</StateMessage>
+          canView(user, "tickets") && (
+            <Card title="Recent support tickets" action={<Btn onClick={() => go("tickets")}>View all</Btn>}>
+              {data.recentTickets.length === 0 ? (
+                <StateMessage>No tickets yet.</StateMessage>
+              ) : (
+                <div className="overflow-x-auto">
+                  <Table
+                    heads={["ID", "Trader", "Subject", "Status"]}
+                    rows={data.recentTickets.map((t) => [t.id, t.traderName, t.subject, <Pill key="s" tone={statusTone(t.status)}>{t.status}</Pill>])}
+                  />
+                </div>
+              )}
+            </Card>
+          )
+        )}
+
+        {canView(user, "activity") && (
+          <Card title="Recent trading activity" action={<Btn onClick={() => go("activity")}>View all</Btn>}>
+            {data.recentActivity.length === 0 ? (
+              <StateMessage>No trades yet.</StateMessage>
             ) : (
-              <Table
-                heads={["ID", "Trader", "Subject", "Status"]}
-                rows={data.recentTickets.map((t) => [t.id, t.traderName, t.subject, <Pill key="s" tone={statusTone(t.status)}>{t.status}</Pill>])}
-              />
+              <div className="overflow-x-auto">
+                <Table
+                  heads={["Trader", "Market", "Side", "P&L"]}
+                  rows={data.recentActivity.map((t) => [
+                    t.traderName,
+                    t.market,
+                    <Pill key="s" tone={statusTone(t.side)}>{t.side === "long" ? "Long" : "Short"}</Pill>,
+                    <span key="p" className={pnlClass(t.pnl)}>{formatPnl(t.pnl)}</span>,
+                  ])}
+                />
+              </div>
             )}
           </Card>
         )}
-
-        <Card title="Recent trading activity" action={<Btn onClick={() => go("Trading Activity")}>View all</Btn>}>
-          {data.recentActivity.length === 0 ? (
-            <StateMessage>No trades yet.</StateMessage>
-          ) : (
-            <Table
-              heads={["Trader", "Market", "Side", "P&L"]}
-              rows={data.recentActivity.map((t) => [
-                t.traderName,
-                t.market,
-                <Pill key="s" tone={statusTone(t.side)}>{t.side === "long" ? "Long" : "Short"}</Pill>,
-                <span key="p" className={pnlClass(t.pnl)}>{formatPnl(t.pnl)}</span>,
-              ])}
-            />
-          )}
-        </Card>
       </div>
     </>
   );
 }
 
-export const page: AdminPage = { label: "Overview", group: "Workspace", roles: ALL, component: Overview };
+export const page: AdminPage = { key: "overview", label: "Overview", group: "Workspace", component: Overview };

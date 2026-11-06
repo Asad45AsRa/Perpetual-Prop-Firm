@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useSiteContent, type FaqContent } from "@/lib/siteContent";
 
-const FAQS = [
+// Built-in text. It is shown until the admin publishes an edited version (Admin > Website CMS).
+export const DEFAULT_FAQS = [
     {
         q: "What is Perpeye?",
         a: "Hypernova is an on-chain prop trading firm built on Hyperliquid. Pass a risk-managed assessment, receive a funded account and keep 80% of the profits — with every rule, payout and reserve anchored on-chain.",
@@ -34,8 +36,12 @@ const FAQS = [
     },
 ];
 
+const DEFAULT_FAQ_CONTENT: FaqContent = { items: DEFAULT_FAQS };
+
 export function Faq() {
     const [open, setOpen] = useState<number | null>(null);
+    // Published FAQ from the admin console, or the built-in list
+    const { items: FAQS } = useSiteContent<FaqContent>("faq", DEFAULT_FAQ_CONTENT);
 
     return (
         <section

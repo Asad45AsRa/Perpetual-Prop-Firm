@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useRef, useState, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes, type TextareaHTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
 /* ───────────────────────── Small UI helpers (shared by all pages) ───────────────────────── */
@@ -29,7 +29,7 @@ const tones = {
 } as const;
 
 export function Pill({ tone, children }: { tone: keyof typeof tones; children: ReactNode }) {
-  return <span className={cn("inline-block shrink-0 whitespace-nowrap px-3 py-1 text-[13px]", tones[tone])}>{children}</span>;
+  return <span className={cn("inline-block px-3 py-1 text-[13px]", tones[tone])}>{children}</span>;
 }
 
 const btnTones = {
@@ -45,16 +45,19 @@ export function Btn({
   disabled,
   tone = "default",
   type = "button",
+  title,
 }: {
   children: ReactNode;
   onClick?: () => void;
   disabled?: boolean;
   tone?: keyof typeof btnTones;
   type?: "button" | "submit";
+  title?: string;
 }) {
   return (
     <button
       type={type}
+      title={title}
       onClick={onClick}
       disabled={disabled}
       className={cn(
@@ -67,13 +70,13 @@ export function Btn({
   );
 }
 
-export function Table({ heads, rows }: { heads: string[]; rows: ReactNode[][] }) {
+export function Table({ heads, rows }: { heads: ReactNode[]; rows: ReactNode[][] }) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full min-w-[400px] text-left text-[15px]">
         <thead>
           <tr className="border-b border-white/[0.08] text-white/40">
-            {heads.map((h, i) => <th key={`${h}-${i}`} className="px-2 py-3 font-normal">{h}</th>)}
+            {heads.map((h, i) => <th key={i} className="px-2 py-3 font-normal">{h}</th>)}
           </tr>
         </thead>
         <tbody>
@@ -120,9 +123,12 @@ export const pnlClass = (n: number) => (n < 0 ? "text-red-400" : "text-success")
 // Maps a status word from the backend to a pill color
 export function statusTone(status: string): keyof typeof tones {
   const s = status.toLowerCase();
-  if (["pending", "open", "warning", "draft", "scheduled", "reviewing", "review", "medium", "in progress", "normal"].includes(s)) return "gold";
-  if (["approved", "paid", "active", "solved", "resolved", "live", "healthy", "ok", "long", "published", "sent", "enabled", "closed", "passed"].includes(s)) return "green";
-  if (["rejected", "failed", "suspended", "breached", "down", "short", "expired", "disabled", "high"].includes(s)) return "red";
+  const gold = ["pending", "open", "warning", "draft", "scheduled", "reviewing", "review", "medium", "in progress", "normal", "awaiting approval", "new", "acknowledged", "resubmit", "degraded", "running", "escalated", "underpaid", "overpaid", "disputed", "reduce-only"];
+  const green = ["approved", "paid", "active", "solved", "resolved", "live", "healthy", "ok", "long", "published", "sent", "enabled", "closed", "passed", "verified", "delivered", "processed", "valid", "balanced", "visible", "success", "fixed", "clear", "low", "overridden"];
+  const red = ["rejected", "failed", "suspended", "breached", "down", "short", "expired", "disabled", "high", "locked", "mismatch", "bounced", "invalid", "denied", "critical", "blocked", "halted", "flagged"];
+  if (gold.includes(s)) return "gold";
+  if (green.includes(s)) return "green";
+  if (red.includes(s)) return "red";
   return "gray";
 }
 
@@ -153,10 +159,67 @@ export function SelectInput({ options, className, ...props }: { options: readonl
   );
 }
 
+export function Textarea({ className, ...props }: TextareaHTMLAttributes<HTMLTextAreaElement>) {
+  return <textarea className={cn(control, "h-auto min-h-[88px] resize-y py-2.5 leading-relaxed", className)} {...props} />;
+}
+
+// Horizontal tab strip used by drawers and multi-section pages
+export function Tabs({ tabs, active, onChange }: { tabs: string[]; active: string; onChange: (tab: string) => void }) {
+  return (
+    <div role="tablist" className="mb-5 flex flex-wrap gap-1 border-b border-white/[0.08]">
+      {tabs.map((t) => (
+        <button
+          key={t}
+          role="tab"
+          aria-selected={active === t}
+          onClick={() => onChange(t)}
+          className={cn(
+            "px-4 py-2.5 text-[14px] transition-colors",
+            active === t ? "border-b-2 border-gold-accent text-gold-light" : "text-white/50 hover:text-white",
+          )}
+        >
+          {t}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+// Value is a percentage from 0 to 100. The bar turns red close to a limit.
+export function ProgressBar({ value, warnAt = 80 }: { value: number; warnAt?: number }) {
+  const v = Math.max(0, Math.min(100, value));
+  return (
+    <div className="flex items-center gap-2">
+      <div className="h-1.5 w-[90px] bg-white/10">
+        <div className={cn("h-full", v >= warnAt ? "bg-red-400" : "bg-success")} style={{ width: `${v}%` }} />
+      </div>
+      <span className="text-[13px] text-white/60">{v.toFixed(0)}%</span>
+    </div>
+  );
+}
+
+// "5 min ago", "3 h ago"... for feeds where the exact clock time matters less than the age
+export function timeAgo(iso: string) {
+  const ms = Date.now() - new Date(iso).getTime();
+  if (Number.isNaN(ms)) return "-";
+  const min = Math.max(0, Math.round(ms / 60_000));
+  if (min < 1) return "just now";
+  if (min < 60) return `${min} min ago`;
+  if (min < 60 * 24) return `${Math.round(min / 60)} h ago`;
+  return `${Math.round(min / 60 / 24)} d ago`;
+}
+
+// Error text for toasts. The request id lets a developer find the exact server log line.
+export function describeError(err: unknown) {
+  const e = err as { message?: string; requestId?: string };
+  const text = e?.message || "Something went wrong.";
+  return e?.requestId ? `${text} (ref ${e.requestId})` : text;
+}
+
 /* ───────────────────────── Modal ───────────────────────── */
 
 // Simple accessible dialog: closes on Escape and on a click outside the panel
-export function Modal({ title, subtitle, onClose, children }: { title: string; subtitle?: string; onClose: () => void; children: ReactNode }) {
+export function Modal({ title, subtitle, onClose, children, wide }: { title: string; subtitle?: string; onClose: () => void; children: ReactNode; wide?: boolean }) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", onKey);
@@ -165,7 +228,7 @@ export function Modal({ title, subtitle, onClose, children }: { title: string; s
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
-      <div role="dialog" aria-modal="true" aria-label={title} className="max-h-[90vh] w-full max-w-[520px] overflow-y-auto border-[0.7px] border-white/[0.13] bg-surface p-6">
+      <div role="dialog" aria-modal="true" aria-label={title} className={cn("max-h-[90vh] w-full overflow-y-auto border-[0.7px] border-white/[0.13] bg-surface p-6", wide ? "max-w-[860px]" : "max-w-[520px]")}>
         <div className="mb-5 flex items-start justify-between gap-4">
           <div>
             <h2 className="text-[20px] text-white">{title}</h2>
@@ -182,7 +245,7 @@ export function Modal({ title, subtitle, onClose, children }: { title: string; s
 /* ───────────────────────── Toast ───────────────────────── */
 
 type ToastFn = (message: string, isError?: boolean) => void;
-const ToastContext = createContext<ToastFn>(() => { });
+const ToastContext = createContext<ToastFn>(() => {});
 export const useToast = () => useContext(ToastContext);
 
 export function ToastProvider({ children }: { children: ReactNode }) {
@@ -222,7 +285,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 export function downloadCsv(fileName: string, rows: Record<string, unknown>[]) {
   if (rows.length === 0) return false;
   const keys = Object.keys(rows[0]);
-  const cell = (v: unknown) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  const cell = (v: unknown) => `"${(typeof v === "object" && v !== null ? JSON.stringify(v) : String(v ?? "")).replace(/"/g, '""')}"`;
   const csv = [keys.join(","), ...rows.map((r) => keys.map((k) => cell(r[k])).join(","))].join("\n");
   const url = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
   const a = document.createElement("a");

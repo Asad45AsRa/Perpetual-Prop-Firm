@@ -2,7 +2,6 @@
 
 import { Card, formatMoney, StateMessage } from "../ui";
 import { useAdminQuery } from "../adminData";
-import { ADMIN } from "../permissions";
 import type { AdminPage, ReservesData } from "../types";
 
 // Money owed to traders: GET /admin/reserves -> { pending, approvedUnpaid, paid, rejected }
@@ -32,4 +31,4 @@ function PayoutReserves() {
   );
 }
 
-export const page: AdminPage = { label: "Payout Reserves", group: "Finance & sales", roles: ADMIN, component: PayoutReserves };
+export const page: AdminPage = { key: "reserves", label: "Payout Reserves", group: "Finance & sales", component: PayoutReserves };

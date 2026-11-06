@@ -48,7 +48,7 @@ export function PromoPanel({ className }: { className?: string }) {
               height={476}
               sizes="(min-width: 640px) 238px, 190px"
               priority
-              className="h-[190px] w-[190px] rotate-[14.99deg] object-cover sm:h-[238.275px] sm:w-[238.275px]"
+              className="h-[190px] w-[190px] rotate-[14.99deg] object-cover sm:h-[238.275px] sm:w-[238.275px] lg:scale-[1.3]"
             />
           </div>
         </div>
@@ -59,11 +59,11 @@ export function PromoPanel({ className }: { className?: string }) {
           80% of the profit.
         </p>
 
-        <ul className="mt-[16px] flex flex-wrap justify-center gap-[8px] px-[16px] sm:mt-[18px] sm:gap-[10px] sm:px-[23px]">
+        <ul className="mt-[16px] flex flex-wrap justify-center gap-[8px] px-[16px] sm:mt-[18px] sm:gap-[10px] sm:px-[23px] lg:px-[16px]">
           {PROMO_STEPS.map((step) => (
             <li
               key={step}
-              className="flex h-[32px] items-center gap-[6px] border-b-2 border-gold-accent/50 bg-white/[0.06] pl-[12px] pr-[13px] text-[12.5px] leading-none text-white/60 sm:h-[34px] sm:gap-[7px] sm:pl-[15px] sm:pr-[16px] sm:text-[14px]"
+              className="flex h-[32px] items-center gap-[6px] whitespace-nowrap border-b-2 border-gold-accent/50 bg-white/[0.06] pl-[12px] pr-[13px] text-[12.5px] leading-none text-white/60 sm:h-[34px] sm:gap-[7px] sm:pl-[15px] sm:pr-[16px] sm:text-[14px]"
             >
               <Image src={`${ASSET_DIR}/check-gold.svg`} alt="" width={18} height={18} unoptimized className="h-[16px] w-[16px] sm:h-[18px] sm:w-[18px]" />
               {step}

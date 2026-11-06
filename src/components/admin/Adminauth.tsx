@@ -6,17 +6,27 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import { TextField } from "@/components/auth/Field";
 import { OtpInput } from "@/components/auth/OtpInput";
 import { GoldButton } from "@/components/auth/GoldButton";
-import { adminApi, USE_MOCK } from "./adminApi";
+import { adminApi, MOCK_BLOCKED, USE_MOCK } from "./adminApi";
+import type { AccessLevel } from "./permissions";
 
 /* ───────────────────────── Types + session store ───────────────────────── */
 
-export type AdminRole = "admin" | "moderator";
-export type AdminUser = { id: string; name: string; email: string; role: AdminRole };
+export type AdminRole = "super_admin" | "admin" | "moderator";
+export type AdminUser = {
+    id: string;
+    name: string;
+    email: string;
+    role: AdminRole;
+    grants: Record<string, AccessLevel>; // section access, keyed by the page key
+    rights: string[]; // special rights (see permissions.ts)
+    protected?: boolean; // true only for the super admin
+};
 
 type SessionState = {
     user: AdminUser | null;
+    notice: string; // message shown on the sign-in screen after a forced sign-out
     setUser: (user: AdminUser) => void;
-    logout: () => void;
+    logout: (notice?: string) => void;
 };
 
 // Only the display profile is kept in sessionStorage. The real session is the httpOnly cookie
@@ -25,12 +35,23 @@ export const useAdminSession = create<SessionState>()(
     persist(
         (set) => ({
             user: null,
-            setUser: (user) => set({ user }),
-            logout: () => set({ user: null }),
+            notice: "",
+            setUser: (user) => set({ user, notice: "" }),
+            logout: (notice = "") => set({ user: null, notice }),
         }),
-        { name: "admin-session", storage: createJSONStorage(() => sessionStorage) },
+        { name: "admin-session", storage: createJSONStorage(() => sessionStorage), partialize: (s) => ({ user: s.user }) },
     ),
 );
+
+// Ends the server session first, then clears the local profile
+export async function signOut(notice = "") {
+    try {
+        await adminApi("/admin/auth/logout", { method: "POST" });
+    } catch {
+        // The local sign-out below must happen even when the server cannot be reached
+    }
+    useAdminSession.getState().logout(notice);
+}
 
 /* ───────────────────────── Theme (Light / Dark) ───────────────────────── */
 
@@ -61,6 +82,9 @@ export function useThemeClass() {
 const LIGHT_CSS = String.raw`
 .adm-dark{color-scheme:dark}
 .adm-light{color-scheme:light}
+.adm-dark select{color-scheme:dark}
+.adm-dark select option,.adm-dark select optgroup{background-color:#1a1a1a;color:#ffffff}
+.adm-light select option,.adm-light select optgroup{background-color:#ffffff;color:#15151b}
 .adm-light.bg-ink,.adm-light .bg-ink{background-color:#f3f4f8}
 .adm-light.text-white,.adm-light .text-white{color:#15151b}
 .adm-light .bg-surface{background-color:#ffffff}
@@ -95,6 +119,12 @@ const LIGHT_CSS = String.raw`
 .adm-light aside{box-shadow:1px 0 0 rgba(21,21,27,.06)}
 .adm-light .text-ink{color:#15151b}
 .adm-light .bg-black\/60{background-color:rgba(21,21,27,.35)}
+.adm-light .bg-black\/40{background-color:rgba(21,21,27,.25)}
+.adm-light .bg-white\/5{background-color:rgba(21,21,27,.05)}
+.adm-light .bg-white\/\[0\.02\]{background-color:rgba(21,21,27,.03)}
+.adm-light .border-white\/\[0\.04\]{border-color:rgba(21,21,27,.06)}
+.adm-light .text-amber-400{color:#b45309}
+.adm-light .bg-amber-500\/15{background-color:rgba(217,119,6,.12)}
 `;
 
 export function AdminThemeStyles() {
@@ -140,6 +170,7 @@ const MAX_ATTEMPTS = 5;
 
 export function AdminAuth() {
     const setUser = useAdminSession((s) => s.setUser);
+    const notice = useAdminSession((s) => s.notice);
     const themeClass = useThemeClass();
     const [step, setStep] = useState<"credentials" | "otp">("credentials");
     const [email, setEmail] = useState("");
@@ -213,7 +244,7 @@ export function AdminAuth() {
                     <form onSubmit={submitCredentials} noValidate className="flex flex-col gap-6">
                         <div>
                             <h1 className="text-[30px] text-white">Sign in</h1>
-                            <p className="mt-2 text-[15px] text-white/40"></p>
+                            {notice && <p role="status" className="mt-2 text-[15px] text-gold-light">{notice}</p>}
                         </div>
                         <TextField
                             id="admin-email"
@@ -233,13 +264,18 @@ export function AdminAuth() {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
+                        {MOCK_BLOCKED && (
+                            <p role="alert" className="text-[14px] text-red-400">
+                                Demo data is switched on in a production build. Set NEXT_PUBLIC_ADMIN_MOCK=false and connect the backend.
+                            </p>
+                        )}
                         {error && <p role="alert" className="text-[14px] text-red-400">{error}</p>}
-                        <GoldButton type="submit" disabled={loading || !email || !password}>
+                        <GoldButton type="submit" disabled={loading || !email || !password || MOCK_BLOCKED}>
                             {loading ? "Checking…" : "Continue"}
                         </GoldButton>
                         {USE_MOCK && (
                             <p className="text-center text-[13px] text-white/30">
-                                Demo: admin@perpeye.com / Admin@123 · mod@perpeye.com / Mod@123
+                                Demo super admin: admin@perpeye.com / Admin@123 · moderator: mod@perpeye.com / Mod@123
                             </p>
                         )}
                     </form>

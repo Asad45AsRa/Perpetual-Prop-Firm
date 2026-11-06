@@ -2,7 +2,6 @@
 
 import { Card, formatMoney, StateMessage, Table } from "../ui";
 import { useAdminQuery } from "../adminData";
-import { ADMIN } from "../permissions";
 import type { AdminPage, OperationsData } from "../types";
 
 // Load right now: GET /admin/operations -> { kpis, plans }
@@ -39,4 +38,4 @@ function OperationsPerformance() {
   );
 }
 
-export const page: AdminPage = { label: "Operations Performance", group: "Workspace", roles: ADMIN, component: OperationsPerformance };
+export const page: AdminPage = { key: "operations", label: "Operations Performance", group: "Workspace", component: OperationsPerformance };

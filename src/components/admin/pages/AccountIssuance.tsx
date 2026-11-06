@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { Btn, Card, FormField, formatDate, Pill, SelectInput, StateMessage, statusTone, Table, TextInput, useToast } from "../ui";
+import { Btn, Card, describeError, FormField, formatDate, Pill, SelectInput, StateMessage, statusTone, Table, TextInput, useToast } from "../ui";
 import { useAdminMutation, useAdminNavigate, useAdminQuery } from "../adminData";
-import { ADMIN } from "../permissions";
+import { STAGE, STAGES } from "../constants";
 import type { AdminPage, ListResponse } from "../types";
 
 type Row = Record<string, unknown>;
@@ -21,7 +21,7 @@ function AccountIssuance() {
 
   const [traderName, setTraderName] = useState("");
   const [planId, setPlanId] = useState("");
-  const [stage, setStage] = useState("Phase 1");
+  const [stage, setStage] = useState<string>(STAGE.challenge);
   const [reason, setReason] = useState("");
   const [error, setError] = useState("");
 
@@ -39,15 +39,15 @@ function AccountIssuance() {
         onSuccess: () => {
           toast("Account issued.");
           setReason("");
-          go("Trading Accounts");
+          go("accounts");
         },
-        onError: (err) => toast(err.message, true),
+        onError: (err) => toast(describeError(err), true),
       },
     );
   };
 
   return (
-    <div className="grid gap-4 lg:grid-cols-[minmax(0,520px)_1fr]">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,520px)_1fr]">
       <Card title="Issue an account">
         {traders.isPending || plans.isPending ? (
           <StateMessage>Loading…</StateMessage>
@@ -67,7 +67,7 @@ function AccountIssuance() {
               </select>
             </FormField>
             <FormField label="Stage" htmlFor="is-stage">
-              <SelectInput id="is-stage" options={["Phase 1", "Funded"]} value={stage} onChange={(e) => setStage(e.target.value)} />
+              <SelectInput id="is-stage" options={STAGES} value={stage} onChange={(e) => setStage(e.target.value)} />
             </FormField>
             <FormField label="Reason (saved to audit log)" htmlFor="is-reason" error={error}>
               <TextInput id="is-reason" placeholder="Support compensation" value={reason} onChange={(e) => setReason(e.target.value)} />
@@ -85,18 +85,20 @@ function AccountIssuance() {
         ) : history.data.items.length === 0 ? (
           <StateMessage>No accounts issued by hand yet.</StateMessage>
         ) : (
-          <Table
-            heads={["ID", "Trader", "Plan", "Stage", "Reason", "Status", "Issued"]}
-            rows={history.data.items.map((r) => [
-              String(r.id), String(r.traderName), String(r.plan), String(r.stage), String(r.reason ?? "-"),
-              <Pill key="s" tone={statusTone(String(r.status))}>{String(r.status)}</Pill>,
-              formatDate(String(r.issuedAt)),
-            ])}
-          />
+          <div className="overflow-x-auto">
+            <Table
+              heads={["ID", "Trader", "Plan", "Stage", "Reason", "Status", "Issued"]}
+              rows={history.data.items.map((r) => [
+                String(r.id), String(r.traderName), String(r.plan), String(r.stage), String(r.reason ?? "-"),
+                <Pill key="s" tone={statusTone(String(r.status))}>{String(r.status)}</Pill>,
+                formatDate(String(r.issuedAt)),
+              ])}
+            />
+          </div>
         )}
       </Card>
     </div>
   );
 }
 
-export const page: AdminPage = { label: "Account Issuance", group: "Traders & trading", roles: ADMIN, component: AccountIssuance };
+export const page: AdminPage = { key: "issuance", label: "Account Issuance", group: "Traders & trading", component: AccountIssuance };

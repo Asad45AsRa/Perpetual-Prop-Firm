@@ -2,21 +2,15 @@
 
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { useSiteContent, type RulesContent, type RulesGroup, type RulesItem, type RulesNode, type RulesSection } from "@/lib/siteContent";
 
 /* ────────────────────────────── TYPES ────────────────────────────── */
 
-type Node =
-  | { t: "h3"; x: string }
-  | { t: "p"; x: string }
-  | { t: "f"; x: string } // formula / highlighted line (white)
-  | { t: "ul"; x: string[] }
-  | { t: "ol"; x: string[] }
-  | { t: "new"; x: string };
-
-type Section = { n: string; title: string; nodes: Node[] };
-
-type Item = { id: string; label: string; sections: Section[] };
-type Group = { label: string; items: Item[] };
+// Content types are shared with the admin editor (see lib/siteContent.ts)
+type Node = RulesNode;
+type Section = RulesSection;
+type Item = RulesItem;
+type Group = RulesGroup;
 
 const h3 = (x: string): Node => ({ t: "h3", x });
 const p = (x: string): Node => ({ t: "p", x });
@@ -27,17 +21,17 @@ const nw = (x: string): Node => ({ t: "new", x });
 
 /* ────────────────────────── QUICK OVERVIEW ───────────────────────── */
 
-const overviewRows = [
+const DEFAULT_OVERVIEW_ROWS = [
   ["Elite", "120×", "10%", "3%", "6%", "80%"],
   ["Breeze", "80×", "8%", "4%", "7%", "80%"],
   ["Instant", "40×", "None", "3%", "8%", "80%"],
   ["Capital Your Way", "40-220×", "8 / 10 / 12%", "2-5%", "3 / 5 / 6 / 7 / 8%", "80 / 85 / 90%"],
 ];
-const overviewHead = ["Account", "Multiplier", "Target", "Daily Loss", "Static Drawdown", "Split"];
+const DEFAULT_OVERVIEW_HEAD = ["Account", "Multiplier", "Target", "Daily Loss", "Static Drawdown", "Split"];
 
 /* ────────────────────────────── CONTENT ──────────────────────────── */
 
-const groups: Group[] = [
+const DEFAULT_GROUPS: Group[] = [
   {
     label: "Getting started",
     items: [
@@ -1348,12 +1342,19 @@ function RenderNode({ node }: { node: Node }) {
 
 /* ────────────────────────────── PAGE ─────────────────────────────── */
 
-const allItems = groups.flatMap((g) => g.items);
-const flatSections = allItems.flatMap((item) => item.sections.map((s) => ({ item, s })));
 const ruleId = (n: string) => `rule-${parseInt(n, 10)}`;
 
-export function RulesBook() {
-  const [activeId, setActiveId] = useState(allItems[0].id);
+// Built-in rulebook. It is shown until the admin publishes an edited version (Admin > Website CMS).
+export const DEFAULT_RULES: RulesContent = {
+  overviewHead: DEFAULT_OVERVIEW_HEAD,
+  overviewRows: DEFAULT_OVERVIEW_ROWS,
+  groups: DEFAULT_GROUPS,
+};
+
+function RulesBookView({ groups, overviewHead, overviewRows }: RulesContent) {
+  const allItems = useMemo(() => groups.flatMap((g) => g.items), [groups]);
+  const flatSections = useMemo(() => allItems.flatMap((item) => item.sections.map((s) => ({ item, s }))), [allItems]);
+  const [activeId, setActiveId] = useState(allItems[0]?.id ?? "");
   const [query, setQuery] = useState("");
   const navRef = useRef<HTMLDivElement>(null);
   const lockRef = useRef(false);
@@ -1371,12 +1372,12 @@ export function RulesBook() {
           items: q ? g.items.filter((it) => itemHaystack(it).includes(q)) : g.items,
         }))
         .filter((g) => g.items.length > 0),
-    [q]
+    [q, groups]
   );
 
-  /* sidebar item click => us rule tak smooth scroll */
+  /* clicking a sidebar item scrolls smoothly to its rule */
   const goTo = (item: Item) => {
-    // Overview ka item Quick Overview block par jaye, baqi apne pehle rule par
+    // The Overview item scrolls to the Quick Overview block, every other item to its first rule
     const targetId =
       item.id === "overview" ? "quick-overview" : ruleId(item.sections[0].n);
     const el = document.getElementById(targetId);
@@ -1394,7 +1395,7 @@ export function RulesBook() {
 
 
 
-  /* scroll-spy: jo rule screen par hai uska item active */
+  /* scroll-spy: the item whose rule is on screen becomes active */
   useEffect(() => {
     let raf = 0;
     const onScroll = () => {
@@ -1420,7 +1421,7 @@ export function RulesBook() {
     };
   }, []);
 
-  /* page load par #rule-N ho to wahan jao */
+  /* when the page loads with #rule-N in the address, jump to that rule */
   useEffect(() => {
     const hash = window.location.hash.slice(1);
     if (!hash.startsWith("rule-") && hash !== "overview") return;
@@ -1445,7 +1446,7 @@ export function RulesBook() {
       document.removeEventListener("touchstart", onOutside);
     };
   }, [searchOpen]);
-  /* active item sidebar ke andar visible rakho */
+  /* keep the active item visible inside the sidebar */
   useEffect(() => {
     const nav = (navRef.current?.closest(".lg\\:overflow-y-auto") as HTMLElement | null) ?? navRef.current;
     const btn = nav?.querySelector<HTMLElement>(`[data-nav-item="${activeId}"]`);
@@ -1470,7 +1471,7 @@ export function RulesBook() {
 
   return (
     <section className="relative w-full  px-6 pb-[120px] pt-[140px] md:px-20">
-      {/* soft gold glow (design ke mutabiq) */}
+      {/* soft gold glow (as in the design) */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 z-0 bg-cover bg-top bg-no-repeat"
@@ -1659,6 +1660,12 @@ export function RulesBook() {
       </div>
     </section>
   );
+}
+
+// Public entry point: shows the rules published from the admin console, or the built-in rules
+export function RulesBook() {
+  const content = useSiteContent<RulesContent>("rules", DEFAULT_RULES);
+  return <RulesBookView {...content} />;
 }
 
 export default RulesBook;
