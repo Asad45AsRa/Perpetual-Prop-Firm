@@ -11,11 +11,11 @@ type Props = {
   unlocked: boolean;
 };
 
-/** Intrinsic size (1x) of the Figma mobile renders in /giveaways/mobile-*.png. */
-const MOBILE_ART: Record<string, { w: number; h: number }> = {
-  AXIS: { w: 377, h: 293 },
-  ONYX: { w: 377, h: 304 },
-  APEX: { w: 300, h: 253 },
+/** Intrinsic size (1x) of the Figma mobile renders in /giveaways/mobile-*.png, plus per-tier placement (ONYX has empty space above the $, so it is pulled up). */
+const MOBILE_ART: Record<string, { w: number; h: number; cls: string }> = {
+  AXIS: { w: 377, h: 293, cls: "mt-[6px] w-full" },
+  ONYX: { w: 377, h: 304, cls: "-mt-[44px] w-full" },
+  APEX: { w: 300, h: 253, cls: "mt-[6px] w-[82%]" },
 };
 
 /** Figma "Giveaways" card: tier chip, level + range, perk pills, 3D render; locked tiers get a padlock. */
@@ -96,7 +96,7 @@ export function GiveawayCard({ tier, unlocked }: Props) {
         width={MOBILE_ART[tier.tier].w}
         height={MOBILE_ART[tier.tier].h}
         sizes="(max-width: 639px) 100vw, 1px"
-        className={cn("mt-[6px] h-auto self-end sm:hidden", tier.tier === "APEX" ? "w-[82%]" : "w-full")}
+        className={cn("h-auto self-end sm:hidden", MOBILE_ART[tier.tier].cls)}
       />
     </section>
   );
