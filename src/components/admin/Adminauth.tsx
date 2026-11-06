@@ -8,6 +8,7 @@ import { OtpInput } from "@/components/auth/OtpInput";
 import { GoldButton } from "@/components/auth/GoldButton";
 import { adminApi, MOCK_BLOCKED, USE_MOCK } from "./adminApi";
 import type { AccessLevel } from "./permissions";
+import { FaEye, FaEyeSlash } from "react-icons/fa6";
 
 /* ───────────────────────── Types + session store ───────────────────────── */
 
@@ -180,12 +181,14 @@ export function AdminAuth() {
     const [attempts, setAttempts] = useState(0);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const backToLogin = (msg = "") => {
         setStep("credentials");
         setCode("");
         setAttempts(0);
         setPassword("");
+        setShowPassword(false);
         setError(msg);
     };
 
@@ -255,15 +258,26 @@ export function AdminAuth() {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
-                        <TextField
-                            id="admin-password"
-                            label="Password"
-                            type="password"
-                            autoComplete="current-password"
-                            placeholder="••••••••"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
+                        <div className="relative">
+                            <TextField
+                                id="admin-password"
+                                label="Password"
+                                type={showPassword ? "text" : "password"}
+                                autoComplete="current-password"
+                                placeholder="••••••••"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword((v) => !v)}
+                                aria-label={showPassword ? "Hide password" : "Show password"}
+                                aria-pressed={showPassword}
+                                className="absolute bottom-0 right-0 flex h-[46px] w-12 items-center justify-center text-white/50 transition-colors hover:text-white"
+                            >
+                                {showPassword ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
+                            </button>
+                        </div>
                         {MOCK_BLOCKED && (
                             <p role="alert" className="text-[14px] text-red-400">
                                 Demo data is switched on in a production build. Set NEXT_PUBLIC_ADMIN_MOCK=false and connect the backend.

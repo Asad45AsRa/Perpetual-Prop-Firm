@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Bell } from "lucide-react";
 import { useAdminNavigate, useAdminQuery } from "./adminData";
 import { timeAgo } from "./ui";
@@ -16,9 +16,32 @@ export function NotificationBell() {
   const { data } = useAdminQuery<ListResponse<NotificationItem>>("notifications", "/admin/notifications");
   const items = data?.items ?? [];
   const critical = items.some((i) => i.level === "critical");
+  const wrapRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const onPointerDown = (e: MouseEvent | TouchEvent) => {
+      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+
+    document.addEventListener("mousedown", onPointerDown);
+    document.addEventListener("touchstart", onPointerDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onPointerDown);
+      document.removeEventListener("touchstart", onPointerDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
 
   return (
-    <div className="relative">
+    <div ref={wrapRef} className="relative">
       <button
         type="button"
         aria-label={`Notifications (${items.length})`}
@@ -35,12 +58,12 @@ export function NotificationBell() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full z-40 mt-2 w-[360px] max-w-[calc(100vw-32px)] border-[0.7px] border-white/[0.13] bg-surface">
+        <div className="absolute right-0 top-full z-40 mt-2 w-[360px] max-w-[calc(100vw-32px)] border-[0.7px] border-white/[0.13] bg-surface max-sm:fixed max-sm:inset-x-4 max-sm:top-[84px] max-sm:mt-0 max-sm:w-auto max-sm:max-w-none">
           <p className="border-b border-white/[0.08] px-4 py-3 text-[14px] text-white/60">Needs attention</p>
           {items.length === 0 ? (
             <p className="px-4 py-6 text-center text-[14px] text-white/40">All clear. Nothing is waiting.</p>
           ) : (
-            <ul className="max-h-[360px] overflow-y-auto">
+            <ul className="max-h-[360px] overflow-y-auto max-sm:max-h-[60vh]">
               {items.map((n) => (
                 <li key={n.id}>
                   <button
