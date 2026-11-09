@@ -9,6 +9,7 @@ import { GoldButton } from "@/components/auth/GoldButton";
 import { adminApi, MOCK_BLOCKED, USE_MOCK } from "./adminApi";
 import type { AccessLevel } from "./permissions";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
+import logo from '../../../public/images/nav/nav.png'
 
 /* ───────────────────────── Types + session store ───────────────────────── */
 
@@ -148,7 +149,7 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
 export function AdminLogo({ className = "h-9" }: { className?: string }) {
     return (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src="/logo.svg" alt="Perpeye" className={`adm-logo w-auto ${className}`} />
+        <img src="/images/nav/nav.png" alt="Perpeye" className={`adm-logo w-auto ${className}`} />
     );
 }
 
