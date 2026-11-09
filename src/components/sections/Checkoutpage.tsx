@@ -286,7 +286,11 @@ function PlanIcon({
 /* Page                                                                */
 /* ------------------------------------------------------------------ */
 
-export function CheckoutPage() {
+/**
+ * Challenge configurator + checkout. `embedded` renders it inside the trader dashboard
+ * (Figma "Challenges"): no marketing headline, page padding or side glow — the dashboard supplies those.
+ */
+export function CheckoutPage({ embedded = false }: { embedded?: boolean } = {}) {
   const [planId, setPlanId] = useState<(typeof PLANS)[number]["id"]>("custom");
   const [amount, setAmount] = useState(5);
 
@@ -322,38 +326,45 @@ export function CheckoutPage() {
 
   const sliderFill = ((amount - MIN_AMOUNT) / (MAX_AMOUNT - MIN_AMOUNT)) * 100;
 
+  const Root = embedded ? "div" : "main";
+
   return (
-    <main className="min-h-screen pt-[120px] text-foreground max-md:mt-2 ">
+    <Root className={embedded ? "text-foreground" : "min-h-screen pt-[120px] text-foreground max-md:mt-2 "}>
       {/* Figma: 1440 frame, 80px side padding */}
-      <section className="relative isolate w-full px-6 pb-24 pt-11 sm:px-6 lg:px-20">
-        <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-x-clip">
-          <LeftGlow
-            width={690}
-            trim={0}
-            height={800}
-            opacity={0.24}
-            className="left-[-320px] bottom-[-220px]"
-          />
-        </div>
+      <section className={cn("relative isolate w-full", embedded ? "" : "px-6 pb-24 pt-11 sm:px-6 lg:px-20")}>
+        {!embedded && (
+          <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-x-clip">
+            <LeftGlow
+              width={690}
+              trim={0}
+              height={800}
+              opacity={0.24}
+              className="left-[-320px] bottom-[-220px]"
+            />
+          </div>
+        )}
 
         {/* ============================ TOP: heading + fee summary ============================ */}
-        <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_440px] lg:gap-10">
-          <div className="min-w-0">
-            <h1 className="text-[36px] font-normal leading-[1.1] tracking-[-0.03em] text-white md:text-[48px]">
-              Crypto Payments.
-              <br />
-              Greater Trading Potential.
-            </h1>
-            <p className="mt-5 max-w-[560px] text-[14px] leading-[20px] text-muted/90 md:text-[16px]">
-              Pick your account size, customize your payment amount, and check
-              out with crypto in just a few steps. Your pricing stays protected
-              throughout the checkout process.
-            </p>
-          </div>
+        {/* Embedded (dashboard): no headline, so the fee summary sits right and the crypto bar spans the full width (Figma). */}
+        <div className={cn("grid items-start gap-8 lg:gap-10", !embedded && "lg:grid-cols-[minmax(0,1fr)_440px]")}>
+          {embedded ? null : (
+            <div className="min-w-0">
+              <h1 className="text-[36px] font-normal leading-[1.1] tracking-[-0.03em] text-white md:text-[48px]">
+                Crypto Payments.
+                <br />
+                Greater Trading Potential.
+              </h1>
+              <p className="mt-5 max-w-[560px] text-[14px] leading-[20px] text-muted/90 md:text-[16px]">
+                Pick your account size, customize your payment amount, and check
+                out with crypto in just a few steps. Your pricing stays protected
+                throughout the checkout process.
+              </p>
+            </div>
+          )}
 
           <aside className="flex min-w-0 flex-col lg:pt-1">
             {/* Fee -> Balance */}
-            <div className="flex items-start gap-6 lg:justify-end">
+            <div className={cn("flex items-start gap-6", embedded ? "justify-end" : "lg:justify-end")}>
               <div>
                 <p className="text-[11px] leading-4 text-white/30">Challenge Fee</p>
                 <p className="mt-1.5 text-[26px] leading-[28px] text-white">
@@ -368,7 +379,7 @@ export function CheckoutPage() {
                 </p>
               </div>
             </div>
-            <div className="mt-4 flex flex-wrap items-center gap-4 text-[11px] leading-4 text-white/30 lg:justify-end">
+            <div className={cn("mt-4 flex flex-wrap items-center gap-4 text-[11px] leading-4 text-white/30", embedded ? "justify-end" : "lg:justify-end")}>
               <span className="flex items-center gap-1.5">
                 <CheckBadge /> No KYC required
               </span>
@@ -661,6 +672,6 @@ export function CheckoutPage() {
           </div>
         </div>
       </section>
-    </main>
+    </Root>
   );
 }

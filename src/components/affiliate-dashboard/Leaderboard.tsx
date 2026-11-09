@@ -9,7 +9,7 @@ import { Panel, PanelTitle, StatusChip, PagerButton } from "./Panel";
 
 const PAGE_SIZE = 6;
 
-function Avatar({ src, size = 25 }: { src: string; size?: number }) {
+export function Avatar({ src, size = 25 }: { src: string; size?: number }) {
   return (
     <span className="relative shrink-0 overflow-hidden rounded-full" style={{ width: size, height: size }}>
       <Image src={src} alt="" fill sizes={`${size}px`} className="object-cover" />
@@ -38,27 +38,30 @@ const PODIUM_POS: Record<number, string> = {
   3: "right-[max(12px,calc(50%-160px))] top-[117px]",
 };
 
-export function Leaderboard() {
-  const [page, setPage] = useState(0);
-  // TODO(backend): paginate server-side; mock data has a single page.
-  const pages = Math.max(1, Math.ceil(leaderboard.rows.length / PAGE_SIZE));
-  const rows = leaderboard.rows.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
-  const { you } = leaderboard;
+/** Large variant (full-width Leaderboard page, sm+): podium scaled 390 → 600px, labels scaled to match. */
+const PODIUM_POS_LARGE: Record<number, string> = {
+  1: "sm:top-[99px]",
+  2: "sm:left-[max(12px,calc(50%-246px))] sm:top-[165px]",
+  3: "sm:right-[max(12px,calc(50%-246px))] sm:top-[165px]",
+};
 
+type PodiumEntry = { place: number; name: string; avatar: string; earning: string };
+
+/** Card-top glow + "Leaderboard / period / Live" header + gold podium (299px tall in Figma). Shared with the trader dashboard. */
+export function LeaderboardHeader({ period, podium, large }: { period: string; podium: PodiumEntry[]; large?: boolean }) {
   return (
-    <Panel className="flex flex-col pb-[16px] xl:min-h-[833px]">
+    <>
       <div aria-hidden className="pointer-events-none absolute left-1/2 top-[-70px] h-[143px] w-[434px] -translate-x-1/2">
         <div className="absolute inset-[-121.45%_-40.02%]">
           <img src={`${DASH_ASSETS}/glow-leaderboard.svg`} alt="" className="block h-full w-full max-w-none" />
         </div>
       </div>
 
-      {/* Header + podium (299px tall in Figma) */}
-      <div className="relative h-[299px] shrink-0">
+      <div className={cn("relative h-[299px] shrink-0", large && "sm:h-[410px]")}>
         <div className="flex items-start justify-between px-[16px] pt-[16.7px]">
           <div>
             <PanelTitle>Leaderboard</PanelTitle>
-            <p className="mt-[2px] text-[12px] leading-[1.3] text-white/50">{leaderboard.period}</p>
+            <p className="mt-[2px] text-[12px] leading-[1.3] text-white/50">{period}</p>
           </div>
           <StatusChip bordered className="h-[24px] text-[12px] leading-normal">
             Live
@@ -68,15 +71,18 @@ export function Leaderboard() {
         <Image
           src={`${DASH_ASSETS}/podium.png`}
           alt=""
-          width={390}
-          height={139}
-          sizes="390px"
+          width={large ? 600 : 390}
+          height={large ? 214 : 139}
+          sizes={large ? "(min-width: 640px) 600px, 390px" : "390px"}
           // object-contain + bottom anchor: on cards narrower than 390px the whole podium scales down instead of cropping the side steps.
-          className="absolute left-1/2 top-[144px] h-[139px] w-[390px] max-w-[calc(100%-16px)] -translate-x-1/2 object-contain object-bottom"
+          className={cn(
+            "absolute left-1/2 top-[144px] h-[139px] w-[390px] max-w-[calc(100%-16px)] -translate-x-1/2 object-contain object-bottom",
+            large && "sm:top-[170px] sm:h-[214px] sm:w-[600px]",
+          )}
         />
 
-        {leaderboard.podium.map((p) => (
-          <div key={p.place} className={cn("absolute", PODIUM_POS[p.place])}>
+        {podium.map((p) => (
+          <div key={p.place} className={cn("absolute", PODIUM_POS[p.place], large && PODIUM_POS_LARGE[p.place])}>
             <p className="flex items-center gap-[7px] whitespace-nowrap text-[14px] leading-normal text-white">
               <Avatar src={p.avatar} />
               <span>
@@ -88,6 +94,20 @@ export function Leaderboard() {
           </div>
         ))}
       </div>
+    </>
+  );
+}
+
+export function Leaderboard() {
+  const [page, setPage] = useState(0);
+  // TODO(backend): paginate server-side; mock data has a single page.
+  const pages = Math.max(1, Math.ceil(leaderboard.rows.length / PAGE_SIZE));
+  const rows = leaderboard.rows.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+  const { you } = leaderboard;
+
+  return (
+    <Panel className="flex flex-col pb-[16px] xl:min-h-[833px]">
+      <LeaderboardHeader period={leaderboard.period} podium={leaderboard.podium} />
 
       {/* Table header bar spans the full card width */}
       <div className="grid h-[42px] shrink-0 grid-cols-[82px_1fr_auto] items-center bg-ink px-[17px] text-[12px] leading-[1.3] text-white/30">
