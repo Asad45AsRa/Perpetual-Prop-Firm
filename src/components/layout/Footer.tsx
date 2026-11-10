@@ -7,8 +7,8 @@ const COLUMNS = [
     title: "Product",
     width: "lg:w-[13.643em]", // 191px in Figma
     links: [
-      { label: "Challenges", href: "/challenges" },
-      { label: "How It Works", href: "/#how-it-works" },
+      { label: "Challenges", href: "/" },
+      { label: "How It Works", href: "/how-it-works" },
       { label: "Rulebook", href: "/rules" },
     ],
   },
@@ -25,8 +25,8 @@ const COLUMNS = [
     title: "Legal",
     width: "",
     links: [
-      { label: "Term Of Use", href: "/terms" },
-      { label: "Privacy Policy", href: "/privacy" },
+      { label: "Term Of Use", href: "/termsOfUse" },
+      { label: "Privacy Policy", href: "/privacyPolicy" },
     ],
   },
 ];

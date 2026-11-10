@@ -156,7 +156,7 @@ export function HeroSection2() {
 
           <div className="mt-[1.8em] flex flex-wrap items-center justify-center gap-[1.143em]">
             <Link
-              href="/challenges"
+              href="/signup"
               className="hero-in flex h-[2.857em] items-center justify-center bg-white px-[1.93em] text-[1em] font-normal leading-none text-black transition-transform duration-300 ease-out hover:scale-105 active:scale-95"
               style={{ "--d": "0.6s" } as React.CSSProperties}
             >

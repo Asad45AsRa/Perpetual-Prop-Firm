@@ -140,25 +140,79 @@ async function fetchDex(dex: string, signal: AbortSignal): Promise<Market[]> {
 
 /* ---------------------------- sub-components ---------------------- */
 
-function CoinIcon({ name, symbol }: { name: string; symbol: string }) {
-  const [failed, setFailed] = useState(false);
-  if (failed) {
+const FLAGS: Record<string, string> = {
+  EUR: "eu", EURUSD: "eu", JPY: "jp", USDJPY: "jp", GBP: "gb", CHF: "ch",
+  AUD: "au", CAD: "ca", DXY: "us", SP500: "us", US500: "us", NDX: "us",
+  US100: "us", DJI: "us", XYZ100: "us", JP225: "jp", KR200: "kr",
+};
+
+const GLYPHS: Record<string, string> = {
+  GOLD: "🥇", SILVER: "🥈", COPPER: "🟠", PLATINUM: "⚪", PALLADIUM: "⚪",
+  CL: "🛢️", WTI: "🛢️", OIL: "🛢️", BRENTOIL: "🛢️", NATGAS: "🔥", URANIUM: "☢️",
+};
+
+// Ordered list of icon sources; the next one is tried when the previous fails to load.
+function iconSources(name: string, symbol: string, category: Market["category"]): string[] {
+  const base = symbol.toUpperCase();
+
+  if (category === "Stocks") {
+    return [
+      `https://financialmodelingprep.com/image-stock/${base}.png`,
+      `https://assets.parqet.com/logos/symbol/${base}?format=png`,
+    ];
+  }
+  if (category === "FX" || category === "Indices") {
+    const cc = FLAGS[base];
+    return cc ? [`https://flagcdn.com/w80/${cc}.png`] : [];
+  }
+  if (category === "Commodities") return [];
+
+  // Crypto: Hyperliquid prefixes some tokens with "k" (kPEPE -> PEPE)
+  const clean = /^k[A-Z]{2,}/.test(symbol) ? symbol.slice(1) : symbol;
+  const lower = clean.toLowerCase();
+  return [
+    `https://assets.coincap.io/assets/icons/${lower}@2x.png`,
+    `https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/128/color/${lower}.png`,
+    `https://app.hyperliquid.xyz/coins/${name.replace(":", "_")}.svg`,
+  ];
+}
+
+function CoinIcon({
+  name,
+  symbol,
+  category,
+}: {
+  name: string;
+  symbol: string;
+  category: Market["category"];
+}) {
+  const sources = useMemo(
+    () => iconSources(name, symbol, category),
+    [name, symbol, category]
+  );
+  const [idx, setIdx] = useState(0);
+  const src = sources[idx];
+
+  // No source left: show glyph (commodities) or the first letter
+  if (!src) {
     return (
       <span className="flex h-[28px] w-[28px] shrink-0 items-center justify-center rounded-full bg-[#2a2a2a] text-[11px] text-white">
-        {symbol.slice(0, 1)}
+        {GLYPHS[symbol.toUpperCase()] ?? symbol.slice(0, 1)}
       </span>
     );
   }
+
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src={`https://app.hyperliquid.xyz/coins/${name.replace(":", "_")}.svg`}
+      key={src}
+      src={src}
       alt=""
       width={28}
       height={28}
       loading="lazy"
-      onError={() => setFailed(true)}
-      className="h-[28px] w-[28px] shrink-0 rounded-full"
+      onError={() => setIdx((i) => i + 1)}
+      className="h-[28px] w-[28px] shrink-0 rounded-full bg-white/10 object-cover"
     />
   );
 }
@@ -347,7 +401,7 @@ export function LiveMarketOverview({ longShort }: Props) {
                     )}
                   >
                     <div className="flex items-center gap-[7px]">
-                      <CoinIcon name={m.iconName} symbol={m.symbol} />
+                      <CoinIcon name={m.iconName} symbol={m.symbol} category={m.category} />
                       <div className="flex flex-col gap-[4px]">
                         <span className="flex items-center gap-[7px] text-[13px] text-white">
                           {m.symbol}
