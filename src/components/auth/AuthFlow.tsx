@@ -21,20 +21,13 @@ type Draft = Partial<WelcomeValues> & { username?: string; avatar?: string };
 
 /** Full-screen backdrop: #0F0F0F with the two big gold glow sweeps from Figma. */
 function Backdrop() {
-  const glow = "absolute left-[calc(50%-1012px)] h-[897.88px] w-[2081.76px]";
-  const inset = "absolute inset-[-12.41%_-5.71%_-11.67%_-5.71%]";
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-      <div className={cn(glow, "top-[-588px]")}>
-        <div className={inset}>
-          <img src={`${ASSET_DIR}/bg-glow-top.svg`} alt="" className="block h-full w-full max-w-none" />
-        </div>
-      </div>
-      <div className={cn(glow, "bottom-[-588px] rotate-180")}>
-        <div className={inset}>
-          <img src={`${ASSET_DIR}/bg-glow-bottom.svg`} alt="" className="block h-full w-full max-w-none" />
-        </div>
-      </div>
+      <img
+        src={`${ASSET_DIR}/waitlist.png`}
+        alt=""
+        className="block h-full w-full object-cover"
+      />
     </div>
   );
 }

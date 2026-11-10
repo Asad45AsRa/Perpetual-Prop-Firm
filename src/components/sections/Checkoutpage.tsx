@@ -756,17 +756,7 @@ export function CheckoutPage({ embedded = false, accountEmail = "" }: { embedded
                 </div>
               </div>
             ) : (
-              /* Get Funded: full width, white -> gold gradient */
-              <button
-                type="button"
-                style={{
-                  background: "linear-gradient(90deg, #FFFFFF 0%, #99804A 100%)",
-                }}
-                className="mt-5 flex h-[52px] w-full items-center justify-center gap-2 text-black outline-none disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                <span className="text-[14px]">Get Funded</span>
-                <span className="text-[22px] leading-none">{money(total)}</span>
-              </button>
+             ''
             )}
 
           </div>
