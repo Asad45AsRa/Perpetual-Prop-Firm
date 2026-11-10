@@ -23,7 +23,8 @@ type Draft = Partial<WelcomeValues> & { username?: string };
 function Backdrop() {
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden bg-ink">
-      <Image src={`${ASSET_DIR}/bg.webp`} alt="" fill priority sizes="100vw" className="object-cover object-center select-none" />
+      {/* Stretch to the viewport: the glows sit in the far corners and cover would crop them; soft gradients show no distortion. */}
+      <Image src={`${ASSET_DIR}/waitlist.webp`} alt="" fill priority sizes="100vw" className="object-fill select-none" />
     </div>
   );
 }

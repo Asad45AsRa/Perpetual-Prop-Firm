@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import {
   LuArrowUpRight,
@@ -664,17 +665,6 @@ export function CheckoutPage({ embedded = false, accountEmail = "" }: { embedded
 
             {/* Agreement */}
 
-            {/* Get Funded: full width, white -> gold gradient */}
-            <button
-              type="button"
-              style={{
-                background: "linear-gradient(90deg, #FFFFFF 0%, #99804A 100%)",
-              }}
-              className="mt-5 flex h-[52px] w-full items-center justify-center gap-2 text-black outline-none disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              <a href="/signup" className="text-[14px]">Get Funded</a>
-              <span className="text-[22px] leading-none">{money(total)}</span>
-            </button>
             {embedded ? (
               /* Dashboard (Figma "Challenges"): trade-with + codes on the left, payment summary + agreement on the right */
               <div className="mt-5 grid gap-[16px] lg:grid-cols-[minmax(0,583fr)_minmax(0,472fr)]">
@@ -754,7 +744,15 @@ export function CheckoutPage({ embedded = false, accountEmail = "" }: { embedded
                 </div>
               </div>
             ) : (
-             ''
+              /* Homepage: Get Funded goes to sign-up (whole bar is the link). Dashboard uses its own checkout above. */
+              <Link
+                href="/signup"
+                style={{ background: "linear-gradient(90deg, #FFFFFF 0%, #99804A 100%)" }}
+                className="mt-5 flex h-[52px] w-full items-center justify-center gap-2 text-black outline-none focus-visible:ring-2 focus-visible:ring-[#99804A]"
+              >
+                <span className="text-[14px]">Get Funded</span>
+                <span className="text-[22px] leading-none">{money(total)}</span>
+              </Link>
             )}
 
           </div>
@@ -763,6 +761,3 @@ export function CheckoutPage({ embedded = false, accountEmail = "" }: { embedded
     </Root>
   );
 }
-
-
-//add

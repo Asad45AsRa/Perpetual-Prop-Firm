@@ -340,7 +340,8 @@ function Calendar() {
                         key={i}
                         className={cn(
                           "h-[64px] border-[0.7px] p-[6px] align-top",
-                          pnl === undefined ? "border-white/[0.06] bg-ink" : pnl >= 0 ? "border-transparent bg-[#2C4F2C]" : "border-transparent bg-[#4A1A1A]",
+                          // Translucent fills so the page background shows through (was solid).
+                          pnl === undefined ? "border-white/[0.06] bg-white/[0.02]" : pnl >= 0 ? "border-[#47a847]/20 bg-[#47a847]/[0.22]" : "border-[#C71919]/25 bg-[#C71919]/[0.22]",
                           key === CALENDAR_TODAY && "border-gold-accent/60",
                         )}
                       >
@@ -349,7 +350,7 @@ function Calendar() {
                       </td>
                     );
                   })}
-                  <td className="h-[64px] border-[0.7px] border-gold-accent/25 bg-gold-accent/[0.12] p-[6px] align-top">
+                  <td className="h-[64px] border-[0.7px] border-gold-accent/20 bg-gold-accent/[0.08] p-[6px] align-top">
                     <span className="block text-[10px] leading-none text-[#C9B27A]">Week {w + 1}</span>
                     {traded && <span className={cn("mt-[16px] block text-[11px] leading-none", total >= 0 ? "text-[#7BD77B]" : "text-[#FF8A8A]")}>{fmt(total)}</span>}
                   </td>

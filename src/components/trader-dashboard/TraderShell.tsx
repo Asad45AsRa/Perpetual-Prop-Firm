@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
-import { DASH_ASSETS, formatUsd } from "@/components/affiliate-dashboard/data";
+import { formatUsd } from "@/components/affiliate-dashboard/data";
 import { Notifications } from "@/components/affiliate-dashboard/Notifications";
 import { UserMenu } from "@/components/affiliate-dashboard/UserMenu";
 import { TRADER_BASE, TRADER_PAGE_HEADERS, trader } from "./data";
@@ -55,15 +55,8 @@ export function TraderShell({ children }: { children: ReactNode }) {
       <TraderSidebar open={menuOpen} onClose={() => setMenuOpen(false)} />
       <div className="relative min-w-0 flex-1 px-4 pb-[46px] pt-6 sm:px-6 lg:pl-[36px] lg:pr-[38px] lg:pt-[37px]">
         <div aria-hidden className="pointer-events-none fixed inset-y-0 left-0 right-0 overflow-hidden lg:left-[256px]">
-          <Image
-            src={`${DASH_ASSETS}/bg-glow.png`}
-            alt=""
-            width={2880}
-            height={1566}
-            priority
-            sizes="(min-width: 1024px) calc(100vw - 256px), 100vw"
-            className="h-auto w-full select-none"
-          />
+          {/* Same waitlist background as sign-up; stretched to the content area so both corner glows stay visible. */}
+          <Image src="/images/affiliate-join/waitlist.webp" alt="" fill priority sizes="100vw" className="object-fill select-none" />
         </div>
         <div className="relative mx-auto max-w-[1110px]">
           <Topbar onMenu={() => setMenuOpen(true)} />

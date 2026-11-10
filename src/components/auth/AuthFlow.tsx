@@ -1,7 +1,7 @@
 "use client";
-/* eslint-disable @next/next/no-img-element -- decorative glow SVGs, no optimization needed */
 
 import { useCallback, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
@@ -23,11 +23,8 @@ type Draft = Partial<WelcomeValues> & { username?: string; avatar?: string };
 function Backdrop() {
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-      <img
-        src={`${ASSET_DIR}/waitlist.png`}
-        alt=""
-        className="block h-full w-full object-cover"
-      />
+      {/* Stretch to the viewport: the glows sit in the far corners and cover would crop them; soft gradients show no distortion. */}
+      <Image src={`${ASSET_DIR}/waitlist.webp`} alt="" fill priority sizes="100vw" className="object-fill select-none" />
     </div>
   );
 }
