@@ -8,7 +8,7 @@ import { useSiteContent, type FaqContent } from "@/lib/siteContent";
 import { CheckoutPage } from "@/components/sections/Checkoutpage";
 import { DEFAULT_FAQS } from "@/components/sections/Faq";
 import { Panel, PanelTitle } from "@/components/affiliate-dashboard/Panel";
-import { TRADER_BASE } from "../data";
+import { TRADER_BASE, trader } from "../data";
 
 const STEPS = [
   { title: "Start Your Challenge", body: "Compare the live account options, see every rule before paying and complete one secure checkout." },
@@ -102,7 +102,7 @@ export function ChallengesView() {
   return (
     <div className="mt-[37px] flex flex-col gap-[16px]">
       <StepCards />
-      <CheckoutPage embedded />
+      <CheckoutPage embedded accountEmail={trader.email} />
       <DemoBanner />
       <Faqs />
     </div>

@@ -233,17 +233,17 @@ export function PnlChart() {
         </div>
       </div>
 
-      <ul className="mt-[16px] flex flex-wrap items-center gap-x-[16px] gap-y-[6px] text-[11px] leading-none text-white/50">
+      <ul className="mt-[16px] flex flex-wrap items-center gap-x-[18px] gap-y-[8px] text-[13px] leading-none text-white/80">
         <li className="flex items-center gap-[6px]">
-          <span aria-hidden className="h-[2px] w-[14px] rounded-full" style={{ background: GREEN }} /> Cumulative PnL
+          <span aria-hidden className="h-[2px] w-[16px] shrink-0 rounded-full" style={{ background: GREEN }} /> Cumulative PnL
         </li>
         <li className="flex items-center gap-[6px]">
-          <span aria-hidden className="h-[8px] w-[4px]" style={{ background: GREEN }} /> Profit day
+          <span aria-hidden className="h-[2px] w-[16px] shrink-0 rounded-full" style={{ background: GREEN }} /> Profit day
         </li>
         <li className="flex items-center gap-[6px]">
-          <span aria-hidden className="h-[8px] w-[4px]" style={{ background: RED }} /> Loss day
+          <span aria-hidden className="h-[2px] w-[16px] shrink-0 rounded-full" style={{ background: RED }} /> Loss day
         </li>
-        <li className="text-white/30">Hover or drag to inspect any day</li>
+        <li className="text-[12px] text-white/30">Hover or drag to inspect any day</li>
       </ul>
 
       <dl className="mt-[16px] grid grid-cols-2 gap-[8px] sm:grid-cols-3">

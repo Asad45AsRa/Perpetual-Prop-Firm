@@ -2,12 +2,18 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowUpRight, Banknote, CalendarClock, Layers, Plus, Wallet } from "lucide-react";
+import Image from "next/image";
+import { ArrowUpRight, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Panel, PanelTitle, tabChip } from "@/components/affiliate-dashboard/Panel";
 import { accountTotals, subAccounts, TRADER_BASE, type AccountStage, type Gauge, type SubAccount } from "./data";
 
-const TOTAL_ICONS = { allocation: Layers, funded: Wallet, daily: CalendarClock, max: Banknote } as const;
+const TOTAL_ICONS = {
+  allocation: "/images/trader-dashboard/total-allocation.svg",
+  funded: "/images/trader-dashboard/total-funded.svg",
+  daily: "/images/trader-dashboard/total-daily-pnl.svg",
+  max: "/images/trader-dashboard/total-max-funding.svg",
+} as const;
 
 const STAGE_CHIP: Record<AccountStage, string> = {
   "Challenge Phase": "bg-[#3B6BE8]/[0.14] text-[#7EA2FF]",
@@ -97,12 +103,10 @@ export function SubAccounts() {
 
       <dl className="mt-[16px] grid grid-cols-2 gap-[8px] sm:grid-cols-4">
         {accountTotals.map(({ label, value, icon }) => {
-          const Icon = TOTAL_ICONS[icon];
           return (
             <div key={label} className="flex items-center gap-[8px] border-[0.7px] border-white/[0.06] bg-white/[0.03] px-[10px] py-[10px]">
-              <span className="flex h-[28px] w-[28px] shrink-0 items-center justify-center bg-white/[0.06]">
-                <Icon aria-hidden className="h-[14px] w-[14px] text-gold-accent" />
-              </span>
+              {/* Figma tile: gold-tinted 32px box with a gold-gradient glyph */}
+              <Image src={TOTAL_ICONS[icon]} alt="" width={32} height={32} unoptimized className="h-[32px] w-[32px] shrink-0" />
               <div className="min-w-0">
                 <dt className="truncate text-[9px] uppercase leading-[1.2] tracking-[0.05em] text-white/40">{label}</dt>
                 <dd className="mt-[2px] text-[14px] leading-[1.2] text-white">{value}</dd>

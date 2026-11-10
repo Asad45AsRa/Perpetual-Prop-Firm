@@ -3,33 +3,33 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { History, Lock, Settings, Sparkles, TrendingUp, Trophy, UserRound, X, type LucideIcon } from "lucide-react";
+import { Lock, TrendingUp, X, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DASH_ASSETS } from "@/components/affiliate-dashboard/data";
-import { SidebarIcon } from "@/components/affiliate-dashboard/SidebarIcon";
 import { TRADER_BASE } from "./data";
+import { TraderNavIcon, type TraderNavIconName } from "./TraderNavIcon";
 
 type NavItem = {
   label: string;
   href: string;
-  /** House SVG icon (gold gradient when active) or a lucide icon. */
-  icon: "overview" | "payouts" | LucideIcon;
+  /** Figma icon (gold gradient when active) or a lucide fallback (Terminal has no export yet). */
+  icon: TraderNavIconName | LucideIcon;
   locked?: boolean;
 };
 
-// TODO(routes): only Home and Terminal exist yet; the rest are placeholders for upcoming pages.
+// TODO(routes): Payouts, Competitions, Purchase History and Settings pages aren't built yet.
 const NAV: NavItem[] = [
-  { label: "Home", href: TRADER_BASE, icon: "overview" },
-  { label: "Challenges", href: `${TRADER_BASE}/challenges`, icon: Trophy },
+  { label: "Home", href: TRADER_BASE, icon: "home" },
+  { label: "Challenges", href: `${TRADER_BASE}/challenges`, icon: "challenges" },
   { label: "Terminal", href: "/terminal", icon: TrendingUp },
-  { label: "Accounts", href: `${TRADER_BASE}/accounts`, icon: UserRound },
+  { label: "Accounts", href: `${TRADER_BASE}/accounts`, icon: "accounts" },
   { label: "Payouts", href: `${TRADER_BASE}/payouts`, icon: "payouts" },
-  { label: "Competitions", href: `${TRADER_BASE}/competitions`, icon: Sparkles, locked: true },
+  { label: "Competitions", href: `${TRADER_BASE}/competitions`, icon: "competitions", locked: true },
 ];
 
 const FOOTER_NAV: NavItem[] = [
-  { label: "Purchase History", href: `${TRADER_BASE}/purchases`, icon: History },
-  { label: "Settings", href: `${TRADER_BASE}/settings`, icon: Settings },
+  { label: "Purchase History", href: `${TRADER_BASE}/purchases`, icon: "history" },
+  { label: "Settings", href: `${TRADER_BASE}/settings`, icon: "settings" },
 ];
 
 function NavLink({ item, active, onNavigate }: { item: NavItem; active: boolean; onNavigate: () => void }) {
@@ -38,7 +38,7 @@ function NavLink({ item, active, onNavigate }: { item: NavItem; active: boolean;
     <>
       <span className="flex h-[24px] w-[24px] shrink-0 items-center justify-center">
         {typeof Icon === "string" ? (
-          <SidebarIcon name={Icon} active={active} />
+          <TraderNavIcon name={Icon} active={active} />
         ) : (
           <Icon aria-hidden className={cn("h-[19px] w-[19px]", active ? "text-gold-accent" : "text-white/50")} strokeWidth={1.8} />
         )}

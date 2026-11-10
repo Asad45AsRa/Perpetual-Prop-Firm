@@ -33,12 +33,11 @@ function Topbar({ onMenu }: { onMenu: () => void }) {
 
       <div className="flex shrink-0 items-center gap-[9px]">
         {/* Figma: lifetime payouts pill left of the bell (hidden on phones to keep the header on one line). */}
-        <div className="hidden h-[41px] items-center gap-[8px] border-[0.57px] border-white/[0.13] bg-white/[0.03] pl-[6px] pr-[12px] md:flex">
-          <span className="flex h-[29px] w-[29px] items-center justify-center bg-white/[0.06]">
-            <Image src={`${DASH_ASSETS}/icons/stat-payout.svg`} alt="" width={17} height={17} unoptimized className="h-[17px] w-[17px]" />
-          </span>
-          <span className="text-[14px] leading-none text-white">{formatUsd(trader.lifetimePayouts)}</span>
-          <span className="text-[11px] leading-none text-white/50">Lifetime Payouts</span>
+        <div className="hidden h-[41px] items-center gap-[9px] border-[0.57px] border-white/[0.13] bg-white/[0.03] pl-[5px] pr-[10px] md:flex">
+          {/* Figma tile: gold-tinted 32px box with a gold-gradient wallet */}
+          <Image src="/images/trader-dashboard/lifetime-payouts.svg" alt="" width={32} height={32} unoptimized className="h-[32px] w-[32px]" />
+          <span className="whitespace-nowrap text-[15px] leading-none text-white">{formatUsd(trader.lifetimePayouts)}</span>
+          <span className="whitespace-nowrap pt-[2px] text-[12px] leading-none text-white/60">Lifetime Payouts</span>
         </div>
         <Notifications />
         <UserMenu />

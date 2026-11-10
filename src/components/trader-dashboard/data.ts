@@ -17,6 +17,7 @@ const av = (n: string) => `${DASH_ASSETS}/avatars/${n}.png`;
 
 export const trader = {
   name: "Hafiz",
+  email: "hafiz123@gmail.com",
   avatar: av("hafiz"),
   joined: "Joined Oct 2026",
   tagline: "Perpeye Trader · Top 12%",

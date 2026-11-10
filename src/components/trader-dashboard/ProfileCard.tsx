@@ -19,8 +19,12 @@ export function ProfileCard() {
 
         <div className="min-w-0 flex-1 max-sm:order-3 max-sm:basis-full">
           <h2 className="text-[26px] font-normal leading-[1.15] tracking-[-0.5px] text-white sm:text-[30px]">{trader.name}</h2>
-          <p className="mt-[4px] text-[12px] leading-[1.3] text-white/60">
-            {trader.joined} · {trader.tagline}
+          <p className="mt-[4px] flex items-start gap-[6px] text-[12px] leading-[1.3] text-white/60">
+            {/* Figma: 13px calendar icon before the join line */}
+            <Image src="/images/trader-dashboard/calendar.svg" alt="" width={13} height={13} unoptimized className="mt-[1px] h-[13px] w-[13px] shrink-0" />
+            <span>
+              {trader.joined} · {trader.tagline}
+            </span>
           </p>
           <div className="mt-[10px] flex flex-wrap gap-[8px]">
             <StatusChip className="h-[22px] whitespace-nowrap text-[11px] leading-normal">Funded Trader</StatusChip>
