@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Image from "next/image";
 import type { IconType } from "react-icons";
 import { SiBinance, SiBitcoin, SiEthereum, SiSolana } from "react-icons/si";
 import { cn } from "@/lib/utils";
@@ -22,7 +23,16 @@ const COINS: Record<Market, { icon: IconType; bg: string }> = {
   BNB: { icon: SiBinance, bg: "#F3BA2F" },
 };
 
+/** Figma coin exports (29px); markets without one fall back to the brand glyph on its colour. */
+const COIN_SVGS: Partial<Record<Market, string>> = {
+  BTC: "/images/trader-dashboard/btc.svg",
+};
+
 export function MarketIcon({ market, size = 29 }: { market: Market; size?: number }) {
+  const svg = COIN_SVGS[market];
+  if (svg) {
+    return <Image src={svg} alt="" aria-hidden width={size} height={size} unoptimized className="shrink-0" style={{ width: size, height: size }} />;
+  }
   const { icon: Icon, bg } = COINS[market];
   return (
     <span aria-hidden className="flex shrink-0 items-center justify-center rounded-full text-white" style={{ width: size, height: size, background: bg }}>

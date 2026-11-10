@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { ChevronDown, Lock, ShieldCheck, TrendingUp } from "lucide-react";
+import { ChevronDown, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { tabChip } from "@/components/affiliate-dashboard/Panel";
 import { subAccounts, type SubAccount } from "../data";
@@ -150,7 +151,12 @@ export function AccountHeader({ account, onChange }: { account: SubAccount; onCh
                   done ? "bg-[#3A3221] text-[#C9B27A]" : "bg-[#2A2A2A] text-white/50",
                 )}
               >
-                {done ? <ShieldCheck aria-hidden className="h-[22px] w-[22px]" fill="#99804A" stroke="#1A1A1A" /> : <Lock aria-hidden className="h-[15px] w-[15px]" />}
+                {/* Figma icons: gold shield-check (reached), lock (not yet) */}
+                {done ? (
+                  <Image src="/images/trader-dashboard/phase-done.svg" alt="" width={24} height={24} unoptimized className="h-[24px] w-[24px]" />
+                ) : (
+                  <Image src="/images/trader-dashboard/phase-locked.svg" alt="" width={16} height={16} unoptimized className="h-[16px] w-[16px]" />
+                )}
               </span>
               <span className={cn("mt-[10px] whitespace-nowrap text-[11px] leading-none sm:text-[12px]", done ? "text-white/60" : "text-white/50")}>{phase}</span>
             </li>

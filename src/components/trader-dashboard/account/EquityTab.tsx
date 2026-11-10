@@ -312,7 +312,8 @@ function Calendar() {
       bodyClassName="px-[16px] pb-[20px] pt-[24px]"
     >
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[640px] table-fixed border-separate border-spacing-[12px_10px] text-left">
+        {/* Figma: 8px gap between every day/week box (inline style: Tailwind has no two-value border-spacing utility). */}
+        <table className="w-full min-w-[640px] table-fixed border-separate text-left" style={{ borderSpacing: "8px 8px" }}>
           <caption className="sr-only">Daily PnL for {monthLabel}</caption>
           <thead>
             <tr>

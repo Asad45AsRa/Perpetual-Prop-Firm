@@ -177,12 +177,13 @@ function TextField({
 }) {
   return (
     <label className="block">
-      <span className="mb-3 block text-[12px] leading-4 text-white/70">{label}</span>
+      {/* Figma "Challenges" checkout: 11px muted label, 36px field */}
+      <span className="mb-2.5 block text-[11px] leading-4 text-white/50">{label}</span>
       <input
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="h-10 w-full border-0 bg-white/[0.06] px-3 text-[13px] text-white outline-none placeholder:text-white/30 focus:ring-1 focus:ring-[#99804A]/60"
+        className="h-9 w-full border-0 bg-white/[0.06] px-3 text-[12px] text-white outline-none placeholder:text-white/30 focus:ring-1 focus:ring-[#99804A]/60"
       />
     </label>
   );
@@ -242,13 +243,15 @@ function CheckBadge() {
   );
 }
 
+/** Figma coin strip (BTC, ETH, SOL, USDT, USDC) — vector export, 99×24. */
 function CoinStack({ small = false }: { small?: boolean }) {
   return (
     <Image
-      src="/images/checked/cryptologos.png"
-      alt="Crypto"
-      width={small ? 84 : 112}
+      src="/images/checked/crypto-logos.svg"
+      alt="Accepted: Bitcoin, Ethereum, Solana, Tether, USD Coin"
+      width={small ? 83 : 107}
       height={small ? 20 : 26}
+      unoptimized
       className={small ? "h-5 w-auto" : "h-[26px] w-auto"}
     />
   );
@@ -295,6 +298,7 @@ export function CheckoutPage({ embedded = false, accountEmail = "" }: { embedded
   const [coupon, setCoupon] = useState("");
   const [referral, setReferral] = useState("");
   const [agreed, setAgreed] = useState(false);
+  const [needsAgreement, setNeedsAgreement] = useState(false);
 
   const [planId, setPlanId] = useState<(typeof PLANS)[number]["id"]>("custom");
   const [amount, setAmount] = useState(5);
@@ -666,13 +670,15 @@ export function CheckoutPage({ embedded = false, accountEmail = "" }: { embedded
               /* Dashboard (Figma "Challenges"): trade-with + codes on the left, payment summary + agreement on the right */
               <div className="mt-5 grid gap-[16px] lg:grid-cols-[minmax(0,583fr)_minmax(0,472fr)]">
                 <div>
-                  <div className="border border-white/[0.06] bg-white/[0.03] p-5">
-                    <p className="text-[12px] leading-4 text-white/60">You&apos;ll Trade With</p>
-                    <p className="mt-1.5 text-[32px] leading-[38px] tracking-[-0.02em] text-white">{money(balance)}</p>
-                    <p className="mt-2 text-[11px] leading-4 text-white/50">
-                      {plan.multiplier}× on your {money(amount)} payment · {plan.name}
-                    </p>
-                    <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                  <div className="border border-white/[0.06] bg-white/[0.03]">
+                    <div className="px-5 pb-4 pt-4">
+                      <p className="text-[11px] leading-4 text-white/40">You&apos;ll Trade With</p>
+                      <p className="mt-1 text-[30px] leading-[36px] tracking-[-0.02em] text-white">{money(balance)}</p>
+                      <p className="mt-1.5 text-[10px] leading-4 text-white/50">
+                        {plan.multiplier}× on your {money(amount)} payment · {plan.name}
+                      </p>
+                    </div>
+                    <div className="grid gap-4 border-t border-white/[0.06] px-5 pb-5 pt-4 sm:grid-cols-2">
                       <TextField label="Coupon Code" placeholder="Enter coupon" value={coupon} onChange={setCoupon} />
                       <TextField label="Affiliate Referral Code" placeholder="Enter referral code" value={referral} onChange={setReferral} />
                     </div>
@@ -697,7 +703,7 @@ export function CheckoutPage({ embedded = false, accountEmail = "" }: { embedded
                       <dd className="text-white/80">-{money(discount)}</dd>
                     </div>
                   </dl>
-                  <div className="mt-4 border-t border-white/[0.06] pt-4">
+                  <div className="mt-3">
                     <div className="flex items-center justify-between">
                       <span className="text-[13px] text-white/60">You pay today</span>
                       <span className="text-[24px] leading-none text-white">{money(total)}</span>
@@ -711,19 +717,27 @@ export function CheckoutPage({ embedded = false, accountEmail = "" }: { embedded
                     <input
                       type="checkbox"
                       checked={agreed}
-                      onChange={(e) => setAgreed(e.target.checked)}
+                      onChange={(e) => {
+                        setAgreed(e.target.checked);
+                        if (e.target.checked) setNeedsAgreement(false);
+                      }}
                       className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer appearance-none border border-white/30 bg-transparent checked:border-[#99804A] checked:bg-[#99804A] focus-visible:outline focus-visible:outline-1 focus-visible:outline-[#99804A]"
                     />
                     I have read, understood, and agree to all rules and conditions outlined above.
                   </label>
                   <button
                     type="button"
-                    disabled={!agreed}
+                    // Figma keeps the button white; without the agreement it explains instead of submitting.
+                    onClick={() => !agreed && setNeedsAgreement(true)}
                     className="mt-5 flex h-[44px] w-full items-center justify-center bg-white text-[14px] text-black outline-none transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-[#99804A] disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     Get Funded
                   </button>
-                  {!agreed && <p className="mt-2 text-[11px] text-white/40">Tick the agreement to continue.</p>}
+                  {needsAgreement && (
+                    <p role="alert" className="mt-2 text-[11px] text-[#E5484D]">
+                      Please agree to the rules and conditions to continue.
+                    </p>
+                  )}
                   <div className="mt-4 flex items-center gap-3 text-[11px] text-white/40">
                     <CoinStack small />
                     Crypto Accepted

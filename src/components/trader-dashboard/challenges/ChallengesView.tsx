@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, FlaskConical, Minus, Plus } from "lucide-react";
+import { ArrowRight, Minus, Plus, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSiteContent, type FaqContent } from "@/lib/siteContent";
 import { CheckoutPage } from "@/components/sections/Checkoutpage";
@@ -34,20 +34,21 @@ function StepCards() {
 
 function DemoBanner() {
   return (
-    <div className="relative flex flex-wrap items-center justify-between gap-4 overflow-hidden border-[0.7px] border-gold-accent/40 bg-[linear-gradient(90deg,rgba(153,128,74,0.35),rgba(153,128,74,0.05)_60%,rgba(255,255,255,0.02))] px-[14px] py-[13px]">
+    // Figma: gold glow from the left fading to the card colour by mid-width, no outline.
+    <div className="relative flex flex-wrap items-center justify-between gap-4 overflow-hidden border-[0.7px] border-white/[0.06] bg-[#171717] bg-[linear-gradient(90deg,rgba(153,128,74,0.78)_0%,rgba(153,128,74,0.38)_20%,rgba(153,128,74,0.12)_40%,rgba(153,128,74,0)_58%)] px-[14px] py-[13px]">
       <div className="flex items-center gap-[10px]">
-        <span className="flex h-[33px] w-[33px] shrink-0 items-center justify-center bg-ink/40 text-[#C9B27A]">
-          <FlaskConical aria-hidden className="h-[17px] w-[17px]" />
+        <span className="flex h-[33px] w-[33px] shrink-0 items-center justify-center border-[0.57px] border-white/[0.08] bg-ink/50">
+          <Zap aria-hidden className="h-[16px] w-[16px] text-[#C9B27A]" fill="#99804A" strokeWidth={1.5} />
         </span>
         <div>
-          <p className="text-[14px] leading-[1.3] text-white">New to prop trading?</p>
-          <p className="text-[12px] leading-[1.4] text-white/60">Practice with a virtual $100,000. No card, no wallet.</p>
+          <p className="text-[13px] leading-[1.3] text-white/80">New to prop trading?</p>
+          <p className="text-[11px] leading-[1.4] text-white/50">Practice with a virtual $100,000. No card, no wallet.</p>
         </div>
       </div>
       {/* TODO(routes): demo account page (Figma "Demo Account") isn't built yet. */}
       <Link
         href={`${TRADER_BASE}/demo`}
-        className="inline-flex h-[36px] items-center gap-[8px] bg-white px-[16px] text-[13px] text-ink transition-opacity hover:opacity-90"
+        className="inline-flex h-[36px] items-center gap-[8px] bg-[linear-gradient(90deg,#FFFFFF_35%,#D6C79F_100%)] px-[18px] text-[13px] text-ink transition-opacity hover:opacity-90"
       >
         Try a free demo account
         <ArrowRight aria-hidden className="h-[15px] w-[15px]" />
@@ -63,7 +64,7 @@ function Faqs() {
 
   return (
     <Panel>
-      <div className="border-b-[0.7px] border-white/[0.06] px-[16px] pb-[14px] pt-[17px]">
+      <div className="border-b-[0.7px] border-white/[0.06] bg-white/[0.05] px-[16px] pb-[14px] pt-[17px]">
         <PanelTitle>FAQs</PanelTitle>
         <p className="mt-[3px] text-[12px] leading-[1.3] text-white/50">Get quick answers to common questions.</p>
       </div>
