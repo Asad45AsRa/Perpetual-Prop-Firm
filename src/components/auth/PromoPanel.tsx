@@ -48,7 +48,7 @@ export function PromoPanel({ className }: { className?: string }) {
               height={476}
               sizes="(min-width: 640px) 238px, 190px"
               priority
-              className="h-[190px] w-[190px] rotate-[14.99deg] object-cover sm:h-[238.275px] sm:w-[238.275px] lg:scale-[1.3]"
+              className="h-[190px] w-[190px] rotate-[14.99deg] object-cover sm:h-[238.275px] sm:w-[238.275px] lg:scale-[1.15]"
             />
           </div>
         </div>

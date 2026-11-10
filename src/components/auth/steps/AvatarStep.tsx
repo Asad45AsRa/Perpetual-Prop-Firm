@@ -40,6 +40,8 @@ export function AvatarStep({ onSubmit }: Props) {
             >
               {AVATARS.map((src, i) => {
                 const selected = field.value === src;
+                // Once a pick exists, fade every other avatar; hover/focus restores full opacity.
+                const dimmed = !!field.value && !selected;
                 return (
                   <button
                     key={src}
@@ -49,13 +51,21 @@ export function AvatarStep({ onSubmit }: Props) {
                     aria-label={`Avatar ${i + 1}`}
                     onClick={() => field.onChange(src)}
                     className={cn(
-                      "relative aspect-square w-full rounded-full outline-none transition-opacity",
+                      "group relative aspect-square w-full overflow-hidden rounded-full outline-none",
                       "focus-visible:ring-2 focus-visible:ring-gold-accent focus-visible:ring-offset-2 focus-visible:ring-offset-ink",
-                      !selected && "hover:opacity-90",
                     )}
                   >
-                    <Image src={src} alt="" fill sizes="46px" className="rounded-full object-cover" />
-                    {/* Figma: 1.5px white border on the selected avatar */}
+                    <Image
+                      src={src}
+                      alt=""
+                      fill
+                      sizes="46px"
+                      className={cn(
+                        "rounded-full object-cover transition-opacity duration-300 ease-out motion-reduce:transition-none",
+                        dimmed && "opacity-40 group-hover:opacity-100 group-focus-visible:opacity-100",
+                      )}
+                    />
+                    {/* 1.5px white border on the selected avatar */}
                     <span
                       className={cn(
                         "absolute inset-0 rounded-full border-[1.5px] transition-colors",
