@@ -8,6 +8,7 @@ import { explorerUrl, SLA_MINUTES, STAGE } from "./constants";
 import { can, levelOf, RIGHT_KEYS, type AccessLevel } from "./permissions";
 import { readMockContent, writeMockContent, type ContentKey, type ContentRecord } from "@/lib/siteContent";
 import { ago, seedDb, seedSettings, seedStaff, type Row } from "./mockData";
+import { createExtras, EXTRA_ACTION_RIGHT, EXTRA_PLAN_RULE_FIELDS, EXTRA_READ_ONLY, EXTRA_RESOURCE_PAGE } from "./mockExtras";
 import type { AdminUser } from "./Adminauth";
 import type { CheckItem } from "./types";
 
@@ -201,6 +202,8 @@ const RESOURCE_PAGE: Record<string, string> = {
   "audit-logs": "audit-logs", settings: "settings", operations: "operations", staff: "staff", "staff-sessions": "staff",
 };
 
+Object.assign(RESOURCE_PAGE, EXTRA_RESOURCE_PAGE); // pages added for demo accounts, leaderboard, trader view and devices
+
 // Rights needed for sensitive row actions: "<resource>.<action>" -> right
 const ACTION_RIGHT: Record<string, string> = {
   "payouts.approve": "payout.approve", "payouts.reject": "payout.approve", "payouts.paid": "payout.approve",
@@ -215,6 +218,8 @@ const ACTION_RIGHT: Record<string, string> = {
   "approvals.approve": "approvals.decide", "approvals.reject": "approvals.decide",
   "payments.refund": "refund.issue", "markets.sync": "market.sync",
 };
+
+Object.assign(ACTION_RIGHT, EXTRA_ACTION_RIGHT);
 
 // Throws unless the signed-in person may open the resource (view) or change it (manage)
 function authorize(me: Row, resource: string, write: boolean, action?: string) {
@@ -357,12 +362,16 @@ const operations = () => ({
   plans: db.plans,
 });
 
-const reserves = () => ({
-  pending: sumBy(db.payouts, "pending") + sumBy(db.payouts, "awaiting approval"),
-  approvedUnpaid: sumBy(db.payouts, "approved"),
-  paid: sumBy(db.payouts, "paid"),
-  rejected: sumBy(db.payouts, "rejected"),
-});
+const reserves = () => {
+  const base = {
+    pending: sumBy(db.payouts, "pending") + sumBy(db.payouts, "awaiting approval"),
+    approvedUnpaid: sumBy(db.payouts, "approved"),
+    paid: sumBy(db.payouts, "paid"),
+    rejected: sumBy(db.payouts, "rejected"),
+  };
+  // Reserve proof and the numbers traders see (see mockExtras.ts)
+  return { ...base, ...extras.reservesExtra(base) };
+};
 
 function reports(from: string | null, to: string | null) {
   const days = 14;
@@ -449,6 +458,7 @@ const RESERVED = new Set(["page", "pageSize", "q", "sort", "order", "from", "to"
 
 function sourceRows(resource: string): Row[] {
   if (resource === "staff") return staff.map(publicStaff);
+  if (resource === "leaderboard") return extras.leaderboardRows(); // rank and eligibility are calculated on every read
   const rows = db[resource];
   if (!rows) throw fail("Unknown resource.", 404, "not_found");
   return rows;
@@ -512,6 +522,9 @@ const must = (cond: boolean, message: string, status = 409) => {
 };
 
 type Handler = (row: Row, body: Row) => void;
+
+// Demo backend for the newer features (analytics, leaderboard, demo accounts, trader view...)
+const extras = createExtras({ db, settings, fail, must, needReason, appendAudit, authorize });
 
 const ACTIONS: Record<string, Record<string, Handler>> = {
   payouts: {
@@ -707,15 +720,20 @@ const ACTIONS: Record<string, Record<string, Handler>> = {
   },
 };
 
+// Row actions of the newer features live in mockExtras.ts
+Object.entries(extras.actions).forEach(([resource, handlers]) => {
+  ACTIONS[resource] = { ...(ACTIONS[resource] ?? {}), ...handlers };
+});
+
 // Read-only resources: created and changed only by the system or by row actions
 const READ_ONLY = new Set([
   "traders", "accounts", "activity", "fills", "fees", "risk", "payments", "payouts", "affiliate-payouts", "audit-logs", "kyc",
   "ledger", "ledger-runs", "webhooks", "errors", "jobs", "public-payouts", "approvals", "email-log", "health", "incidents",
-  "feed", "backups", "alert-history", "staff-sessions", "referrals", "ticket-messages", "issuance",
+  "feed", "backups", "alert-history", "staff-sessions", "referrals", "ticket-messages", "issuance", ...EXTRA_READ_ONLY,
 ]);
 const NO_DELETE = new Set(["markets", "plans", "notes"]);
 const PREFIX: Record<string, string> = { coupons: "CP", announcements: "ANN", emails: "EM", competitions: "CMP", plans: "PL", alerts: "AL", affiliates: "AFF", markets: "MKT", notes: "NT" };
-const PLAN_RULE_FIELDS = ["profitTarget", "dailyLoss", "maxLoss", "profitSplit", "minDays", "maxLeverage"];
+const PLAN_RULE_FIELDS = ["profitTarget", "dailyLoss", "maxLoss", "profitSplit", "minDays", "maxLeverage", ...EXTRA_PLAN_RULE_FIELDS];
 
 const changedOnly = (before: Row, after: Row) => {
   const b: Row = {};
@@ -881,6 +899,7 @@ function saveSettingsSection(me: Row, section: string, body: Row) {
     must(k in current, `Unknown setting: ${k}.`, 400);
     if (typeof current[k] === "number") must(Number.isFinite(Number(v)) && Number(v) >= 0, `${k} must be a number of zero or more.`, 400);
   });
+  extras.checkSettings(section, { ...current, ...values });
   if (section === "payouts") must(Number(values.profitSplit ?? current.profitSplit) <= 100, "Profit split cannot be above 100%.", 400);
   const before = { ...current };
   Object.entries(values).forEach(([k, v]) => { current[k] = typeof current[k] === "number" ? Number(v) : String(v); });
@@ -947,6 +966,10 @@ export async function mockRequest<T>(path: string, options: Options = {}): Promi
   // Everything below needs a valid, still-allowed session
   const me = requireStaff();
   const user = toUser(me);
+
+  // Newer features: settings impact, account analytics and breach, read-only trader view
+  const extra = extras.route({ me, method, resource, a, b, q });
+  if (extra.handled) return extra.value as T;
 
   if (resource === "overview") return overview(me) as T;
   if (resource === "notifications") return { items: notifications(me) } as T;
@@ -1097,7 +1120,7 @@ export async function mockRequest<T>(path: string, options: Options = {}): Promi
     if (resource === "markets") throw fail("Markets are added by syncing from Hyperliquid.", 405, "read_only");
     const row: Row = { ...body, id: `${PREFIX[resource] ?? "ID"}-${Math.floor(100 + Math.random() * 900)}`, version: 1 };
     if (resource === "notes") Object.assign(row, { author: me.email, createdAt: new Date().toISOString() });
-    if (resource === "plans") row.planVersion = 1;
+    if (resource === "plans") { extras.checkPlan(row); row.planVersion = 1; }
     list.unshift(row);
     appendAudit(`Created ${resource}`, String(row.id), { after: row });
     emit(resource);
@@ -1112,7 +1135,9 @@ export async function mockRequest<T>(path: string, options: Options = {}): Promi
     const { ifVersion: _i, id: _id, version: _v, ...changes } = body; // eslint-disable-line @typescript-eslint/no-unused-vars
     // An unverified market can never go live
     if (resource === "markets" && changes.status === "enabled" && row.verified !== true) throw fail("Verify the market before enabling it.", 409, "conflict");
+    if (resource === "plans") extras.checkPlan({ ...row, ...changes, multiplier: changes.multiplier ?? row.multiplier });
     Object.assign(row, changes);
+    if (resource === "plans" && !(Number(row.multiplier) > 0)) row.multiplier = Math.round((Number(row.capital) / Number(row.price)) * 100) / 100;
     if (resource === "plans" && PLAN_RULE_FIELDS.some((f) => JSON.stringify(before[f]) !== JSON.stringify(row[f]))) row.planVersion = Number(row.planVersion) + 1;
     bump(row);
     const [bf, af] = changedOnly(before, row);

@@ -48,6 +48,15 @@ const config: PageConfig = {
       show: (r) => r.status === "approved",
     },
   ],
+  // Bulk approve and reject run the SAME server checks as a single approval, one payout at a time.
+  // A payout that fails a check, or needs a second approver, is skipped and counted as failed.
+  // "Mark paid" has no bulk version on purpose: every payout needs its own transaction hash.
+  // A reason is asked for both, so the dialog works as a confirmation and the reason lands in every audit entry.
+  // Run: POST /admin/payouts/bulk/<approve|reject> { ids, reason }
+  bulkActions: [
+    { label: "Approve selected", action: "approve", reason: true, permission: "payout.approve", success: "Payouts approved. Any that failed a check were skipped." },
+    { label: "Reject selected", action: "reject", reason: true, permission: "payout.approve", success: "Payouts rejected. The traders will be emailed the reason." },
+  ],
   detailTitle: (r) => `${r.id} · ${r.traderName}`,
   detail: [
     { label: "Checks", kind: "checks", path: (r) => `/admin/payouts/${encodeURIComponent(String(r.id))}/checks` },

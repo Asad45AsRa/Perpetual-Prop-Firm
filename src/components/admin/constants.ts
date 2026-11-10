@@ -1,8 +1,14 @@
 // Single source of truth for names that several admin files compare against.
 // Never type "Phase 1" or "Funded" by hand in a page; import these instead.
 
-export const STAGE = { challenge: "Phase 1", funded: "Funded" } as const;
+// The words match the trader dashboard exactly: "Challenge Phase" -> "Funded Stage" -> "Payout Request".
+// If the backend still stores the old values ("Phase 1" / "Funded"), migrate them once to these names.
+export const STAGE = { challenge: "Challenge Phase", funded: "Funded Stage" } as const;
 export const STAGES: string[] = [STAGE.challenge, STAGE.funded];
+
+// The three steps the trader sees on the account progress bar. "Payout Request" is a milestone,
+// not a stored stage: it unlocks once a funded account has withdrawable profit.
+export const STAGE_FLOW: string[] = [STAGE.challenge, STAGE.funded, "Payout Request"];
 
 export const NETWORKS = ["USDT • TRC20", "USDT • ERC20", "BTC"];
 

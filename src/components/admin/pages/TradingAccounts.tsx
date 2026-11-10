@@ -1,5 +1,7 @@
 "use client";
 
+import { AccountAnalytics } from "../AccountAnalytics";
+import { BreachExplainer } from "../BreachExplainer";
 import { STAGE } from "../constants";
 import { ResourcePage, type PageConfig, type Row } from "../ResourcePage";
 import type { AdminPage } from "../types";
@@ -7,6 +9,7 @@ import type { AdminPage } from "../types";
 // Accounts are opened and evaluated by the trading engine. A person can only override the engine
 // with a written reason, and every override is shown in the audit log as "Manual override".
 // List: GET /admin/accounts   Actions: POST /admin/accounts/:id/<pass|fail|lock|unlock|force-close|reset>
+// Detail tabs: GET /admin/accounts/:id/analytics (trader figures), /breach (why it failed), /equity
 const active = (r: Row) => r.status === "active";
 
 const config: PageConfig = {
@@ -43,9 +46,19 @@ const config: PageConfig = {
     { label: "Close positions", action: "force-close", reason: true, permission: "account.override", success: "Open positions closed.", show: active },
     { label: "Reset", action: "reset", reason: true, tone: "danger", permission: "account.override", success: "Account reset.", show: (r) => r.status !== "passed" },
   ],
+  // Bulk actions skip any account that cannot take the action (for example "Unlock" on an active account)
+  // and report how many were done and how many failed. Pass, fail and reset stay single-account only on purpose.
+  // Run: POST /admin/accounts/bulk/<lock|unlock|force-close> { ids, reason }
+  bulkActions: [
+    { label: "Lock selected", action: "lock", reason: true, permission: "account.override", success: "Accounts locked." },
+    { label: "Unlock selected", action: "unlock", reason: true, permission: "account.override", success: "Accounts unlocked." },
+    { label: "Close positions on selected", action: "force-close", reason: true, permission: "account.override", success: "Open positions closed." },
+  ],
   detailTitle: (r) => `${r.id} · ${r.traderName}`,
   detail: [
     { label: "Overview", kind: "fields" },
+    { label: "Trader analytics", kind: "custom", render: (r) => <AccountAnalytics key={String(r.id)} row={r} /> },
+    { label: "Why failed or locked", kind: "custom", render: (r) => <BreachExplainer key={String(r.id)} row={r} /> },
     { label: "Equity", kind: "equity" },
     {
       label: "Risk events", kind: "list", resource: "risk",

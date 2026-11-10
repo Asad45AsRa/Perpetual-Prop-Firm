@@ -79,7 +79,29 @@ export type OperationsData = {
 };
 
 // GET /admin/reserves
-export type ReservesData = { pending: number; approvedUnpaid: number; paid: number; rejected: number };
+// The first four numbers are money owed to traders. `onChain` and `publicStats` prove the reserve and
+// explain the figures the trader sees on the Payouts page. Both are optional so an older backend still works.
+export type ReservesData = {
+  pending: number;
+  approvedUnpaid: number;
+  paid: number;
+  rejected: number;
+  onChain?: {
+    walletAddress: string;
+    network: string;
+    balance: number; // live balance read from the chain
+    proofUrl: string; // block explorer page traders can open to verify the reserve
+    lastCheckedAt: string;
+    coverage: number; // balance divided by (pending + approved-unpaid); 1 or more means fully covered
+  };
+  publicStats?: {
+    payoutReserve: number; // the number traders see as "Payout Reserve"
+    totalPayoutsIssued: number; // the number traders see as "Total Payouts Issued"
+    avgPayoutSeconds: number; // the number traders see as "Avg. Payout Time"
+    reserveSource: "live on-chain" | "manual"; // where payoutReserve comes from
+    sources: { label: string; value: string; formula: string }[]; // how each public number is calculated
+  };
+};
 
 // GET /admin/settings
 export type SettingValue = string | number;
@@ -132,3 +154,48 @@ export type ReportsData = {
   breachReasons: { reason: string; count: number }[];
   funnel: { label: string; value: number }[];
 };
+
+// GET /admin/accounts/:id/analytics
+// The same numbers the trader sees on the Accounts page, so support and the trader always read the same figures.
+export type AccountAnalyticsData = {
+  stagePath: { challengeRequired: boolean; steps: { label: string; state: "done" | "current" | "locked" | "skipped" }[] };
+  summary: { equity: number; realized: number; hitRate: number; profitFactor: number; grossResult: number; fees: number; funding: number; netResult: number };
+  winLoss: { winners: number; losers: number; breakEven: number; avgWinner: number; avgLoser: number; bestTrade: number; worstTrade: number; expectancy: number };
+  pace: { volume: number; closedTrades: number; openNow: number; activeDays: number; avgHoldMinutes: number; deepestPullbackPct: number };
+  holding: { averageMinutes: number; measured: number; buckets: { label: string; count: number; pct: number }[] };
+  sides: { long: SideStats; short: SideStats };
+  calendar: { month: string; days: { date: string; pnl: number | null }[] }; // pnl is null on days without a closed trade
+  marketMix: { market: string; closedTrades: number; volume: number; winRate: number; costs: number; netPnl: number }[];
+};
+export type SideStats = { closed: number; pnl: number; hitRate: number; avgPerTrade: number };
+
+// GET /admin/accounts/:id/breach
+// Everything needed to explain why the engine failed or locked an account.
+export type BreachData = {
+  accountStatus: string;
+  rulesSnapshot: string;
+  events: {
+    id: string;
+    rule: string;
+    threshold: string;
+    valueAtBreach: string;
+    equitySnapshot: number;
+    action: string;
+    status: string;
+    source: string;
+    detectedAt: string;
+    price: { market: string; fill: number; bid: number; ask: number; mark: number; at: string } | null; // price proof at the moment of the breach
+  }[];
+};
+
+// GET /admin/trader-view/:traderId (read-only copy of what the trader's own dashboard shows)
+export type TraderViewData = {
+  profile: { id: string; name: string; username: string; avatar: string; joinedAt: string; status: string; kyc: string; rank: number | null; topPercent: number | null; lifetimePayouts: number };
+  subAccounts: { id: string; plan: string; stage: string; status: string; allocation: number; equity: number; dailyDrawdownPct: number; maxDrawdownPct: number; profitTargetPct: number }[];
+  lifetime: { realizedPnl: number; totalRoiPct: number; totalPayouts: number; volume: number; tradingDays: number; winRatePct: number; avgProfitPerDay: number; avgHoldMinutes: number };
+  payouts: { withdrawable: number; subAccountProfit: number; history: { id: string; date: string; account: string; amount: number; split: number; afterSplit: number; network: string; status: string }[] };
+  purchases: { id: string; date: string; plan: string; amount: number; method: string; status: string }[];
+};
+
+// GET /admin/settings-impact?section=<name>  (what a settings change touches, shown before saving)
+export type SettingsImpactData = { items: CheckItem[] };

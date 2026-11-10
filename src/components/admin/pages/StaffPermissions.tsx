@@ -44,6 +44,55 @@ function template(role: "admin" | "moderator"): { grants: Record<string, AccessL
   };
 }
 
+// Ready-made role templates. Clicking one fills in the role, the section levels and the special rights;
+// every box can still be changed before saving. Keys that are not real sidebar pages are dropped,
+// so a template never grants access to a page that does not exist.
+type Template = { label: string; hint: string; role: "admin" | "moderator"; grants: Record<string, AccessLevel>; rights: string[] };
+
+const ROLE_TEMPLATES: Template[] = [
+  {
+    label: "Support",
+    hint: "Answers tickets and looks up traders. Cannot touch money, accounts or settings.",
+    role: "moderator",
+    grants: { overview: "view", traders: "view", accounts: "view", activity: "view", "trader-view": "view", demo: "view", leaderboard: "view", metrics: "view", tickets: "manage", announcements: "view", emails: "view" },
+    rights: ["tickets.reply"],
+  },
+  {
+    label: "Finance",
+    hint: "Reviews and approves payouts and refunds. Can see revenue.",
+    role: "admin",
+    grants: { overview: "view", reports: "view", traders: "view", accounts: "view", payments: "manage", payouts: "manage", approvals: "manage", affiliates: "view", "affiliate-payouts": "manage", coupons: "view", plans: "view", reserves: "view", "public-payouts": "view", ledger: "view", metrics: "view" },
+    rights: ["finance.view", "payout.approve", "approvals.decide", "refund.issue"],
+  },
+  {
+    label: "Risk analyst",
+    hint: "Watches risk events and can suspend traders. Cannot move money.",
+    role: "moderator",
+    grants: { overview: "view", traders: "view", accounts: "view", activity: "view", risk: "manage", markets: "view", alerts: "view", "trader-view": "view", leaderboard: "view", metrics: "view" },
+    rights: ["risk.review", "traders.suspend"],
+  },
+  {
+    label: "Compliance",
+    hint: "Reviews identity checks. Can read payouts and the audit log.",
+    role: "moderator",
+    grants: { overview: "view", kyc: "manage", traders: "view", payouts: "view", "audit-logs": "view", "trader-view": "view" },
+    rights: ["kyc.review"],
+  },
+  {
+    label: "Full admin",
+    hint: "Manages every section except staff. No kill switches.",
+    role: "admin",
+    grants: {}, // filled from the live page list when applied
+    rights: RIGHT_KEYS.filter((r) => r !== "settings.kill_switch"),
+  },
+];
+
+function applyTemplate(t: Template): { grants: Record<string, AccessLevel>; rights: string[] } {
+  const keys = openable().map((p) => p.key);
+  if (t.label === "Full admin") return { grants: Object.fromEntries(keys.map((k) => [k, "manage" as AccessLevel])), rights: t.rights };
+  return { grants: Object.fromEntries(Object.entries(t.grants).filter(([k]) => keys.includes(k))), rights: t.rights };
+}
+
 const generatePassword = () => `Pe-${Math.random().toString(36).slice(2, 8)}${Math.floor(10 + Math.random() * 90)}!`;
 
 /* ───────────────────────── Access editor (sections and special rights) ───────────────────────── */
@@ -162,6 +211,26 @@ function StaffForm({ person, onClose }: { person?: Staff; onClose: () => void })
               </div>
             </FormField>
           )}
+        </div>
+        <div>
+          <p className="mb-1 text-[14px] text-white">Start from a template</p>
+          <p className="mb-2 text-[12px] text-white/40">Fills in the role and every box below. You can still change anything before you save.</p>
+          <div className="flex flex-wrap gap-2">
+            {ROLE_TEMPLATES.map((t) => (
+              <Btn
+                key={t.label}
+                title={t.hint}
+                onClick={() => {
+                  const next = applyTemplate(t);
+                  setRole(t.role);
+                  setGrants(next.grants);
+                  setRights(next.rights);
+                }}
+              >
+                {t.label}
+              </Btn>
+            ))}
+          </div>
         </div>
         <AccessEditor grants={grants} rights={rights} onGrants={setGrants} onRights={setRights} />
         {error && <p role="alert" className="text-[14px] text-red-400">{error}</p>}

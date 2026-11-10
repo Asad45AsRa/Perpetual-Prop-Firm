@@ -17,6 +17,7 @@ export const ALL_PAGE_KEYS = [
   "plans", "payments", "payouts", "approvals", "affiliates", "affiliate-payouts", "coupons", "reserves", "public-payouts", "reports",
   "tickets", "announcements", "emails", "cms", "competitions",
   "health", "errors", "webhooks", "jobs", "alerts", "audit-logs", "settings", "staff",
+  "trader-view", "demo", "leaderboard", "metrics",
 ];
 
 const grantAll = (level: AccessLevel, except: string[] = []) =>
@@ -50,12 +51,12 @@ export function seedDb(): Record<string, Row[]> {
   const v = { version: 1 };
   return {
     traders: [
-      { id: "TR-1001", name: "Ahmed Raza", email: "ahmed@example.com", country: "Pakistan", accounts: 2, status: "active", kyc: "verified", emailVerified: true, riskScore: 22, flags: "", lastLoginAt: ago(40), lastIp: "39.40.12.8", referralSource: "CRYPTOP", joinedAt: ago(60 * 24 * 40), ...v },
-      { id: "TR-1002", name: "Sarah Miller", email: "sarah@example.com", country: "United Kingdom", accounts: 1, status: "active", kyc: "verified", emailVerified: true, riskScore: 12, flags: "", lastLoginAt: ago(15), lastIp: "81.2.69.160", referralSource: "direct", joinedAt: ago(60 * 24 * 25), ...v },
-      { id: "TR-1003", name: "Ali Hassan", email: "ali@example.com", country: "UAE", accounts: 3, status: "suspended", kyc: "pending", emailVerified: true, riskScore: 81, flags: "multi-account", lastLoginAt: ago(60 * 20), lastIp: "94.200.1.7", referralSource: "ZONE15", joinedAt: ago(60 * 24 * 12), ...v },
-      { id: "TR-1004", name: "Daniel Lee", email: "daniel@example.com", country: "Canada", accounts: 1, status: "active", kyc: "verified", emailVerified: true, riskScore: 30, flags: "", lastLoginAt: ago(120), lastIp: "24.114.3.9", referralSource: "direct", joinedAt: ago(60 * 24 * 3), ...v },
-      { id: "TR-1005", name: "Mina Park", email: "mina@example.com", country: "South Korea", accounts: 0, status: "active", kyc: "none", emailVerified: false, riskScore: 5, flags: "", lastLoginAt: ago(60 * 48), lastIp: "1.234.5.6", referralSource: "direct", joinedAt: ago(60 * 24), ...v },
-      { id: "TR-1006", name: "Omid Rahimi", email: "omid@example.com", country: "Iran", accounts: 0, status: "active", kyc: "pending", emailVerified: true, riskScore: 64, flags: "restricted-country", lastLoginAt: ago(60 * 6), lastIp: "5.200.1.1", referralSource: "direct", joinedAt: ago(60 * 10), ...v },
+      { id: "TR-1001", name: "Ahmed Raza", username: "kairo88", avatar: "avatar-04", email: "ahmed@example.com", country: "Pakistan", accounts: 2, status: "active", kyc: "verified", emailVerified: true, riskScore: 22, flags: "", lastLoginAt: ago(40), lastIp: "39.40.12.8", referralSource: "CRYPTOP", joinedAt: ago(60 * 24 * 40), ...v },
+      { id: "TR-1002", name: "Sarah Miller", username: "sigma_", avatar: "avatar-02", email: "sarah@example.com", country: "United Kingdom", accounts: 1, status: "active", kyc: "verified", emailVerified: true, riskScore: 12, flags: "", lastLoginAt: ago(15), lastIp: "81.2.69.160", referralSource: "direct", joinedAt: ago(60 * 24 * 25), ...v },
+      { id: "TR-1003", name: "Ali Hassan", username: "orbithq", avatar: "avatar-07", email: "ali@example.com", country: "UAE", accounts: 3, status: "suspended", kyc: "pending", emailVerified: true, riskScore: 81, flags: "multi-account", lastLoginAt: ago(60 * 20), lastIp: "94.200.1.7", referralSource: "ZONE15", joinedAt: ago(60 * 24 * 12), ...v },
+      { id: "TR-1004", name: "Daniel Lee", username: "delta_t", avatar: "avatar-10", email: "daniel@example.com", country: "Canada", accounts: 1, status: "active", kyc: "verified", emailVerified: true, riskScore: 30, flags: "", lastLoginAt: ago(120), lastIp: "24.114.3.9", referralSource: "direct", joinedAt: ago(60 * 24 * 3), ...v },
+      { id: "TR-1005", name: "Mina Park", username: "zen21", avatar: "avatar-05", email: "mina@example.com", country: "South Korea", accounts: 0, status: "active", kyc: "none", emailVerified: false, riskScore: 5, flags: "", lastLoginAt: ago(60 * 48), lastIp: "1.234.5.6", referralSource: "direct", joinedAt: ago(60 * 24), ...v },
+      { id: "TR-1006", name: "Omid Rahimi", username: "omid_r", avatar: "avatar-01", email: "omid@example.com", country: "Iran", accounts: 0, status: "active", kyc: "pending", emailVerified: true, riskScore: 64, flags: "restricted-country", lastLoginAt: ago(60 * 6), lastIp: "5.200.1.1", referralSource: "direct", joinedAt: ago(60 * 10), ...v },
     ],
     accounts: [
       { id: "ACC-2001", traderId: "TR-1001", traderName: "Ahmed Raza", plan: "$10K", stage: STAGE.challenge, startBalance: 10000, balance: 10240, equity: 10268, pnl: 268, dailyLossUsed: 12, drawdownUsed: 8, highWater: 10268, targetProgress: 33, tradingDays: 6, rulesSnapshot: "Growth v2: target 8%, daily 4%, max 7%", status: "active", ...v },
@@ -125,9 +126,11 @@ export function seedDb(): Record<string, Row[]> {
       { id: "MKT-05", symbol: "DOGE-PERP", category: "Crypto", maxLeverage: 8, fee: 0.05, tickSize: 0.00001, minSize: 10, sizeDecimals: 0, priceSource: "Hyperliquid", hours: "24/7", spreadBps: 4, slippageBps: 3, fundingMode: "mirror", staleSeconds: 5, breakerPct: 12, verified: true, status: "halted", ...v },
     ],
     plans: [
-      { id: "PL-1", name: "Starter", capital: 5000, price: 39, profitTarget: 8, dailyLoss: 4, maxLoss: 7, profitSplit: 80, minDays: 0, maxLeverage: 10, payoutMin: 100, payoutCycle: "On demand", refundDays: 7, planVersion: 1, status: "active", ...v },
-      { id: "PL-2", name: "Growth", capital: 10000, price: 59, profitTarget: 8, dailyLoss: 4, maxLoss: 7, profitSplit: 80, minDays: 0, maxLeverage: 15, payoutMin: 100, payoutCycle: "On demand", refundDays: 7, planVersion: 2, status: "active", ...v },
-      { id: "PL-3", name: "Pro", capital: 25000, price: 99, profitTarget: 8, dailyLoss: 4, maxLoss: 7, profitSplit: 85, minDays: 3, maxLeverage: 20, payoutMin: 200, payoutCycle: "Weekly", refundDays: 7, planVersion: 1, status: "active", ...v },
+      { id: "PL-1", name: "Starter", capital: 5000, price: 39, multiplier: 128.21, planType: "fixed", challengeRequired: "yes", drawdownType: "global default", dailyLossMethod: "global default", takerFeePct: "", makerFeePct: "", maxExposurePct: "", holdHours: "", multiplierMin: 0, multiplierMax: 0, paymentMin: 0, paymentMax: 0, profitTargetOptions: "", dailyLossOptions: "", maxLossOptions: "", profitSplitOptions: "", profitTarget: 8, dailyLoss: 4, maxLoss: 7, profitSplit: 80, minDays: 0, maxLeverage: 10, payoutMin: 100, payoutCycle: "On demand", refundDays: 7, planVersion: 1, status: "active", ...v },
+      { id: "PL-2", name: "Growth", capital: 10000, price: 59, multiplier: 169.49, planType: "fixed", challengeRequired: "yes", drawdownType: "global default", dailyLossMethod: "global default", takerFeePct: "", makerFeePct: "", maxExposurePct: "", holdHours: "", multiplierMin: 0, multiplierMax: 0, paymentMin: 0, paymentMax: 0, profitTargetOptions: "", dailyLossOptions: "", maxLossOptions: "", profitSplitOptions: "", profitTarget: 8, dailyLoss: 4, maxLoss: 7, profitSplit: 80, minDays: 0, maxLeverage: 15, payoutMin: 100, payoutCycle: "On demand", refundDays: 7, planVersion: 2, status: "active", ...v },
+      { id: "PL-3", name: "Pro", capital: 25000, price: 99, multiplier: 252.53, planType: "fixed", challengeRequired: "yes", drawdownType: "global default", dailyLossMethod: "global default", takerFeePct: "", makerFeePct: "", maxExposurePct: "", holdHours: "", multiplierMin: 0, multiplierMax: 0, paymentMin: 0, paymentMax: 0, profitTargetOptions: "", dailyLossOptions: "", maxLossOptions: "", profitSplitOptions: "", profitTarget: 8, dailyLoss: 4, maxLoss: 7, profitSplit: 85, minDays: 3, maxLeverage: 20, payoutMin: 200, payoutCycle: "Weekly", refundDays: 7, planVersion: 1, status: "active", ...v },
+      { id: "PL-4", name: "Instant", capital: 5000, price: 125, multiplier: 40, planType: "fixed", challengeRequired: "no", drawdownType: "trailing", dailyLossMethod: "global default", takerFeePct: "", makerFeePct: "", maxExposurePct: "", holdHours: "", multiplierMin: 0, multiplierMax: 0, paymentMin: 0, paymentMax: 0, profitTargetOptions: "", dailyLossOptions: "", maxLossOptions: "", profitSplitOptions: "", profitTarget: 8, dailyLoss: 3, maxLoss: 5, profitSplit: 70, minDays: 0, maxLeverage: 10, payoutMin: 100, payoutCycle: "On demand", refundDays: 0, planVersion: 1, status: "active", ...v },
+      { id: "PL-5", name: "Capital Your Way", capital: 525, price: 5, multiplier: 105, planType: "custom", challengeRequired: "yes", drawdownType: "static", dailyLossMethod: "global default", takerFeePct: "", makerFeePct: "", maxExposurePct: "", holdHours: "", multiplierMin: 40, multiplierMax: 220, paymentMin: 5, paymentMax: 1500, profitTargetOptions: "8, 10, 12", dailyLossOptions: "3, 4, 5", maxLossOptions: "4, 5, 6", profitSplitOptions: "80, 90", profitTarget: 8, dailyLoss: 4, maxLoss: 5, profitSplit: 90, minDays: 0, maxLeverage: 10, payoutMin: 100, payoutCycle: "On demand", refundDays: 7, planVersion: 1, status: "active", ...v },
     ],
     affiliates: [
       { id: "AFF-01", name: "CryptoPartner", email: "crypto@example.com", code: "CRYPTOP", referrals: 41, conversionRate: 18, commission: 15, holdDays: 14, earnings: 365, fraudFlags: "", status: "active", ...v },
@@ -249,6 +252,27 @@ export function seedDb(): Record<string, Row[]> {
       { id: "SS-2", staffId: "ST-2", device: "Safari on iPhone", ip: "198.51.100.23", startedAt: ago(60 * 5), lastSeenAt: ago(60 * 4) },
       { id: "SS-3", staffId: "ST-3", device: "Firefox on macOS", ip: "192.0.2.77", startedAt: ago(60 * 26), lastSeenAt: ago(60 * 25) },
     ],
+    "demo-accounts": [
+      { id: "DM-1", traderName: "Sarah Miller", balance: 100000, startBalance: 100000, equity: 102450, pnl: 2450, targetProgress: 24.5, restarts: 1, status: "active", createdAt: ago(60 * 24 * 9), lastRestartAt: ago(60 * 24 * 4), ...v },
+      { id: "DM-2", traderName: "Daniel Lee", balance: 100000, startBalance: 100000, equity: 98120, pnl: -1880, targetProgress: 0, restarts: 0, status: "active", createdAt: ago(60 * 24 * 2), lastRestartAt: "", ...v },
+      { id: "DM-3", traderName: "Mina Park", balance: 100000, startBalance: 100000, equity: 100000, pnl: 0, targetProgress: 0, restarts: 3, status: "closed", createdAt: ago(60 * 24 * 20), lastRestartAt: ago(60 * 24 * 12), ...v },
+    ],
+    leaderboard: [
+      { id: "LB-1", traderName: "Ahmed Raza", username: "kairo88", pnl: 51930, winRate: 58.33, volume: 2740000, trades: 9, status: "visible", ...v },
+      { id: "LB-2", traderName: "Sarah Miller", username: "sigma_", pnl: 48210, winRate: 61.5, volume: 2310000, trades: 13, status: "visible", ...v },
+      { id: "LB-3", traderName: "Daniel Lee", username: "delta_t", pnl: 44075, winRate: 55.2, volume: 1980000, trades: 8, status: "visible", ...v },
+      { id: "LB-4", traderName: "Mina Park", username: "zen21", pnl: 29955, winRate: 58.33, volume: 2740000, trades: 9, status: "visible", ...v },
+      { id: "LB-5", traderName: "Liam Carter", username: "nova_x", pnl: 21400, winRate: 52.1, volume: 1500000, trades: 6, status: "visible", ...v },
+      { id: "LB-6", traderName: "Ali Hassan", username: "orbithq", pnl: 29955, winRate: 58.33, volume: 2740000, trades: 2, status: "visible", ...v },
+    ],
+    "trader-sessions": [
+      { id: "TS-1", traderId: "TR-1001", device: "Chrome on Windows", ip: "39.40.12.8", startedAt: ago(60 * 3), lastSeenAt: ago(40), status: "active" },
+      { id: "TS-2", traderId: "TR-1001", device: "Safari on iPhone", ip: "39.40.12.9", startedAt: ago(60 * 24 * 5), lastSeenAt: ago(60 * 24 * 2), status: "signed out" },
+      { id: "TS-3", traderId: "TR-1002", device: "Safari on macOS", ip: "81.2.69.160", startedAt: ago(60 * 5), lastSeenAt: ago(15), status: "active" },
+      { id: "TS-4", traderId: "TR-1003", device: "Firefox on Windows", ip: "94.200.1.7", startedAt: ago(60 * 22), lastSeenAt: ago(60 * 20), status: "active" },
+      { id: "TS-5", traderId: "TR-1003", device: "Chrome on Android", ip: "94.200.1.20", startedAt: ago(60 * 30), lastSeenAt: ago(60 * 21), status: "active" },
+      { id: "TS-6", traderId: "TR-1004", device: "Chrome on Windows", ip: "24.114.3.9", startedAt: ago(60 * 4), lastSeenAt: ago(120), status: "active" },
+    ],
     "audit-logs": [], // filled by appendAudit
   };
 }
@@ -262,6 +286,9 @@ export const seedSettings = () => ({
     payouts: { minPayout: 100, schedule: "on demand", profitSplit: 80, networks: "USDT (TRC20), USDT (ERC20)", walletWhitelist: "required", dualApprovalAbove: 500, holdHours: 24 },
     compliance: { kycRequired: "yes", restrictedCountries: "KP, IR, SY, CU", refundDays: 7, refundPolicy: "Refund if no trade was placed" },
     plisio: { coins: "USDT, BTC, ETH", networks: "TRC20, ERC20, BTC", invoiceExpiryMin: 60 },
+    demo: { enabled: "on", balance: 100000, profitTarget: 10, restartLimit: 0, maxActiveDemos: 1 },
+    leaderboard: { periodMode: "custom", periodStart: "2026-10-25", periodEnd: "2026-11-09", rankBy: "Total PnL", minTrades: 3, excludeFlagged: "yes" },
+    reserve: { walletAddress: "0x71C7656EC7ab88b098defB751B7401B5f6d8976F", network: "USDC · BNB Smart Chain (BEP-20)", proofUrl: "https://bscscan.com/address/0x71C7656EC7ab88b098defB751B7401B5f6d8976F", publicStatsSource: "live on-chain", manualReserveAmount: 0 },
     flags: { publicPayoutFeed: "on", affiliateProgram: "on", competitions: "off", newSignups: "on" },
   } as Record<string, Record<string, string | number>>,
   killSwitches: { pauseTrading: false, pausePurchases: false, pausePayouts: false, maintenanceMode: false } as Record<string, boolean>,

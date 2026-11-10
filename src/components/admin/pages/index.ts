@@ -34,6 +34,10 @@ import { page as Alerts } from "./Alerts";
 import { page as AuditLogs } from "./AuditLogs";
 import { page as PlatformSettings } from "./PlatformSettings";
 import { page as StaffPermissions } from "./StaffPermissions";
+import { page as TraderView } from "./TraderView";
+import { page as DemoAccounts } from "./DemoAccounts";
+import { page as Leaderboard } from "./Leaderboard";
+import { page as MetricDefinitions } from "./MetricDefinitions";
 
 // Sidebar sections, in display order
 export const GROUPS = ["Workspace", "Traders & trading", "Finance & sales", "Communication", "Platform control"];
@@ -77,6 +81,10 @@ export const PAGES: AdminPage[] = [
   AuditLogs,
   PlatformSettings,
   StaffPermissions,
+  TraderView,
+  DemoAccounts,
+  Leaderboard,
+  MetricDefinitions,
 ];
 
 // Whether this person may open the page at all

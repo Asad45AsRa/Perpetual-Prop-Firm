@@ -5,6 +5,7 @@ import { useAdminMutation, useAdminQuery } from "../adminData";
 import { useAdminSession } from "../Adminauth";
 import { ActionDialog, REASON_FIELD } from "../ActionDialog";
 import { DiffView } from "../DiffView";
+import { SettingsImpact } from "../SettingsImpact";
 import { can, canManage } from "../permissions";
 import { Btn, Card, describeError, formatDate, FormField, Pill, SelectInput, StateMessage, Tabs, TextInput, useToast } from "../ui";
 import type { AdminPage, SettingsData, SettingValue } from "../types";
@@ -68,6 +69,37 @@ const SECTIONS: Record<string, { title: string; fields: Field[] }> = {
       { key: "coins", label: "Accepted coins" },
       { key: "networks", label: "Accepted networks" },
       { key: "invoiceExpiryMin", label: "Invoice expires after (minutes)" },
+    ],
+  },
+  demo: {
+    title: "Demo account",
+    fields: [
+      { key: "enabled", label: "Free demo account", options: ["on", "off"], help: "Off hides the demo button on the trader's Challenges page." },
+      { key: "balance", label: "Virtual balance ($)" },
+      { key: "profitTarget", label: "Profit target (%)" },
+      { key: "restartLimit", label: "Restarts per trader per month", help: "0 means unlimited." },
+      { key: "maxActiveDemos", label: "Active demo accounts per trader" },
+    ],
+  },
+  leaderboard: {
+    title: "Leaderboard",
+    fields: [
+      { key: "periodMode", label: "Period", options: ["weekly", "bi-weekly", "monthly", "custom"], help: "Custom uses the two dates below." },
+      { key: "periodStart", label: "Custom period starts (yyyy-mm-dd)" },
+      { key: "periodEnd", label: "Custom period ends (yyyy-mm-dd)" },
+      { key: "rankBy", label: "Rank traders by", options: ["Total PnL", "ROI %", "Win rate"] },
+      { key: "minTrades", label: "Minimum closed trades to be ranked" },
+      { key: "excludeFlagged", label: "Leave out flagged traders", options: ["yes", "no"] },
+    ],
+  },
+  reserve: {
+    title: "Reserve & public stats",
+    fields: [
+      { key: "walletAddress", label: "Reserve wallet address" },
+      { key: "network", label: "Reserve network" },
+      { key: "proofUrl", label: "Proof link (block explorer page)" },
+      { key: "publicStatsSource", label: "Payout Reserve shown to traders comes from", options: ["live on-chain", "manual"] },
+      { key: "manualReserveAmount", label: "Manual reserve amount ($)", help: "Used only when the source above is manual." },
     ],
   },
   flags: {
@@ -137,7 +169,12 @@ function SettingsForm({ data, section, editable }: { data: SettingsData; section
           submitLabel="Save settings"
           busy={save.isPending}
           onClose={() => setAsking(false)}
-          intro={<DiffView before={Object.fromEntries(Object.keys(changed).map((k) => [k, current[k]]))} after={changed} />}
+          intro={
+            <div className="grid gap-4">
+              <SettingsImpact section={section} />
+              <DiffView before={Object.fromEntries(Object.keys(changed).map((k) => [k, current[k]]))} after={changed} />
+            </div>
+          }
           onSubmit={(v) =>
             save.mutate(
               { path: `/admin/settings/${section}`, method: "PUT", body: { values: changed, reason: v.reason, ifVersion: data.version } },

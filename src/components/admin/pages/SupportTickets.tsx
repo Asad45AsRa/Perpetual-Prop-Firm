@@ -31,6 +31,8 @@ const config: PageConfig = {
   bulkActions: [
     { label: "Close selected", action: "resolve", permission: "tickets.reply", success: "Tickets closed." },
     { label: "Start selected", action: "start", permission: "tickets.reply", success: "Tickets started." },
+    // Run: POST /admin/tickets/bulk/assign { ids, assigned }
+    { label: "Assign selected", action: "assign", permission: "tickets.reply", success: "Tickets assigned.", inputs: [{ key: "assigned", label: "Assign to", type: "select", options: ["Support Team", "Finance Team", "Risk Team"], required: true }] },
   ],
   detailTitle: (r) => `${r.id} · ${r.subject}`,
   detail: [
