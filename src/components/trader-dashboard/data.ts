@@ -10,6 +10,10 @@ export const TRADER_PAGE_HEADERS: Record<string, { title: string; subtitle: stri
   [TRADER_BASE]: { title: "Home", subtitle: "Your Perpeye performance, accounts and stats at a glance." },
   [`${TRADER_BASE}/leaderboard`]: { title: "Top Performers", subtitle: "See top traders and track your ranking." },
   [`${TRADER_BASE}/challenges`]: { title: "Challenges", subtitle: "Choose your preferred Perpeye challenge and start trading." },
+  [`${TRADER_BASE}/payouts`]: { title: "Payouts", subtitle: "Manage your connected wallet." },
+  [`${TRADER_BASE}/purchases`]: { title: "My Purchases", subtitle: "View all your previous purchases in one place." },
+  [`${TRADER_BASE}/settings`]: { title: "Settings", subtitle: "Manage your account preferences and personalize your experience." },
+  [`${TRADER_BASE}/demo`]: { title: "Challenges", subtitle: "Choose your preferred Perpeye challenge and start trading." },
   [`${TRADER_BASE}/accounts`]: { title: "Account Dashboard", subtitle: "Track and analyse your trading performance on a single account." },
 };
 

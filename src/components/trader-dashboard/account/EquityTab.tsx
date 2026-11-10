@@ -27,7 +27,7 @@ export function StatTiles({ items }: { items: { label: string; value: string; su
       {items.map((s) => (
         <div key={s.label} className="border-b-[1.5px] border-white/30 bg-white/[0.06] px-[15px] pb-[13px] pt-[15px]">
           <dt className="text-[13px] uppercase leading-[1.3] text-white/60 sm:text-[14px]">{s.label}</dt>
-          <dd className={cn("mt-[3px] text-[18px] leading-[1.3] sm:text-[20px]", s.tone === "green" ? "text-[#47a847]" : s.tone === "red" ? "text-[#E5484D]" : "text-white")}>{s.value}</dd>
+          <dd className={cn("mt-[3px] text-[18px] leading-[1.3] sm:text-[20px]", s.tone === "green" ? "text-[#47a847]" : s.tone === "red" ? "text-[#C71919]" : "text-white")}>{s.value}</dd>
           {s.sub && <dd className="mt-[3px] text-[12px] leading-[1.3] text-white/50 sm:text-[13px]">{s.sub}</dd>}
         </div>
       ))}
@@ -171,7 +171,7 @@ function RiskRules({ accountName }: { accountName: string }) {
         <span className="text-white/40">Start of the day balance</span>
         <span className="text-[14px] text-white">{usd(r.startOfDayBalance).replace(".00", "")}</span>
       </div>
-      <RuleRow label="Max Drawdown" pct={r.max.pct} color={RED} lines={[{ text: r.max.total }, { text: r.max.left, className: "text-[#E5484D]" }]} />
+      <RuleRow label="Max Drawdown" pct={r.max.pct} color={RED} lines={[{ text: r.max.total }, { text: r.max.left, className: "text-[#C71919]" }]} />
       <div className="mx-[16px] border-t-[0.7px] border-white/[0.06]" />
       <RuleRow
         label="Profit Target"
@@ -247,7 +247,7 @@ function LivePositions() {
                 <span>{p.size}</span>
                 <span>{usd(p.entry)}</span>
                 <span>{usd(p.mark)}</span>
-                <span className={p.pnl >= 0 ? "text-[#47a847]" : "text-[#E5484D]"}>
+                <span className={p.pnl >= 0 ? "text-[#47a847]" : "text-[#C71919]"}>
                   {usd(p.pnl, true).replace("+", "")} ({p.roe >= 0 ? "+" : ""}
                   {p.roe}%)
                 </span>
@@ -378,7 +378,7 @@ function MarketMix() {
                 </span>
               </span>
             </span>
-            <span className={cn("text-[14px]", m.pnl >= 0 ? "text-[#47a847]" : "text-[#E5484D]")}>{usd(m.pnl, true)}</span>
+            <span className={cn("text-[14px]", m.pnl >= 0 ? "text-[#47a847]" : "text-[#C71919]")}>{usd(m.pnl, true)}</span>
           </li>
         ))}
       </ul>

@@ -15,12 +15,14 @@ type NavItem = {
   /** Figma icon (gold gradient when active) or a lucide fallback (Terminal has no export yet). */
   icon: TraderNavIconName | LucideIcon;
   locked?: boolean;
+  /** Extra routes that also highlight this item (e.g. the demo page lives under Challenges). */
+  also?: string[];
 };
 
 // TODO(routes): Payouts, Competitions, Purchase History and Settings pages aren't built yet.
 const NAV: NavItem[] = [
   { label: "Home", href: TRADER_BASE, icon: "home" },
-  { label: "Challenges", href: `${TRADER_BASE}/challenges`, icon: "challenges" },
+  { label: "Challenges", href: `${TRADER_BASE}/challenges`, icon: "challenges", also: [`${TRADER_BASE}/demo`] },
   { label: "Terminal", href: "/terminal", icon: TrendingUp },
   { label: "Accounts", href: `${TRADER_BASE}/accounts`, icon: "accounts" },
   { label: "Payouts", href: `${TRADER_BASE}/payouts`, icon: "payouts" },
@@ -98,13 +100,13 @@ export function TraderSidebar({ open, onClose }: { open: boolean; onClose: () =>
 
         <nav aria-label="Trader" className="mt-[42px] flex flex-col gap-[6px] pl-[23px] pr-[20px]">
           {NAV.map((item) => (
-            <NavLink key={item.label} item={item} active={pathname === item.href} onNavigate={onClose} />
+            <NavLink key={item.label} item={item} active={pathname === item.href || !!item.also?.includes(pathname)} onNavigate={onClose} />
           ))}
         </nav>
 
         <nav aria-label="Account" className="mt-auto flex flex-col gap-[6px] pb-[27px] pl-[23px] pr-[20px] pt-[40px]">
           {FOOTER_NAV.map((item) => (
-            <NavLink key={item.label} item={item} active={pathname === item.href} onNavigate={onClose} />
+            <NavLink key={item.label} item={item} active={pathname === item.href || !!item.also?.includes(pathname)} onNavigate={onClose} />
           ))}
         </nav>
       </aside>

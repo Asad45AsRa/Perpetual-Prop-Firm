@@ -3,13 +3,12 @@
 import { useState } from "react";
 import { Download } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { tabChip } from "@/components/affiliate-dashboard/Panel";
+import { AccountSelect } from "../AccountSelect";
 import { TRADE_FILTERS, tradeLog, type ClosedTrade, type TradeFilter } from "./data";
 import { useShare } from "./EquityTab";
 import { Card, MarketIcon, usd } from "./ui";
 
 const COLS = "grid grid-cols-[minmax(96px,1fr)_130px_130px_70px_90px_70px_70px_90px_44px] items-center gap-x-[12px]";
-const signed = (n: number) => (n < 0 ? "text-[#E5484D]" : n > 0 ? "text-[#47a847]" : "text-white");
 
 /** Figma "Trade Log" tab (frame 1669:3245): closed trades with UTC open/close, duration, gross, fees, funding, net and share. */
 export function TradeLogTab() {
@@ -23,13 +22,14 @@ export function TradeLogTab() {
       title="Trade log"
       subtitle={`${tradeLog.length} closed`}
       action={
-        <div role="tablist" aria-label="Direction" className="flex gap-[9px]">
-          {TRADE_FILTERS.map((f) => (
-            <button key={f} type="button" role="tab" aria-selected={filter === f} onClick={() => setFilter(f)} className={tabChip(filter === f)}>
-              {f}
-            </button>
-          ))}
-        </div>
+        // Figma: small "All ▾" dropdown (same control as the Home account picker).
+        <AccountSelect
+          id="trade-log-filter"
+          label="Direction"
+          value={filter}
+          onChange={(v) => setFilter(v as TradeFilter)}
+          options={TRADE_FILTERS.map((f) => ({ value: f, label: f }))}
+        />
       }
     >
       <div className="overflow-x-auto">
@@ -50,21 +50,22 @@ export function TradeLogTab() {
           </thead>
           <tbody>
             {rows.map((t) => (
-              <tr key={t.id} className={cn(COLS, "h-[61px] border-t-[0.7px] border-white/[0.06] px-[16px] text-[13px] text-white/80")}>
+              <tr key={t.id} className={cn(COLS, "h-[61px] border-t-[0.7px] border-white/[0.06] px-[16px] text-[13px] text-white")}>
                 <td className="flex items-center gap-[7px]">
                   <MarketIcon market={t.market} />
                   <span>
                     <span className="block text-[13px] leading-[1.2] text-white">{t.market}</span>
-                    <span className={cn("block text-[11px] leading-[1.3]", t.side === "Long" ? "text-[#47a847]" : "text-[#E5484D]")}>{t.side}</span>
+                    <span className={cn("block text-[11px] leading-[1.3]", t.side === "Long" ? "text-[#47a847]" : "text-[#C71919]")}>{t.side}</span>
                   </span>
                 </td>
                 <td>{t.opened}</td>
                 <td>{t.closed}</td>
                 <td>{t.duration}</td>
-                <td className={signed(t.gross)}>{usd(t.gross, true)}</td>
+                {/* Figma: money columns in plain white */}
+                <td>{usd(t.gross, true)}</td>
                 <td>{usd(t.fees)}</td>
-                <td className={signed(t.funding)}>{usd(t.funding, true)}</td>
-                <td className={signed(t.net)}>{usd(t.net, true)}</td>
+                <td>{usd(t.funding, true)}</td>
+                <td>{usd(t.net, true)}</td>
                 <td className="text-right">
                   <button
                     type="button"

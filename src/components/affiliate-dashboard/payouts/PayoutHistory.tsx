@@ -3,25 +3,10 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { formatUsd, PAYOUT_FILTERS, type Payout, type PayoutFilter } from "../data";
-import { PagerButton, Panel, StatusChip, tabChip } from "../Panel";
+import { pad2, pageItems, PagerButton, Panel, StatusChip, tabChip } from "../Panel";
 
 const PAGE_SIZE = 7;
 const COLS = "grid grid-cols-[1fr_1.3fr_1fr_auto] items-center px-[16px]";
-const pad2 = (n: number) => String(n).padStart(2, "0");
-
-/** 1-based page numbers to show: first, last and current ±2, with "…" for the gaps. */
-function pageItems(pages: number, current: number): (number | "…")[] {
-  const nums = new Set<number>([1, pages]);
-  for (let n = current - 2; n <= current + 2; n++) if (n >= 1 && n <= pages) nums.add(n);
-  const sorted = [...nums].sort((a, b) => a - b);
-  const out: (number | "…")[] = [];
-  sorted.forEach((n, i) => {
-    if (i > 0 && n - sorted[i - 1] > 1) out.push("…");
-    out.push(n);
-  });
-  return out;
-}
-
 /** Payout history (Figma "Payouts" left card): status filter chips, 7 rows per page, numbered pager.
  *  Table on tablet+, stacked cards on mobile. */
 export function PayoutHistory({ payouts }: { payouts: Payout[] }) {

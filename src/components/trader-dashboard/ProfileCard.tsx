@@ -7,10 +7,19 @@ export function ProfileCard() {
   return (
     <section
       aria-label="Trader profile"
-      className="relative overflow-hidden border-[0.7px] border-white/[0.13] bg-[linear-gradient(100deg,#15130F_0%,#2B251B_38%,#7A6640_78%,#C9B583_100%)]"
+      className="relative overflow-hidden border-[0.7px] border-white/[0.13] bg-ink"
     >
-      {/* soft highlight sweep, like the Figma banner texture */}
-      <div aria-hidden className="pointer-events-none absolute -right-[60px] -top-[80px] h-[260px] w-[380px] rounded-full bg-[#FFF1D3]/25 blur-[60px]" />
+      {/* Figma banner: dark textured stone with gold light in both bottom corners */}
+      <Image
+        src="/images/trader-dashboard/profile-banner.webp"
+        alt=""
+        aria-hidden
+        fill
+        priority
+        sizes="(min-width: 1280px) 608px, 100vw"
+        // Phones: fit full width at the bottom so both gold corners stay visible (cover would crop them on a tall card).
+        className="pointer-events-none object-cover object-bottom select-none max-sm:object-contain"
+      />
 
       <div className="relative flex flex-wrap items-center gap-x-[18px] gap-y-[14px] px-[16px] py-[18px] sm:px-[20px]">
         <span className="relative h-[84px] w-[84px] shrink-0 overflow-hidden rounded-full border-2 border-[#E9D9AE] shadow-[0_8px_24px_rgba(0,0,0,0.45)] sm:h-[96px] sm:w-[96px]">
@@ -28,8 +37,9 @@ export function ProfileCard() {
           </p>
           <div className="mt-[10px] flex flex-wrap gap-[8px]">
             <StatusChip className="h-[22px] whitespace-nowrap text-[11px] leading-normal">Funded Trader</StatusChip>
-            <span className="inline-flex h-[22px] items-center gap-[5px] whitespace-nowrap bg-[#3B6BE8]/[0.14] px-[10px] text-[11px] leading-normal text-[#7EA2FF]">
-              <span aria-hidden className="h-[5px] w-[5px] rounded-full bg-[#5B86F5]" />
+            {/* Figma: blue verified badge + plain grey label, no chip background */}
+            <span className="inline-flex h-[22px] items-center gap-[5px] whitespace-nowrap text-[12px] leading-normal text-white/70">
+              <Image src="/images/trader-dashboard/verified.svg" alt="" width={11} height={11} unoptimized className="h-[11px] w-[11px]" />
               Verified
             </span>
           </div>

@@ -43,6 +43,73 @@ export function PagerButton({ label, disabled, onClick, flip }: { label: string;
   );
 }
 
+/** 1-based page numbers to show: first, last and current ±2, with "…" for the gaps. */
+export function pageItems(pages: number, current: number): (number | "…")[] {
+  const nums = new Set<number>([1, pages]);
+  for (let n = current - 2; n <= current + 2; n++) if (n >= 1 && n <= pages) nums.add(n);
+  const sorted = [...nums].sort((a, b) => a - b);
+  const out: (number | "…")[] = [];
+  sorted.forEach((n, i) => {
+    if (i > 0 && n - sorted[i - 1] > 1) out.push("…");
+    out.push(n);
+  });
+  return out;
+}
+
+export const pad2 = (n: number) => String(n).padStart(2, "0");
+
+/** Figma footer: "Showing NN of M" + prev / 01 02 … / next (0-based `page`). */
+export function NumberedPager({
+  page,
+  pages,
+  shown,
+  total,
+  onPage,
+  label,
+}: {
+  page: number;
+  pages: number;
+  shown: number;
+  total: number;
+  onPage: (page: number) => void;
+  label: string;
+}) {
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 border-t-[0.7px] border-white/[0.06] px-[16px] py-[16px]">
+      <p className="text-[12px] text-white/30">
+        Showing {pad2(shown)} of {total}
+      </p>
+      <nav aria-label={label} className="flex flex-wrap items-center gap-[9px]">
+        <PagerButton label="Previous page" disabled={page === 0} onClick={() => onPage(page - 1)} flip />
+        {pageItems(pages, page + 1).map((item, i) =>
+          item === "…" ? (
+            <span key={`gap-${i}`} aria-hidden className="w-[14px] text-center text-[12px] text-white/30">
+              …
+            </span>
+          ) : (
+            <button
+              key={item}
+              type="button"
+              aria-label={`Page ${item}`}
+              aria-current={item === page + 1 ? "page" : undefined}
+              onClick={() => onPage(item - 1)}
+              className={cn(
+                "flex h-[34.1px] w-[34.1px] items-center justify-center text-[12px] leading-none transition-colors",
+                item === page + 1
+                  ? "border-[0.7px] border-gold-accent bg-gold-accent/15 text-white"
+                  : "border-[0.57px] border-white/[0.06] bg-white/[0.06] text-white/50 hover:text-white/80",
+              )}
+            >
+              {pad2(item)}
+            </button>
+          ),
+        )}
+        <PagerButton label="Next page" disabled={page >= pages - 1} onClick={() => onPage(page + 1)} />
+      </nav>
+    </div>
+  );
+}
+
 const CHIP_TONES = {
   green: { chip: "bg-[#47a847]/[0.12] text-[#47a847]", border: "border-[#47a847]", dot: "bg-[#47a847]" },
   amber: { chip: "bg-[#E8A23B]/[0.12] text-[#E8A23B]", border: "border-[#E8A23B]", dot: "bg-[#E8A23B]" },

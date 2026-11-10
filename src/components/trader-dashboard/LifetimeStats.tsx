@@ -13,7 +13,8 @@ const FUNDED_OPTIONS = [
 ];
 
 /** Figma "Lifetime stats": funded-account select, range chips, 8 stat tiles (Win rate gets the gold underline). */
-export function LifetimeStats() {
+/** `wide` = Payouts page layout: no account picker, all 8 tiles on one row on desktop (Figma). */
+export function LifetimeStats({ wide }: { wide?: boolean } = {}) {
   const [account, setAccount] = useState("all");
   const [range, setRange] = useState<PnlRange>("All");
   // TODO(backend): per-account stats; with one funded account "All" and "#PE-1" are the same numbers.
@@ -25,7 +26,7 @@ export function LifetimeStats() {
         <div>
           <PanelTitle>Lifetime stats</PanelTitle>
           <p className="mt-[2px] text-[12px] leading-[1.3] text-white/50">All funded accounts</p>
-          <AccountSelect id="lifetime-account" value={account} onChange={setAccount} options={FUNDED_OPTIONS} className="mt-[8px]" />
+          {!wide && <AccountSelect id="lifetime-account" value={account} onChange={setAccount} options={FUNDED_OPTIONS} className="mt-[8px]" />}
         </div>
         <div role="tablist" aria-label="Range" className="flex gap-[9px]">
           {PNL_RANGES.map((r) => (
@@ -36,13 +37,13 @@ export function LifetimeStats() {
         </div>
       </div>
 
-      <dl className="mt-[18px] grid grid-cols-2 gap-[8px] sm:grid-cols-3">
+      <dl className={cn("mt-[18px] grid grid-cols-2 gap-[8px]", wide ? "sm:grid-cols-4 xl:grid-cols-8" : "sm:grid-cols-3")}>
         {stats.map((s) => (
           <div
             key={s.label}
             className={cn(
-              "border-[0.7px] border-white/[0.06] bg-white/[0.03] px-[12px] py-[12px]",
-              s.highlight && "border-b-2 border-b-gold-accent",
+              // Figma: gold bottom rule on every tile.
+              "border-[0.7px] border-b-[1.5px] border-white/[0.06] border-b-gold-accent bg-white/[0.03] px-[12px] py-[12px]",
             )}
           >
             <dt className="text-[9px] uppercase leading-[1.2] tracking-[0.05em] text-white/40">{s.label}</dt>

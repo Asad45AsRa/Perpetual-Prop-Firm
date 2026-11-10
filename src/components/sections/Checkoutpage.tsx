@@ -399,10 +399,8 @@ export function CheckoutPage({ embedded = false, accountEmail = "" }: { embedded
             </div>
 
             {/* Cryptocurrency picker */}
-            <button
-              type="button"
-              className="mt-4 flex h-[64px] w-full items-center justify-between border border-white/10 bg-white/[0.03] px-3.5 text-left outline-none hover:border-white/20"
-            >
+            {/* Info row, not a control (no hover). Figma: transparent fill, faint 1px border, white/6 icon tile. */}
+            <div className="mt-4 flex h-[64px] w-full items-center justify-between border border-white/[0.05] bg-transparent px-3.5 text-left">
               <span className="flex items-center gap-3">
                 <span className="flex h-9 w-9 items-center justify-center bg-white/[0.06]">
                   <Image
@@ -423,7 +421,7 @@ export function CheckoutPage({ embedded = false, accountEmail = "" }: { embedded
                 </span>
               </span>
               <CoinStack />
-            </button>
+            </div>
           </aside>
         </div>
 

@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Minus, Plus, Zap } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSiteContent, type FaqContent } from "@/lib/siteContent";
 import { CheckoutPage } from "@/components/sections/Checkoutpage";
@@ -16,7 +17,7 @@ const STEPS = [
   { title: "Get Rewarded. Get Funded", body: "Pass within the published limits to progress to a funded account and become eligible for rewards." },
 ];
 
-function StepCards() {
+export function StepCards() {
   return (
     <ol className="grid gap-[16px] md:grid-cols-3">
       {STEPS.map((s, i) => (
@@ -37,9 +38,8 @@ function DemoBanner() {
     // Figma: gold glow from the left fading to the card colour by mid-width, no outline.
     <div className="relative flex flex-wrap items-center justify-between gap-4 overflow-hidden border-[0.7px] border-white/[0.06] bg-[#171717] bg-[linear-gradient(90deg,rgba(153,128,74,0.78)_0%,rgba(153,128,74,0.38)_20%,rgba(153,128,74,0.12)_40%,rgba(153,128,74,0)_58%)] px-[14px] py-[13px]">
       <div className="flex items-center gap-[10px]">
-        <span className="flex h-[33px] w-[33px] shrink-0 items-center justify-center border-[0.57px] border-white/[0.08] bg-ink/50">
-          <Zap aria-hidden className="h-[16px] w-[16px] text-[#C9B27A]" fill="#99804A" strokeWidth={1.5} />
-        </span>
+        {/* Figma tile (33px, own frame + gold bolt) */}
+        <Image src="/images/trader-dashboard/demo-bolt.svg" alt="" width={33} height={33} unoptimized className="h-[33px] w-[33px] shrink-0" />
         <div>
           <p className="text-[13px] leading-[1.3] text-white/80">New to prop trading?</p>
           <p className="text-[11px] leading-[1.4] text-white/50">Practice with a virtual $100,000. No card, no wallet.</p>
@@ -83,7 +83,15 @@ function Faqs() {
                 >
                   {f.q}
                   <span className="flex h-[26px] w-[26px] shrink-0 items-center justify-center bg-white/[0.06] text-white/70">
-                    {isOpen ? <Minus aria-hidden className="h-[14px] w-[14px]" /> : <Plus aria-hidden className="h-[14px] w-[14px]" />}
+                    {/* Figma gold "+"; turns into "×" when open */}
+                    <Image
+                      src="/images/trader-dashboard/faq-plus.svg"
+                      alt=""
+                      width={13}
+                      height={14}
+                      unoptimized
+                      className={cn("h-[14px] w-[13px] transition-transform duration-200", isOpen && "rotate-45")}
+                    />
                   </span>
                 </button>
               </h3>

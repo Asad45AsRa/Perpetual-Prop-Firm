@@ -16,36 +16,33 @@ const TOTAL_ICONS = {
 } as const;
 
 const STAGE_CHIP: Record<AccountStage, string> = {
-  "Challenge Phase": "bg-[#3B6BE8]/[0.14] text-[#7EA2FF]",
-  "Funded Stage": "bg-[#47a847]/[0.12] text-[#47a847]",
-  Breached: "bg-[#E5484D]/[0.12] text-[#E5484D]",
+  "Challenge Phase": "border-l-[1.5px] border-[#3B6BE8] bg-[#3B6BE8]/[0.14] text-[#7EA2FF]",
+  "Funded Stage": "border-l-[1.5px] border-[#47a847] bg-[#47a847]/[0.12] text-[#47a847]",
+  Breached: "border-l-[1.5px] border-[#E5484D] bg-[#E5484D]/[0.12] text-[#E5484D]",
 };
 
 /** Small progress ring with the % inside; red once a drawdown limit is fully used. */
+// Figma rule colours: daily = blue, max = red, target = green.
+const RING_COLOR: Record<string, string> = { "Daily DD": "#3B6BE8", "Max DD": "#E5484D", "Profit Target": "#47a847" };
+
 function Ring({ gauge }: { gauge: Gauge }) {
-  const r = 14;
+  const r = 20;
   const c = 2 * Math.PI * r;
-  const isTarget = gauge.label === "Profit Target";
-  const color = isTarget ? "#47a847" : gauge.value >= 100 ? "#E5484D" : gauge.value >= 60 ? "#E8A23B" : "#99804A";
+  const color = RING_COLOR[gauge.label] ?? "#99804A";
+  // A 0% ring still shows a short tick in the rule colour (Figma).
+  const dash = Math.max((Math.min(gauge.value, 100) / 100) * c, 3);
   return (
-    <div className="flex items-center gap-[6px]" role="img" aria-label={`${gauge.label} ${gauge.value}%`}>
-      <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden className="shrink-0 -rotate-90">
-        <circle cx="17" cy="17" r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="3" />
-        <circle
-          cx="17"
-          cy="17"
-          r={r}
-          fill="none"
-          stroke={color}
-          strokeWidth="3"
-          strokeLinecap="round"
-          strokeDasharray={`${(Math.min(gauge.value, 100) / 100) * c} ${c}`}
-        />
-        <text x="17" y="17" transform="rotate(90 17 17)" textAnchor="middle" dominantBaseline="central" fill="white" fontSize="8">
+    <div className="flex items-center gap-[8px]" role="img" aria-label={`${gauge.label} ${gauge.value}%`}>
+      <span className="relative h-[46px] w-[46px] shrink-0">
+        <svg width="46" height="46" viewBox="0 0 46 46" aria-hidden className="-rotate-90">
+          <circle cx="23" cy="23" r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="4" />
+          <circle cx="23" cy="23" r={r} fill="none" stroke={color} strokeWidth="4" strokeDasharray={`${dash} ${c}`} />
+        </svg>
+        <span aria-hidden className="absolute inset-0 flex items-center justify-center text-[11px] text-white">
           {gauge.value}%
-        </text>
-      </svg>
-      <span className="whitespace-nowrap text-[10px] leading-[1.2] text-white/50">{gauge.label}</span>
+        </span>
+      </span>
+      <span className="whitespace-nowrap text-[11px] leading-[1.2] text-white/50">{gauge.label}</span>
     </div>
   );
 }

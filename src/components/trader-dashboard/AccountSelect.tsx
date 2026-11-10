@@ -8,18 +8,21 @@ export function AccountSelect({
   value,
   onChange,
   options = ACCOUNT_OPTIONS,
+  label = "Account",
   className,
 }: {
   id: string;
   value: string;
   onChange: (v: string) => void;
   options?: { value: string; label: string }[];
+  /** Screen-reader label (visually hidden). */
+  label?: string;
   className?: string;
 }) {
   return (
     <div className={cn("relative w-[110px]", className)}>
       <label htmlFor={id} className="sr-only">
-        Account
+        {label}
       </label>
       <select
         id={id}

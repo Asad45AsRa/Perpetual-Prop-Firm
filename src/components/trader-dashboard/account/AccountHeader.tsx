@@ -10,14 +10,14 @@ import { subAccounts, type SubAccount } from "../data";
 import { PHASES } from "./data";
 
 const STAGE_CHIP: Record<SubAccount["stage"], string> = {
-  "Challenge Phase": "bg-[#3B6BE8]/[0.18] text-white",
-  "Funded Stage": "bg-[#47a847]/[0.15] text-[#47a847]",
-  Breached: "bg-[#E5484D]/[0.15] text-[#E5484D]",
+  "Challenge Phase": "border-l-[1.5px] border-[#3B6BE8] bg-[#3B6BE8]/[0.18] text-white",
+  "Funded Stage": "border-l-[1.5px] border-[#47a847] bg-[#47a847]/[0.15] text-[#47a847]",
+  Breached: "border-l-[1.5px] border-[#C71919] bg-[#C71919]/[0.15] text-[#C71919]",
 };
 const STATUS_CHIP: Record<SubAccount["status"], string> = {
   Active: "border-white/30 bg-white/[0.06] text-white/70",
   Passed: "border-[#47a847] bg-[#47a847]/[0.12] text-[#47a847]",
-  Breached: "border-[#E5484D] bg-[#E5484D]/[0.12] text-[#E5484D]",
+  Breached: "border-[#C71919] bg-[#C71919]/[0.12] text-[#C71919]",
 };
 
 /** Account switcher: "Account #PE-1 ▾" button with an Active/Inactive tabbed list (Figma frame 2131332266). */

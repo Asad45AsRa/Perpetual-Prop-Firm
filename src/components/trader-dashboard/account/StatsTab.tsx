@@ -17,7 +17,7 @@ function StatList({ rows }: { rows: StatLine[] }) {
 }
 
 /** One colour per holding-time bucket; the summary bar and the row dots use the same colours. */
-const BUCKET_COLORS = ["#5B86F5", "#47A847", "#2BB3A3", "#9B7BF5", "#E8C547", "#F5A623", "#E5484D"];
+const BUCKET_COLORS = ["#5B86F5", "#47A847", "#2BB3A3", "#9B7BF5", "#E8C547", "#F5A623", "#C71919"];
 
 function HoldingTime() {
   const total = holdBuckets.reduce((s, b) => s + b.count, 0);
@@ -118,7 +118,7 @@ function MarketBreakdown() {
                 <span>{m.trades}</span>
                 <span>{m.winRate}</span>
                 <span>{m.costs}</span>
-                <span className={cn("text-right", m.net >= 0 ? "text-[#47a847]" : "text-[#E5484D]")}>{usd(m.net, true)}</span>
+                <span className={cn("text-right", m.net >= 0 ? "text-[#47a847]" : "text-[#C71919]")}>{usd(m.net, true)}</span>
               </li>
             ))}
           </ul>

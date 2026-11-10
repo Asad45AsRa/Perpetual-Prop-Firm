@@ -7,10 +7,10 @@ import { Panel, PanelTitle } from "@/components/affiliate-dashboard/Panel";
 import type { Market } from "./data";
 
 export const GREEN = "#47a847";
-export const RED = "#E5484D";
+export const RED = "#C71919";
 export const BLUE = "#3B6BE8";
 
-export const toneText = (tone?: "green" | "red") => (tone === "green" ? "text-[#47a847]" : tone === "red" ? "text-[#E5484D]" : "text-white");
+export const toneText = (tone?: "green" | "red") => (tone === "green" ? "text-[#47a847]" : tone === "red" ? "text-[#C71919]" : "text-white");
 
 /** "$1,234.56" / "+$1,234.56" / "-$1,234.56" (Figma uses a true minus in the trade log, kept as ASCII here for copy/paste). */
 export const usd = (n: number, signed = false) =>
@@ -118,7 +118,7 @@ export function SideChip({ side }: { side: "Long" | "Short" }) {
     <span
       className={cn(
         "inline-flex h-[30px] items-center px-[11px] text-[12px] leading-none",
-        side === "Long" ? "bg-[#47a847]/[0.15] text-[#47a847]" : "bg-[#E5484D]/[0.15] text-[#E5484D]",
+        side === "Long" ? "bg-[#47a847]/[0.15] text-[#47a847]" : "bg-[#C71919]/[0.15] text-[#C71919]",
       )}
     >
       {side}
