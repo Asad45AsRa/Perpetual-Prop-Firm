@@ -49,7 +49,10 @@ export function Card({
   children,
   className,
   bodyClassName,
+  strip,
 }: {
+  /** Figma "Stats & Discipline": header sits on a lighter strip with a divider below. */
+  strip?: boolean;
   title: string;
   subtitle?: string;
   action?: ReactNode;
@@ -59,7 +62,12 @@ export function Card({
 }) {
   return (
     <Panel className={cn("flex flex-col", className)}>
-      <div className="flex flex-wrap items-start justify-between gap-3 px-[16px] pb-[14px] pt-[17px]">
+      <div
+        className={cn(
+          "flex flex-wrap items-start justify-between gap-3 px-[16px] pb-[14px] pt-[17px]",
+          strip && "border-b-[0.7px] border-white/[0.06] bg-white/[0.05]",
+        )}
+      >
         <div>
           <PanelTitle>{title}</PanelTitle>
           {subtitle && <p className="mt-[3px] text-[12px] leading-[1.3] text-white/50">{subtitle}</p>}

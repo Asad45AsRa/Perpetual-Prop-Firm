@@ -7,7 +7,7 @@ function StatList({ rows }: { rows: StatLine[] }) {
   return (
     <dl className="px-[13px] pb-[6px]">
       {rows.map((r) => (
-        <div key={r.label} className="flex h-[40px] items-center justify-between border-b-[0.7px] border-white/[0.06] px-[9px] text-[13px] last:border-b-0">
+        <div key={r.label} className="flex h-[40px] items-center justify-between border-b-[0.7px] border-white/[0.06] px-[9px] text-[12px] last:border-b-0">
           <dt className="text-white/50">{r.label}</dt>
           <dd className={toneText(r.tone)}>{r.value}</dd>
         </div>
@@ -16,32 +16,53 @@ function StatList({ rows }: { rows: StatLine[] }) {
   );
 }
 
+/** One colour per holding-time bucket; the summary bar and the row dots use the same colours. */
+const BUCKET_COLORS = ["#5B86F5", "#47A847", "#2BB3A3", "#9B7BF5", "#E8C547", "#F5A623", "#E5484D"];
+
 function HoldingTime() {
   const total = holdBuckets.reduce((s, b) => s + b.count, 0);
   const common = holdBuckets.reduce((a, b) => (b.count > a.count ? b : a));
   return (
-    <Card title="Holding time" subtitle="How long positions stay open" action={<GoldChip>Most common: {common.label}</GoldChip>} bodyClassName="px-[16px] pb-[20px]">
-      <div className="flex gap-[40px] border-b-[0.7px] border-white/[0.13] pb-[24px] pt-[10px]">
+    <Card
+      strip
+      title="Holding time"
+      subtitle="How long positions stay open"
+      action={<GoldChip>Most common: {common.label}</GoldChip>}
+      bodyClassName="px-[16px] pb-[20px]"
+    >
+      <div className="flex gap-[40px] pt-[18px]">
         <div>
-          <p className="text-[13px] text-white/50">Average hold</p>
-          <p className="mt-[2px] text-[30px] leading-[1.2] tracking-[-0.6px] text-white sm:text-[36px]">{averageHold}</p>
+          <p className="text-[12px] uppercase text-white/50">Average hold</p>
+          <p className="mt-[2px] text-[30px] leading-[1.2] tracking-[-0.6px] text-[#C9B27A] sm:text-[36px]">{averageHold}</p>
         </div>
         <div>
-          <p className="text-[13px] text-white/50">Trades measured</p>
+          <p className="text-[12px] uppercase text-white/50">Trades measured</p>
           <p className="mt-[2px] text-[30px] leading-[1.2] tracking-[-0.6px] text-white sm:text-[36px]">{total}</p>
         </div>
       </div>
-      <ul className="mt-[6px]">
-        {holdBuckets.map((b) => {
+
+      {/* Distribution bar: each bucket's share, in its colour (Figma: orange 4–24h, red over 24h). */}
+      <div role="img" aria-label={holdBuckets.filter((b) => b.count).map((b) => `${b.label} ${Math.round((b.count / total) * 100)}%`).join(", ")} className="mt-[18px] flex h-[6px] gap-[3px]">
+        {holdBuckets.map((b, i) =>
+          b.count ? <span key={b.label} className="h-full" style={{ flexGrow: b.count, background: BUCKET_COLORS[i] }} /> : null,
+        )}
+      </div>
+
+      <ul className="mt-[14px] border-t-[0.7px] border-white/[0.13]">
+        {holdBuckets.map((b, i) => {
           const pct = total ? Math.round((b.count / total) * 100) : 0;
           return (
-            <li key={b.label} className="grid h-[46px] grid-cols-[80px_1fr_28px_40px] items-center gap-x-[12px] border-b-[0.7px] border-white/[0.06] text-[12px] last:border-b-0 sm:grid-cols-[96px_1fr_28px_40px]">
-              <span className="text-white/60">{b.label}</span>
-              <span aria-hidden className="h-[6px] rounded-full bg-white/[0.06]">
-                <span className="block h-full rounded-full bg-[linear-gradient(90deg,#99804A,#FFFFFF)]" style={{ width: `${pct}%` }} />
+            <li key={b.label} className="grid h-[46px] grid-cols-[92px_1fr_28px_40px] items-center gap-x-[12px] border-b-[0.7px] border-white/[0.06] text-[12px] last:border-b-0 sm:grid-cols-[108px_1fr_28px_40px]">
+              {/* Figma: square colour key; buckets with no trades are dimmed */}
+              <span className={cn("flex items-center gap-[8px]", b.count ? "text-white" : "text-white/30")}>
+                <span aria-hidden className={cn("h-[6px] w-[6px] shrink-0", !b.count && "opacity-40")} style={{ background: BUCKET_COLORS[i] }} />
+                {b.label}
               </span>
-              <span className="text-right text-white">{b.count}</span>
-              <span className="text-right text-white/60">{pct}%</span>
+              <span aria-hidden className="h-[4px] rounded-full bg-white/[0.06]">
+                <span className="block h-full rounded-full" style={{ width: `${pct}%`, background: BUCKET_COLORS[i] }} />
+              </span>
+              <span className={cn("text-right", b.count ? "text-white" : "text-white/30")}>{b.count}</span>
+              <span className={cn("text-right", b.count ? "text-white" : "text-white/30")}>{pct}%</span>
             </li>
           );
         })}
@@ -113,10 +134,10 @@ export function StatsTab() {
     <div className="flex flex-col gap-[16px]">
       <StatTiles items={resultBreakdown.map((r) => ({ label: r.label, value: r.value, tone: "tone" in r ? r.tone : undefined }))} />
       <div className="grid gap-[16px] lg:grid-cols-2">
-        <Card title="Win / loss split" subtitle="How your trades resolve" bodyClassName="border-t-[0.7px] border-white/[0.06] pt-[6px]">
+        <Card strip title="Win / loss split" subtitle="How your trades resolve" bodyClassName="pt-[6px]">
           <StatList rows={winLossSplit} />
         </Card>
-        <Card title="Pace & discipline" subtitle="Activity across the account" bodyClassName="border-t-[0.7px] border-white/[0.06] pt-[6px]">
+        <Card strip title="Pace & discipline" subtitle="Activity across the account" bodyClassName="pt-[6px]">
           <StatList rows={paceDiscipline} />
         </Card>
       </div>
