@@ -54,7 +54,7 @@ export function ProfileCard() {
           </div>
         </div>
 
-        <div className="flex h-[58px] min-w-[84px] flex-col justify-center border-[0.7px] border-white/20 bg-ink/40 px-[14px] backdrop-blur-[6px] max-sm:order-2 max-sm:ml-auto">
+        <div className="flex h-[58px] min-w-[84px] flex-col justify-center border-l-[1.5px] border-gold-accent bg-white/[0.06] px-[14px] backdrop-blur-[6px] max-sm:order-2 max-sm:ml-auto">
           <span className="text-[10px] uppercase leading-none tracking-[0.06em] text-white/50">Rank</span>
           <span className="mt-[6px] text-[22px] leading-none tracking-[-0.4px] text-white">#{trader.rank}</span>
         </div>
