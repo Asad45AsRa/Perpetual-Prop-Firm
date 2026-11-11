@@ -21,7 +21,7 @@ export function ProfileCard() {
         className="pointer-events-none select-none object-cover object-bottom max-sm:hidden"
       />
       <Image
-        src="/images/trader-dashboard/profile-banner-mobile.webp"
+        src="/images/trader-dashboard/profile-banner-mobile-v2.webp"
         alt=""
         aria-hidden
         fill
