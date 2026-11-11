@@ -432,7 +432,8 @@ export function CheckoutPage({ embedded = false, accountEmail = "" }: { embedded
           <div>
             <SectionChip>Choose Your Path To Funding</SectionChip>
 
-            <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {/* Dashboard has a 256px sidebar, so 4 columns only fit from xl; the homepage is full width. */}
+            <div className={cn("mt-4 grid gap-3 sm:grid-cols-2", embedded ? "xl:grid-cols-4" : "lg:grid-cols-4")}>
               {PLANS.map((p) => {
                 const selected = p.id === planId;
                 const price = amount * p.multiplier;

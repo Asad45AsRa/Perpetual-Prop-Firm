@@ -90,7 +90,7 @@ export function PurchasesView() {
           </thead>
           <tbody>
             {shown.map((p) => (
-              <tr key={p.id} className={cn(COLS, "h-[58px] border-t-[0.7px] border-white/[0.06] text-[13px] text-white")}>
+              <tr key={p.id} className={cn(COLS, "h-[58px] border-t-[0.7px] border-white/[0.06] text-[13px] text-white/60")}>
                 <td>{p.date}</td>
                 <td>
                   <span className="inline-flex h-[28px] items-center border-l-[1.5px] border-gold-accent bg-gold-accent/15 px-[10px] text-[12px] text-[#C9B27A]">
@@ -99,8 +99,8 @@ export function PurchasesView() {
                 </td>
                 <td>{money(p.size)}</td>
                 <td>{money(p.price)}</td>
-                <td className="text-white/80">{p.method}</td>
-                <td className="text-white/80">{p.wallet}</td>
+                <td>{p.method}</td>
+                <td>{p.wallet}</td>
                 <td className="text-right">
                   <StatusChip tone={p.status === "Pending" ? "amber" : "green"} className="h-[22px] text-[12px] leading-normal">
                     {p.status}

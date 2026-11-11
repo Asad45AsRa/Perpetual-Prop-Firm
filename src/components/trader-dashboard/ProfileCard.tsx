@@ -10,6 +10,7 @@ export function ProfileCard() {
       className="relative overflow-hidden border-[0.7px] border-white/[0.13] bg-ink"
     >
       {/* Figma banner: dark textured stone with gold light in both bottom corners */}
+      {/* Figma exports: wide banner on sm+, square-ish crop on phones (tall card). */}
       <Image
         src="/images/trader-dashboard/profile-banner.webp"
         alt=""
@@ -17,8 +18,16 @@ export function ProfileCard() {
         fill
         priority
         sizes="(min-width: 1280px) 608px, 100vw"
-        // Phones: fit full width at the bottom so both gold corners stay visible (cover would crop them on a tall card).
-        className="pointer-events-none object-cover object-bottom select-none max-sm:object-contain"
+        className="pointer-events-none select-none object-cover object-bottom max-sm:hidden"
+      />
+      <Image
+        src="/images/trader-dashboard/profile-banner-mobile.webp"
+        alt=""
+        aria-hidden
+        fill
+        priority
+        sizes="100vw"
+        className="pointer-events-none select-none object-cover object-bottom sm:hidden"
       />
 
       <div className="relative flex flex-wrap items-center gap-x-[18px] gap-y-[14px] px-[16px] py-[18px] sm:px-[20px]">
