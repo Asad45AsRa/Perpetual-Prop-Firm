@@ -85,7 +85,7 @@ export function Faq() {
                 <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-0">
                     {/* LEFT */}
                     <div className="flex flex-col items-start gap-[2.857em]">
-                        <h1 className="w-full max-w-[7.29em] text-[3.714em] font-normal leading-[100%] tracking-[-0.02em] text-white max-md:max-w-full max-md:text-[2.857em]">
+                        <h1 className="w-full max-w-[7.29em] text-[3.714em] font-normal leading-[100%] tracking-[-0.02em] text-white max-md:max-w-full max-md:text-[2.857em] md:max-lg:max-w-none md:max-lg:text-[44px]">
                             Frequently Asked Questions About Perpeye
                         </h1>
 

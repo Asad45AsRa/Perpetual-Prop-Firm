@@ -265,9 +265,9 @@ export function PathToFunding() {
     return (
         <section
             data-affiliate-page
-            className="relative w-full px-6 pb-[120px] pt-[80px] md:px-20"
+            className="relative w-full px-6 pb-[120px] pt-[80px] md:px-20 md:max-lg:px-6"
         >
-            <div className="relative z-10">
+            <div className="relative z-10 mx-auto w-full max-w-[NAV_MAX_WIDTH] px-NAV_PADDING">
                 {/* header */}
                 <div className="flex flex-col items-center text-center">
                     <h2 className="text-[40px] font-normal leading-[1] tracking-[-0.02em] text-white md:text-[48px]">
@@ -280,7 +280,7 @@ export function PathToFunding() {
                     </p>
                 </div>
 
-                <div className="mt-[56px] grid grid-cols-1 gap-6 md:grid-cols-[1.55fr_1fr]">
+                <div className="mt-[56px] grid grid-cols-1 gap-6 min-[984px]:grid-cols-[minmax(0,1fr)_425px] xl:grid-cols-[1.55fr_1fr]">
                     {/* ------------------------- left card ------------------------- */}
                     <div className="border border-white/10 bg-[#141414] p-5">
                         <div className="flex items-start justify-between">
@@ -310,7 +310,7 @@ export function PathToFunding() {
                         </div>
 
                         {/* stats */}
-                        <div className="mt-[18px] grid grid-cols-2 gap-[18px] md:grid-cols-4">
+                        <div className="mt-[18px] grid grid-cols-2 gap-[18px] lg:grid-cols-4">
                             <Stat
                                 value={Math.round(totals.signups).toLocaleString("en-US")}
                                 label="Total Signups"

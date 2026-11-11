@@ -427,7 +427,7 @@ export function TraderPerformance({ apiUrl, passRate, markets }: Props) {
     const maxVolume = Math.max(1, ...popular.map((m) => m.volume));
 
     return (
-        <section className="relative w-full px-6 pb-[80px] pt-[40px] md:px-20 mb-10">
+        <section className="relative w-full px-6 pb-[80px] pt-[40px] md:px-20 md:max-lg:px-6 mb-10">
             <RightGlow
                 width={890}
                 right={-440}

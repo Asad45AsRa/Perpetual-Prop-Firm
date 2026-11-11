@@ -91,7 +91,7 @@ export function JoinCta() {
       />
 
       <div className="relative z-10 mx-auto flex max-w-[1280px] flex-col items-center text-center">
-        <h2 className="text-[40px] font-normal leading-[1.05] tracking-[-0.02em] text-white md:text-[85px] md:leading-[75px]">
+        <h2 className="text-[40px] font-normal leading-[1.05] tracking-[-0.02em] text-white md:text-[85px] md:leading-[75px] md:max-xl:text-[64px] md:max-xl:leading-[58px]">
           Join Our Affiliate Program
           <br className="hidden md:block" /> And Earn Rewards
         </h2>

@@ -32,7 +32,7 @@ function StepCard({
     return (
         <article
             className={cn(
-                "flex flex-col items-center border border-white/10 bg-gradient-to-b from-white/[0.05] to-white/[0.01] px-6 pb-8 pt-[26px] text-center lg:h-[405px]",
+                "flex flex-col items-center border border-white/10 bg-gradient-to-b from-white/[0.05] to-white/[0.01] px-6 pb-8 pt-[26px] text-center lg:h-[405px] md:max-lg:mx-auto md:max-lg:w-full md:max-lg:max-w-[420px]",
                 className,
             )}
         >
@@ -297,7 +297,7 @@ export function ThreeSteps() {
                 </p>
             </div>
 
-            <div className="mt-11 grid gap-6 md:grid-cols-3 text-muted/90">
+            <div className="mt-11 grid gap-6 md:grid-cols-3 md:max-lg:grid-cols-1 text-muted/90">
                 <StepCard
                     step={1}
                     title="Start Your Evaluation"

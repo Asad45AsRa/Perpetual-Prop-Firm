@@ -195,7 +195,7 @@ export function ExplorePage() {
   return (
     <main className="min-h-screen font-sans text-foreground mt-5">
       {/* Figma frame: 1440px centered, 80px side padding (px-6 mobile / lg:px-20) */}
-      <section className="relative isolate mx-auto flex w-full max-w-none flex-col items-center px-6 md:px-10 py-20 max-md:pb-0 text-center lg:px-20">
+      <section className="relative isolate mx-auto flex w-full max-w-none flex-col items-center px-6 py-20 max-md:pb-0 text-center lg:px-20">
         <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-x-clip">
           <RightGlow
             width={760}
@@ -208,7 +208,7 @@ export function ExplorePage() {
         </div>
         {/* ===== Funding diagram ===== */}
         <div className="flex w-full flex-col items-center max-md:pt-16">
-          <h2 className="max-w-[650px] text-[40px] font-normal leading-[0.94] tracking-[-0.05em] text-white md:text-[56px]">
+          <h2 className="max-w-[650px] text-[40px] font-normal leading-[0.94] tracking-[-0.05em] text-white md:text-[44px] lg:text-[56px]">
             Built For The Next Generation Of Perp Traders
           </h2>
           <p className="mt-5 max-w-[520px] text-[15px] leading-[21px] text-muted/90">
@@ -317,8 +317,8 @@ export function ExplorePage() {
         {/* ===== Trade On Perpetual Markets ===== */}
         <div className="mt-48 max-md:mt-36 flex w-full flex-col gap-12 text-left lg:flex-row lg:items-center lg:justify-between lg:gap-8">
           {/* Left: content */}
-          <div className="w-full max-w-[470px]">
-            <h2 className="text-[40px] font-normal leading-[1.05] tracking-[-0.03em] text-white md:text-[56px]">
+          <div className="w-full max-w-[470px] md:max-lg:max-w-none">
+            <h2 className="text-[40px] font-normal leading-[1.05] tracking-[-0.03em] text-white md:text-[44px] lg:text-[56px]">
               Trade On Perpetual Markets, 24/7
             </h2>
             <p className="mt-6 max-w-[430px] text-[16px] leading-relaxed text-muted/90">
@@ -327,7 +327,7 @@ export function ExplorePage() {
               with liquidity powered by Hyperliquid.
             </p>
 
-            <div className="mt-8 flex max-w-[430px]  flex-wrap gap-3">
+            <div className="mt-8 flex max-w-[430px] flex-wrap gap-3 md:max-lg:max-w-none">
               {TAGS.map((t) => (
                 <span
                   key={t}
@@ -342,7 +342,7 @@ export function ExplorePage() {
           </div>
 
           {/* Right: rotating boxes */}
-          <div className="w-full max-w-[620px] ">
+          <div className="w-full max-w-[620px] md:max-lg:max-w-none">
             <div className="border border-white/10 bg-white/[0.02] p-4 sm:p-6 md:p-8">
               {/* Header */}
               <div className="flex items-start justify-between gap-3">
@@ -362,7 +362,7 @@ export function ExplorePage() {
               </div>
 
               {/* 6 x 3 grid */}
-              <div className="mt-5 grid grid-cols-6 gap-1.5 sm:mt-8 sm:gap-3">
+             <div className="mt-5 grid grid-cols-6 gap-1.5 sm:mt-8 sm:gap-3 md:max-lg:grid-cols-9">
                 {MARKETS.map((m) => (
                   <div
                     key={m.file}
@@ -397,7 +397,7 @@ export function ExplorePage() {
         {/* ===== Payouts section ===== */}
         <div className="relative mt-24 max-md:mt-36 flex w-full flex-col-reverse gap-12 text-left lg:mt-[200px] lg:flex-row lg:items-center lg:justify-between lg:gap-8">
           {/* Left glow: section ke padding se bahar nikal kar screen ke left edge par */}
-          <div aria-hidden className="pointer-events-none absolute -left-6 top-1/2 -z-10 md:-left-10 lg:-left-20">
+          <div aria-hidden className="pointer-events-none absolute -left-6 top-1/2 -z-10 lg:-left-20">
             <LeftGlow
               width={830}
               height={760}
@@ -407,7 +407,7 @@ export function ExplorePage() {
             />
           </div>
           {/* Left: payouts table */}
-          <div className="w-full max-w-[455px] lg:shrink-0">
+          <div className="w-full max-w-[455px] md:max-lg:max-w-none lg:w-[clamp(340px,calc(34.8vw_+_3.6px),455px)] lg:shrink-0">
             {/* Legend: Figma mein table ke upar center */}
             <div className="mb-3 flex items-center justify-center gap-6 text-[11px] text-muted/70">
               <span className="flex items-center gap-1.5">
@@ -472,8 +472,8 @@ export function ExplorePage() {
           </div>
 
           {/* Right: content */}
-          <div className="w-full lg:w-[650px] lg:shrink-0">
-            <h2 className="text-[40px] font-normal leading-[1] tracking-[-0.03em] text-white md:text-[53px]">
+          <div className="w-full lg:min-w-0 lg:max-w-[650px] lg:flex-1">
+            <h2 className="text-[40px] font-normal leading-[1] tracking-[-0.03em] text-white md:text-[44px] lg:text-[length:clamp(36px,calc(6.23vw_-_27.8px),53px)]">
               Get Paid On-Chain In Seconds, Without Waiting For Approval
             </h2>
             <p className="mt-4 max-w-[540px] text-[16px] leading-relaxed text-muted/80">

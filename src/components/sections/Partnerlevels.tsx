@@ -64,7 +64,7 @@ export function PartnerLevels() {
               key={l.tag}
               /* Mobile: height follows the content (no fixed height) and gets bottom padding.
                  md and up: original fixed 458px height. */
-              className="relative flex flex-col items-center overflow-hidden border border-white/[0.14] bg-[#111111] max-md:pb-6 md:h-[458px]"
+              className="relative flex flex-col items-center overflow-hidden border border-white/[0.14] bg-[#111111] max-md:pb-6 md:h-[458px] md:max-xl:h-auto md:max-xl:pb-6"
             >
               {/* 1) Main glow: soft curved light from the top, smooth fade downward */}
               <div
@@ -130,7 +130,7 @@ export function PartnerLevels() {
                     key={c}
                     /* Mobile: chip grows with its text (no fixed height) so long text wraps cleanly.
                        md and up: original fixed 30px height. */
-                    className="inline-flex h-[30px] items-center border border-[#2C2C2C] bg-[#1B1B1B] px-3 text-[13px] leading-none text-[#8D8D8D] max-md:h-auto max-md:min-h-[30px] max-md:justify-center max-md:py-2 max-md:text-center max-md:leading-[16px]"
+                    className="inline-flex h-[30px] items-center border border-[#2C2C2C] bg-[#1B1B1B] px-3 text-[13px] leading-none text-[#8D8D8D] max-md:h-auto max-md:min-h-[30px] max-md:justify-center max-md:py-2 max-md:text-center max-md:leading-[16px] md:max-xl:h-auto md:max-xl:min-h-[30px] md:max-xl:justify-center md:max-xl:py-2 md:max-xl:text-center md:max-xl:leading-[16px]"
                   >
                     {c}
                   </span>

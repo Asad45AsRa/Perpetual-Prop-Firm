@@ -15,7 +15,7 @@ export function ExploreHero() {
   return (
     <section
       data-affiliate-page
-      className="relative w-full overflow-hidden bg-[#111111] bg-cover bg-left-top bg-no-repeat px-6 pb-[120px] pt-[184px] md:min-h-[720px] md:bg-[length:100%_100%] md:px-20"
+      className="relative w-full overflow-hidden bg-[#111111] bg-cover bg-left-top bg-no-repeat px-6 pb-[120px] pt-[184px] md:min-h-[720px] md:bg-[length:100%_100%] md:px-20 md:max-lg:px-6"
       style={{ backgroundImage: "url('/images/explore/Explore.png')" }}
     >
       {/* Bottom fade: image ka glow section ke edge par katne ke bajaye #111 mein ghul jaye,
@@ -26,7 +26,7 @@ export function ExploreHero() {
       />
 
       <div className="relative z-10">
-        <h1 className="text-[40px] font-normal leading-[1] tracking-[-0.02em] text-white md:text-[60px]">
+        <h1 className="text-[40px] font-normal leading-[1] tracking-[-0.02em] text-white md:text-[60px] md:max-xl:text-[48px]">
           Every Metric That Matters.
         </h1>
 

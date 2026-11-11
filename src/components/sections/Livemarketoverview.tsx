@@ -285,7 +285,7 @@ export function LiveMarketOverview({ longShort }: Props) {
   return (
     <section
       data-affiliate-page
-      className="relative w-full px-6 pb-[120px] pt-[80px] md:px-20"
+      className="relative w-full px-6 pb-[120px] pt-[80px] md:px-20 md:max-lg:px-6"
     >
       {/* Left / right side glows (Figma jaisa) — data-affiliate-page body glows band karta hai,
           isliye yahan section ke andar apne glows hain */}
@@ -302,7 +302,7 @@ export function LiveMarketOverview({ longShort }: Props) {
       </div>
 
       <div className="relative z-10 flex flex-col items-center text-center">
-        <h2 className="text-[40px] font-normal leading-[1] tracking-[-0.02em] text-white md:text-[48px]">
+        <h2 className="text-[40px] font-normal leading-[1] tracking-[-0.02em] text-white md:text-[48px] md:max-xl:text-[44px]">
           Live Market Overview
         </h2>
         <p className="mt-6 max-w-[390px] text-[16px] leading-[21px] text-muted/80">

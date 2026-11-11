@@ -20,7 +20,7 @@ export type RulesContent = { overviewHead: string[]; overviewRows: string[][]; g
 export type FaqItem = { q: string; a: string };
 export type FaqContent = { items: FaqItem[] };
 
-export type ContentKey = "faq" | "rules";
+export type ContentKey = "faq" | "rules" | "terms" | "privacy";
 
 // One stored record per key. The public site only ever reads `published`.
 export type ContentRecord<T = unknown> = {

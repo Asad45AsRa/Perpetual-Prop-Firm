@@ -303,7 +303,7 @@ export function FundedPayouts() {
     return (
         <section
             data-affiliate-page
-            className="relative w-full px-6 pb-[120px] pt-[80px] md:px-20"
+            className="relative w-full px-6 pb-[120px] pt-[80px] md:px-20 md:max-lg:px-6"
         >
             <RightGlow
                 width={850}

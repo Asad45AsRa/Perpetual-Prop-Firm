@@ -915,7 +915,7 @@ function saveSettingsSection(me: Row, section: string, body: Row) {
 
 function handleContent(me: Row, method: string, key: ContentKey, action: string | undefined, body: Row) {
   authorize(me, "content", method !== "GET");
-  if (key !== "faq" && key !== "rules") throw fail("Unknown content key.", 404, "not_found");
+  if (!["faq", "rules", "terms", "privacy"].includes(key)) throw fail("Unknown content key.", 404, "not_found");
   const all = readMockContent();
   const rec: ContentRecord = all[key] ?? { key, published: null, draft: null, version: 0, publishedAt: null, history: [] };
   if (method === "GET") return rec;
