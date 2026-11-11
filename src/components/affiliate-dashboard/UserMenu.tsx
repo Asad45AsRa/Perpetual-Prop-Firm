@@ -74,7 +74,8 @@ export function UserMenu() {
         aria-controls={menuId}
         onClick={() => setOpen((o) => !o)}
         className={cn(
-          "flex h-[41px] items-center gap-[5px] border-[0.57px] border-white/[0.13] pl-[7.4px] pr-[13px] text-[14px] leading-normal text-white transition-colors hover:bg-white/[0.06]",
+          // Phones: name is hidden, so a centred 41px square; sm+: avatar + name.
+          "flex h-[41px] w-[41px] items-center justify-center gap-[5px] border-[0.57px] border-white/[0.13] text-[14px] sm:w-auto sm:justify-start sm:pl-[7.4px] sm:pr-[13px] leading-normal text-white transition-colors hover:bg-white/[0.06]",
           open ? "bg-white/[0.06]" : "bg-white/[0.03]",
         )}
       >
