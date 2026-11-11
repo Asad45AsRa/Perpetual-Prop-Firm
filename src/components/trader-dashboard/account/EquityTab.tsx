@@ -25,7 +25,7 @@ export function StatTiles({ items }: { items: { label: string; value: string; su
   return (
     <dl className="grid grid-cols-2 gap-[16px] lg:grid-cols-4">
       {items.map((s) => (
-        <div key={s.label} className="border-b-[1.5px] border-white/30 bg-white/[0.06] px-[15px] pb-[13px] pt-[15px]">
+        <div key={s.label} className="border-b-[1.5px] border-gold-accent bg-white/[0.06] px-[15px] pb-[13px] pt-[15px]">
           <dt className="text-[13px] uppercase leading-[1.3] text-white/60 sm:text-[14px]">{s.label}</dt>
           <dd className={cn("mt-[3px] text-[18px] leading-[1.3] sm:text-[20px]", s.tone === "green" ? "text-[#47a847]" : s.tone === "red" ? "text-[#C71919]" : "text-white")}>{s.value}</dd>
           {s.sub && <dd className="mt-[3px] text-[12px] leading-[1.3] text-white/50 sm:text-[13px]">{s.sub}</dd>}

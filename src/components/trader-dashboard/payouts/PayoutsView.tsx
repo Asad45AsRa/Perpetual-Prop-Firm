@@ -230,9 +230,9 @@ function History({ rows }: { rows: TraderPayout[] }) {
           </thead>
           <tbody>
             {shown.map((r) => (
-              <tr key={r.id} className={cn(COLS, "h-[52px] border-t-[0.7px] border-white/[0.06] text-[13px] text-white")}>
+              <tr key={r.id} className={cn(COLS, "h-[52px] border-t-[0.7px] border-white/[0.06] text-[13px] text-white/60")}>
                 <td>{r.date}</td>
-                <td className="text-white/80">{r.plan}</td>
+                <td>{r.plan}</td>
                 <td>{money0(r.amount)}</td>
                 <td>{r.split}%</td>
                 <td className="text-[#47a847]">{money0((r.amount * r.split) / 100)}</td>

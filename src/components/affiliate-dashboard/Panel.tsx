@@ -96,7 +96,7 @@ export function NumberedPager({
               className={cn(
                 "flex h-[34.1px] w-[34.1px] items-center justify-center text-[12px] leading-none transition-colors",
                 item === page + 1
-                  ? "border-[0.7px] border-gold-accent bg-gold-accent/15 text-white"
+                  ? "border-[0.57px] border-gold-accent bg-gold-accent text-white"
                   : "border-[0.57px] border-white/[0.06] bg-white/[0.06] text-white/50 hover:text-white/80",
               )}
             >

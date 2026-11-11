@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { DASH_ASSETS } from "@/components/affiliate-dashboard/data";
-import { Panel } from "@/components/affiliate-dashboard/Panel";
+import { Panel, PanelTitle } from "@/components/affiliate-dashboard/Panel";
 import { TRADER_BASE } from "../data";
 import { StepCards } from "./ChallengesView";
 
@@ -79,13 +79,12 @@ export function DemoView() {
 
         <div className="flex flex-col gap-[16px]">
           <Panel className="px-[16px] pb-[16px] pt-[16px]">
-            <h2 className="text-[11px] font-normal uppercase tracking-[0.04em] text-white/50">How it works</h2>
+            <PanelTitle>How it works</PanelTitle>
             <ol className="mt-[12px] flex flex-col gap-[8px]">
               {HOW_IT_WORKS.map((s, i) => (
                 <li key={s.title} className="flex items-center gap-[12px] border-[0.7px] border-white/[0.06] bg-white/[0.04] px-[12px] py-[10px]">
-                  <span className="flex h-[30px] w-[30px] shrink-0 items-center justify-center bg-white/[0.06] text-[11px] text-white/60">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
+                  {/* Figma step tiles (33px, gold-tinted) */}
+                  <Image src={`/images/trader-dashboard/demo-step-${i + 1}.svg`} alt="" width={33} height={33} unoptimized className="h-[33px] w-[33px] shrink-0" />
                   <span>
                     <span className="block text-[13px] leading-[1.3] text-white">{s.title}</span>
                     <span className="block text-[11px] leading-[1.4] text-white/50">{s.body}</span>
@@ -97,7 +96,7 @@ export function DemoView() {
 
           <dl className="grid grid-cols-3 gap-[16px]">
             {FACTS.map((f) => (
-              <div key={f.label} className="border-b-[1.5px] border-white/30 bg-white/[0.06] px-[12px] pb-[10px] pt-[10px]">
+              <div key={f.label} className="border-b-[1.5px] border-gold-accent bg-white/[0.06] px-[12px] pb-[10px] pt-[10px]">
                 <dt className="text-[10px] uppercase text-white/50">{f.label}</dt>
                 <dd className="mt-[3px] text-[16px] text-[#C9B27A]">{f.value}</dd>
               </div>

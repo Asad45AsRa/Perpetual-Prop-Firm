@@ -82,7 +82,7 @@ function Faqs() {
                   className="flex min-h-[66px] w-full items-center justify-between gap-4 px-[16px] text-left text-[14px] text-white"
                 >
                   {f.q}
-                  <span className="flex h-[26px] w-[26px] shrink-0 items-center justify-center bg-white/[0.06] text-white/70">
+                  <span className="flex h-[34px] w-[34px] shrink-0 items-center justify-center border-[0.57px] border-white/[0.06] bg-white/[0.06] text-white/70">
                     {/* Figma gold "+"; turns into "×" when open */}
                     <Image
                       src="/images/trader-dashboard/faq-plus.svg"
