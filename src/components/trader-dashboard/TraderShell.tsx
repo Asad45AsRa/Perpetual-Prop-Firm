@@ -55,16 +55,8 @@ export function TraderShell({ children }: { children: ReactNode }) {
       <TraderSidebar open={menuOpen} onClose={() => setMenuOpen(false)} />
       <div className="relative min-w-0 flex-1 px-4 pb-[46px] pt-6 sm:px-6 lg:pl-[36px] lg:pr-[38px] lg:pt-[37px]">
         <div aria-hidden className="pointer-events-none fixed inset-y-0 left-0 right-0 overflow-hidden lg:left-[256px]">
-          {/* Figma: plain #0F0F0F page with one soft light from the top-left of the content (glow pre-composited on #0F0F0F). */}
-          <Image
-            src="/images/trader-dashboard/bg-glow.webp"
-            alt=""
-            width={2200}
-            height={1001}
-            priority
-            sizes="(min-width: 1024px) calc(100vw - 256px), 100vw"
-            className="h-auto w-full select-none"
-          />
+          {/* Figma glow rebuilt in CSS (no image): warm light at the top-left of the content, fading into #0F0F0F. */}
+          <div className="aspect-[2200/1001] w-full bg-[radial-gradient(ellipse_42%_62%_at_22%_0%,rgba(255,247,228,0.24)_0%,rgba(255,247,228,0.11)_40%,rgba(255,247,228,0)_100%)]" />
         </div>
         <div className="relative mx-auto max-w-[1110px]">
           <Topbar onMenu={() => setMenuOpen(true)} />
