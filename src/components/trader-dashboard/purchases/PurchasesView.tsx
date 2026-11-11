@@ -49,7 +49,7 @@ export function PurchasesView() {
       <div className="flex flex-wrap items-start justify-between gap-4 p-[16px]">
         <dl className="flex flex-wrap gap-[8px]">
           {summary.map((s) => (
-            <div key={s.label} className="min-w-[140px] border-b-[1.5px] border-white/30 bg-white/[0.06] px-[12px] pb-[8px] pt-[9px]">
+            <div key={s.label} className="min-w-[140px] border-b-[1.5px] border-gold-accent bg-white/[0.06] px-[12px] pb-[8px] pt-[9px]">
               <dt className="text-[10px] uppercase leading-[1.3] text-white/50">{s.label}</dt>
               <dd className="mt-[2px] text-[15px] leading-[1.3] text-white">{s.value}</dd>
             </div>

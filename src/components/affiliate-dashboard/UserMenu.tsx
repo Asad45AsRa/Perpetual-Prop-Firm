@@ -80,7 +80,7 @@ export function UserMenu() {
         )}
       >
         <span className="relative h-[29px] w-[29px] overflow-hidden rounded-full border-[0.57px] border-white/[0.06] bg-white/[0.06]">
-          <Image src={currentUser.avatar} alt="" fill sizes="29px" className="object-cover" />
+          <Image src={currentUser.avatar} alt="" fill sizes="116px" className="object-cover" />
         </span>
         <span className="hidden sm:inline">{currentUser.name}</span>
         <span className="sr-only sm:hidden">Account menu</span>
@@ -98,7 +98,7 @@ export function UserMenu() {
         <div className="flex items-center gap-[8px] bg-white/[0.03] px-[12px] py-[10px] sm:gap-[10px] sm:px-[14px] sm:py-[12px]">
           <span className="relative h-[30px] w-[30px] shrink-0 sm:h-[38px] sm:w-[38px] overflow-hidden rounded-full border-[0.57px] border-white/[0.13]">
             {/* eager: the menu starts hidden, so a lazy image would pop in after opening */}
-            <Image src={currentUser.avatar} alt="" fill sizes="38px" loading="eager" className="object-cover" />
+            <Image src={currentUser.avatar} alt="" fill sizes="152px" loading="eager" className="object-cover" />
           </span>
           <div className="min-w-0">
             <p className="truncate text-[14px] leading-[1.2] text-white sm:text-[16px]">{currentUser.name}</p>

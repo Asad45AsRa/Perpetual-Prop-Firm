@@ -24,7 +24,8 @@ export const trader = {
   email: "hafiz123@gmail.com",
   avatar: av("hafiz"),
   joined: "Joined Oct 2026",
-  tagline: "Perpeye Trader · Top 12%",
+  tagline: "Perpeye Trader",
+  topPercent: 12,
   rank: 179,
   lifetimePayouts: 149,
 };

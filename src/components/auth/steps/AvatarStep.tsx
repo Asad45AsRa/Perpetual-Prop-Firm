@@ -59,7 +59,8 @@ export function AvatarStep({ onSubmit }: Props) {
                       src={src}
                       alt=""
                       fill
-                      sizes="46px"
+                      // Ask for ~3× the 46px slot so avatars stay sharp when the page is zoomed (2048px sources).
+                      sizes="140px"
                       className={cn(
                         "rounded-full object-cover transition-opacity duration-300 ease-out motion-reduce:transition-none",
                         dimmed && "opacity-40 group-hover:opacity-100 group-focus-visible:opacity-100",

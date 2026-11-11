@@ -52,7 +52,8 @@ function NavLink({ item, active, onNavigate }: { item: NavItem; active: boolean;
   const cls = cn(
     "flex h-[44px] w-[213px] items-center gap-[8px] border-l-2 pl-[8px] pr-[10px] text-[14px] capitalize leading-[0.865] transition-colors",
     active
-      ? "border-gold-accent bg-[linear-gradient(90deg,rgba(153,128,74,0.3),rgba(153,128,74,0))] text-white"
+      ? // Figma: active rule is a white → gold gradient
+        "[border-image:linear-gradient(180deg,#FFFFFF_0%,#F1E8D0_45%,#C9B27A_100%)_1] bg-[linear-gradient(90deg,rgba(153,128,74,0.3),rgba(153,128,74,0))] text-white"
       : "border-transparent text-white/50 hover:bg-white/[0.03] hover:text-white/80",
   );
 

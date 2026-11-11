@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { StatusChip } from "@/components/affiliate-dashboard/Panel";
 import { trader } from "./data";
 
 /** Figma "Home" profile banner: gold-lit card with avatar, name, join line, status chips and rank tile. */
@@ -32,7 +31,7 @@ export function ProfileCard() {
 
       <div className="relative flex flex-wrap items-center gap-x-[18px] gap-y-[14px] px-[16px] py-[18px] sm:px-[20px]">
         <span className="relative h-[84px] w-[84px] shrink-0 overflow-hidden rounded-full border-2 border-[#E9D9AE] shadow-[0_8px_24px_rgba(0,0,0,0.45)] sm:h-[96px] sm:w-[96px]">
-          <Image src={trader.avatar} alt="" fill sizes="96px" className="object-cover" priority />
+          <Image src={trader.avatar} alt="" fill sizes="288px" className="object-cover" priority />
         </span>
 
         <div className="min-w-0 flex-1 max-sm:order-3 max-sm:basis-full">
@@ -41,11 +40,12 @@ export function ProfileCard() {
             {/* Figma: 13px calendar icon before the join line */}
             <Image src="/images/trader-dashboard/calendar.svg" alt="" width={13} height={13} unoptimized className="mt-[1px] h-[13px] w-[13px] shrink-0" />
             <span>
-              {trader.joined} · {trader.tagline}
+              {trader.joined} · {trader.tagline} · <span className="text-[#C9B27A]">Top {trader.topPercent}%</span>
             </span>
           </p>
           <div className="mt-[10px] flex flex-wrap gap-[8px]">
-            <StatusChip className="h-[22px] whitespace-nowrap text-[11px] leading-normal">Funded Trader</StatusChip>
+            {/* Figma: green chip with a left rule, no dot */}
+            <span className="inline-flex h-[22px] items-center whitespace-nowrap border-l-[1.5px] border-[#47a847] bg-[#47a847]/[0.12] px-[10px] text-[11px] leading-normal text-[#47a847]">Funded Trader</span>
             {/* Figma: blue verified badge + plain grey label, no chip background */}
             <span className="inline-flex h-[22px] items-center gap-[5px] whitespace-nowrap text-[12px] leading-normal text-white/70">
               <Image src="/images/trader-dashboard/verified.svg" alt="" width={11} height={11} unoptimized className="h-[11px] w-[11px]" />

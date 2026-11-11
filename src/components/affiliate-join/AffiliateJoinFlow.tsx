@@ -1,12 +1,11 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { AFFILIATE_DASHBOARD_ROUTE, ASSET_DIR } from "./constants";
+import { AFFILIATE_DASHBOARD_ROUTE } from "./constants";
 import type { WelcomeValues } from "./schemas";
 import { Stepper } from "./Stepper";
 import { PromoPanel } from "./PromoPanel";
@@ -23,8 +22,8 @@ type Draft = Partial<WelcomeValues> & { username?: string };
 function Backdrop() {
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden bg-ink">
-      {/* Stretch to the viewport: the glows sit in the far corners and cover would crop them; soft gradients show no distortion. */}
-      <Image src={`${ASSET_DIR}/waitlist.webp`} alt="" fill priority sizes="100vw" className="object-fill select-none" />
+      {/* Same CSS glow as the dashboards (no image): warm light top-left and bottom-right on #0F0F0F. */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_45%_55%_at_0%_0%,rgba(255,247,228,0.2)_0%,rgba(255,247,228,0.08)_45%,rgba(255,247,228,0)_100%),radial-gradient(ellipse_40%_50%_at_100%_100%,rgba(255,247,228,0.14)_0%,rgba(255,247,228,0.05)_45%,rgba(255,247,228,0)_100%)]" />
     </div>
   );
 }

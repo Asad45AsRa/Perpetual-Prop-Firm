@@ -12,7 +12,8 @@ const PAGE_SIZE = 6;
 export function Avatar({ src, size = 25 }: { src: string; size?: number }) {
   return (
     <span className="relative shrink-0 overflow-hidden rounded-full" style={{ width: size, height: size }}>
-      <Image src={src} alt="" fill sizes={`${size}px`} className="object-cover" />
+      {/* ~4× the slot so avatars stay sharp when the page is zoomed. */}
+      <Image src={src} alt="" fill sizes={`${size * 4}px`} className="object-cover" />
     </span>
   );
 }

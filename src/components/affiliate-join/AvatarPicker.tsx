@@ -40,7 +40,8 @@ export function AvatarPicker({ value, onChange, className, size = 46, describedB
               src={src}
               alt=""
               fill
-              sizes={`${size}px`}
+              // ~3× the slot so avatars stay sharp when the page is zoomed.
+              sizes={`${size * 3}px`}
               className={cn(
                 "rounded-full object-cover transition-opacity duration-300 ease-out motion-reduce:transition-none",
                 dimmed && "opacity-40 group-hover:opacity-100 group-focus-visible:opacity-100",
