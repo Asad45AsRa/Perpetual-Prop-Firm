@@ -17,7 +17,7 @@ export function ExploreHero() {
       data-affiliate-page
       className="relative w-full overflow-hidden bg-[#0F0F0F] bg-cover bg-left-top bg-no-repeat px-6 pb-[120px] pt-[184px] md:min-h-[720px] md:px-20 md:max-lg:px-6"
       // Figma "explore page bg" export: #0F0F0F with the top-left light.
-      style={{ backgroundImage: "url('/images/explore/explore-bg.webp')" }}
+      style={{ backgroundImage: "url('/images/explore/explore-bg-hq.webp')" }}
     >
       {/* Bottom fade: image ka glow section ke edge par katne ke bajaye #111 mein ghul jaye,
           taake Live Market ke saath koi line/seam na bane */}

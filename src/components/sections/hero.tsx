@@ -25,12 +25,14 @@ export function Hero() {
 
       {/* BG: Figma "home page bg" export (#0F0F0F + top-right light), pinned top-right; fades out at the bottom into the page. */}
       <Image
-        src="/images/hero/home-bg.webp"
+        src="/images/hero/home-bg-hq.webp"
         alt=""
         aria-hidden
         fill
         priority
         sizes="100vw"
+        // Serve the file as-is: re-compressing soft gradients causes banding/blur, worst when zoomed.
+        unoptimized
         className="pointer-events-none select-none object-cover object-right-top [mask-image:linear-gradient(to_bottom,#000_80%,transparent_100%)]"
       />
 
