@@ -23,18 +23,17 @@ export function Hero() {
 
       </div>
 
-      {/* BG: Figma's exported hero background (dark base + top-right light beam, 1440×821).
-          Covers the hero, pinned top-right so the glow stays in the corner at every width;
-          fades out at the bottom so it blends into the page colour with no visible edge. */}
-      <Image
-        src="/images/hero/hero-bg.png"
-        alt=""
-        width={1440}
-        height={821}
-        priority
-        unoptimized
+      {/* BG (CSS, no image): #0F0F0F with the Figma top-right light beam; fades out at the bottom into the page. */}
+      <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover object-right-top [mask-image:linear-gradient(to_bottom,#000_80%,transparent_100%)]" />
+        className="pointer-events-none absolute inset-0 bg-[#0F0F0F] [mask-image:linear-gradient(to_bottom,#000_80%,transparent_100%)]"
+        style={{
+          backgroundImage: [
+            "radial-gradient(ellipse 40% 95% at 100% 0%, rgba(255,247,228,0.4) 0%, rgba(255,247,228,0.18) 45%, rgba(255,247,228,0) 100%)",
+            "radial-gradient(ellipse 40% 28% at 70% 0%, rgba(255,247,228,0.3) 0%, rgba(255,247,228,0.12) 50%, rgba(255,247,228,0) 100%)",
+          ].join(","),
+        }}
+      />
 
 
       {/* GIF: no visual effects applied.

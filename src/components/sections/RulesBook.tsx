@@ -1474,8 +1474,14 @@ function RulesBookView({ groups, overviewHead, overviewRows }: RulesContent) {
       {/* soft gold glow (as in the design) */}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 z-0 bg-cover bg-top bg-no-repeat"
-        style={{ backgroundImage: "url('/images/rules/Rulespage.png')" }}
+        className="pointer-events-none fixed inset-0 z-0"
+        // CSS glow (no image): diagonal warm band from upper-left to mid-right, as in the Figma export it replaces.
+        style={{
+          backgroundImage: [
+            "radial-gradient(ellipse 65% 42% at 22% 42%, rgba(196,184,156,0.26) 0%, rgba(196,184,156,0.16) 50%, rgba(196,184,156,0) 100%)",
+            "radial-gradient(ellipse 55% 32% at 80% 54%, rgba(153,128,74,0.34) 0%, rgba(153,128,74,0.2) 50%, rgba(153,128,74,0) 100%)",
+          ].join(","),
+        }}
       />
 
       {/* ───── HERO ───── */}

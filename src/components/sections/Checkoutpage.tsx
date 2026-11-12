@@ -8,6 +8,7 @@ import {
   LuArrowUpRight,
   LuChevronDown,
   LuChevronsUpDown,
+  LuCheck,
 } from "react-icons/lu";
 import { LeftGlow } from "../../components/sections/LeftGlow";
 
@@ -714,6 +715,8 @@ export function CheckoutPage({ embedded = false, accountEmail = "" }: { embedded
                     </div>
                   </div>
                   <label className="mt-5 flex cursor-pointer items-start gap-3 text-[12px] leading-[1.45] text-white/70">
+                    {/* Custom box: transparent with a white tick when checked (native input stays for a11y). */}
+                    <span className="relative mt-0.5 h-4 w-4 shrink-0">
                     <input
                       type="checkbox"
                       checked={agreed}
@@ -721,8 +724,10 @@ export function CheckoutPage({ embedded = false, accountEmail = "" }: { embedded
                         setAgreed(e.target.checked);
                         if (e.target.checked) setNeedsAgreement(false);
                       }}
-                      className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer appearance-none border border-white/30 bg-transparent checked:border-[#99804A] checked:bg-[#99804A] focus-visible:outline focus-visible:outline-1 focus-visible:outline-[#99804A]"
+                      className="peer absolute inset-0 h-4 w-4 cursor-pointer appearance-none border border-white/30 bg-transparent checked:border-white/60 focus-visible:outline focus-visible:outline-1 focus-visible:outline-[#99804A]"
                     />
+                    <LuCheck aria-hidden className="pointer-events-none absolute inset-0 m-auto hidden h-3 w-3 text-white peer-checked:block" strokeWidth={3} />
+                    </span>
                     I have read, understood, and agree to all rules and conditions outlined above.
                   </label>
                   <button
