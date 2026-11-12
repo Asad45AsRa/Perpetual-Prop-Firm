@@ -15,14 +15,9 @@ export function ExploreHero() {
   return (
     <section
       data-affiliate-page
-      className="relative w-full overflow-hidden bg-[#111111] px-6 pb-[120px] pt-[184px] md:min-h-[720px] md:px-20 md:max-lg:px-6"
-      // CSS glow (no image): soft warm light across the top-left, as in the Figma export it replaces.
-      style={{
-        backgroundImage: [
-          "radial-gradient(ellipse 42% 80% at 0% 0%, rgba(223,214,199,0.6) 0%, rgba(223,214,199,0.3) 45%, rgba(223,214,199,0) 100%)",
-          "radial-gradient(ellipse 60% 34% at 32% 0%, rgba(223,214,199,0.35) 0%, rgba(223,214,199,0.14) 50%, rgba(223,214,199,0) 100%)",
-        ].join(","),
-      }}
+      className="relative w-full overflow-hidden bg-[#0F0F0F] bg-cover bg-left-top bg-no-repeat px-6 pb-[120px] pt-[184px] md:min-h-[720px] md:px-20 md:max-lg:px-6"
+      // Figma "explore page bg" export: #0F0F0F with the top-left light.
+      style={{ backgroundImage: "url('/images/explore/explore-bg.webp')" }}
     >
       {/* Bottom fade: image ka glow section ke edge par katne ke bajaye #111 mein ghul jaye,
           taake Live Market ke saath koi line/seam na bane */}

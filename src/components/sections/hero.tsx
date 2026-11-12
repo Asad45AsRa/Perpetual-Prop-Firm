@@ -23,16 +23,15 @@ export function Hero() {
 
       </div>
 
-      {/* BG (CSS, no image): #0F0F0F with the Figma top-right light beam; fades out at the bottom into the page. */}
-      <div
+      {/* BG: Figma "home page bg" export (#0F0F0F + top-right light), pinned top-right; fades out at the bottom into the page. */}
+      <Image
+        src="/images/hero/home-bg.webp"
+        alt=""
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[#0F0F0F] [mask-image:linear-gradient(to_bottom,#000_80%,transparent_100%)]"
-        style={{
-          backgroundImage: [
-            "radial-gradient(ellipse 40% 95% at 100% 0%, rgba(255,247,228,0.4) 0%, rgba(255,247,228,0.18) 45%, rgba(255,247,228,0) 100%)",
-            "radial-gradient(ellipse 40% 28% at 70% 0%, rgba(255,247,228,0.3) 0%, rgba(255,247,228,0.12) 50%, rgba(255,247,228,0) 100%)",
-          ].join(","),
-        }}
+        fill
+        priority
+        sizes="100vw"
+        className="pointer-events-none select-none object-cover object-right-top [mask-image:linear-gradient(to_bottom,#000_80%,transparent_100%)]"
       />
 
 
